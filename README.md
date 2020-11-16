@@ -14,6 +14,10 @@ sudo mkdir ~/vagrant-ubuntu
 cd ~/vagrant-ubuntu
 sudo vagrant init ubuntu/trusty64
 vagrant up
-vagrant ssh
 
+## master
+vagrant ssh k8s-master
+
+## node-1
+vagrant ssh node-1
 
