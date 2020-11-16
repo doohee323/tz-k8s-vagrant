@@ -19,6 +19,7 @@ sudo chown $(id -u):$(id -g) $HOME/.kube/config
 kubectl apply -f https://raw.githubusercontent.com/coreos/flannel/master/Documentation/kube-flannel.yml
 kubectl proxy --accept-hosts='^*' &
 
+## Copy config to local
 cp /root/.kube/config /vagrant/config
 
 
