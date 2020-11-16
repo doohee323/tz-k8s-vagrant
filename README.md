@@ -38,7 +38,7 @@
     kubectl get nodes
 ```
 
-## destroy VMs  
+## -. destroy VMs  
 ``` 
     vagrant destroy -f
 ``` 
