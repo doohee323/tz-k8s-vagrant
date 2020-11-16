@@ -1,6 +1,6 @@
 # tz-k8s-vagrant
 
-## Prep. in ubuntu
+## -. Prep. in ubuntu
 ```
     sudo apt install virtualbox -y
     sudo apt install vagrant -y
@@ -12,11 +12,12 @@
     sudo vagrant init bento/ubuntu-18.04
 ```
 
-## Run VMs with k8s 
-
+## -. Run VMs with k8s 
+``` 
     vagrant up
+``` 
 
-## ssh into nodes  
+## -. ssh into nodes  
 ### checking k8s nodes status
 ``` 
     vagrant ssh k8s-master
@@ -24,9 +25,11 @@
 ```
 
 ### node-1
+``` 
     vagrant ssh node-1
+``` 
 
-## install kubectl in macbook
+## -. install kubectl in macbook
 ### cf) https://kubernetes.io/docs/tasks/tools/install-kubectl/
 ``` 
     brew install kubectl
@@ -36,5 +39,7 @@
 ```
 
 ## destroy VMs  
+``` 
     vagrant destroy -f
+``` 
 
