@@ -33,7 +33,7 @@ to project root directory.
     vagrant ssh node-1
 ``` 
 
-## -. install kubectl in macbook
+## -. install kubectl in macbook 
 ### cf) https://kubernetes.io/docs/tasks/tools/install-kubectl/
 ``` 
     brew install kubectl
