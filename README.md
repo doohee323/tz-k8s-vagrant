@@ -1,9 +1,19 @@
 # tz-k8s-vagrant
 
-## -. Prep. in MacOS
+It supports two version of k8s installation, shell and ansible. First need to copy proper Vagrantfile
+to project root directory. 
+
+## -. Refer to README.md for each version.
 ```
-    virtualbox
-    vagrant
+    scripts/shell/README.md
+    scripts/ansible/README.md
+```
+
+## -. Copy Vagrantfile to project root directory.
+```
+    cp scripts/shell/Vagrantfile Vagrantfile
+    or
+    cp scripts/ansible/Vagrantfile Vagrantfile
 ```
 
 ## -. Run VMs with k8s 
@@ -28,7 +38,7 @@
 ``` 
     brew install kubectl
     mkdir -p ~/.kube
-    cp tz-k8s-vagrant/config ~/.kube
+    cp tz-k8s-vagrant/config ~/.kube/config
     kubectl get nodes
 ```
 
