@@ -1,15 +1,19 @@
 # tz-k8s-vagrant
 
-## -. Prep. in ubuntu
+It supports two version of k8s installation, shell and ansible. First need to copy proper Vagrantfile
+to project root directory. 
+
+## -. Refer to README.md for each version.
 ```
-    sudo apt install virtualbox -y
-    sudo apt install vagrant -y
-    sudo wget https://releases.hashicorp.com/vagrant/2.2.2/vagrant_2.2.2_x86_64.deb
-    sudo dpkg –i vagrant_2.2.2_x86_64.deb
-    vagrant ––version
-    sudo mkdir ~/vagrant-ubuntu
-    cd ~/vagrant-ubuntu
-    sudo vagrant init bento/ubuntu-18.04
+    scripts/shell/README.md
+    scripts/ansible/README.md
+```
+
+## -. Copy Vagrantfile to project root directory.
+```
+    cp scripts/shell/Vagrantfile Vagrantfile
+    or
+    cp scripts/ansible/Vagrantfile Vagrantfile
 ```
 
 ## -. Run VMs with k8s 
@@ -34,7 +38,7 @@
 ``` 
     brew install kubectl
     mkdir -p ~/.kube
-    cp tz-k8s-vagrant/config ~/.kube
+    cp tz-k8s-vagrant/config ~/.kube/config
     kubectl get nodes
 ```
 
