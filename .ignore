@@ -1,2 +1,5 @@
 .vagrant
 .idea
+join.sh
+cluster.*
+kube_config_cluster.yml
