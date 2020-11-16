@@ -15,8 +15,9 @@ Vagrant.configure("2") do |config|
     master.vm.box = IMAGE_NAME
     master.vm.network "private_network", ip: "10.0.0.10"
     #master.vm.network "public_network"
-    #master.vm.network "forwarded_port", guest: 80, host: 8080
-    #master.vm.network "forwarded_port", guest: 443, host: 8080
+    master.vm.network "forwarded_port", guest: 6443, host: 6443
+    master.vm.network "forwarded_port", guest: 80, host: 8080
+    master.vm.network "forwarded_port", guest: 443, host: 8080
     master.vm.hostname = "k8s-master"
     master.vm.provision "shell", :path => File.join(File.dirname(__FILE__),"scripts/shells/master.sh"), :args => master.vm.hostname
   end

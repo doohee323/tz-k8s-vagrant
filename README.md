@@ -30,6 +30,15 @@ kubectl get nodes
 vagrant ssh node-1
 
 ###################################################
+## install kubectl in macbook
+## cf) https://kubernetes.io/docs/tasks/tools/install-kubectl/
+###################################################
+brew install kubectl
+mkdir -p ~/.kube
+cp tz-k8s-vagrant/config ~/.kube
+kubectl get nodes
+
+###################################################
 ## destroy VMs  
 ###################################################
 vagrant destroy -f
