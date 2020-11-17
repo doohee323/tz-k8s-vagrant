@@ -31,37 +31,44 @@ echo "################################################"
 echo "## [ Monitoring with prometheus ] #############################"
 
 # A bit confusing is the whole set of such Helm charts – there is a “simple” Prometheus chart, and  kube-prometheus, and prometheus-operator:
-
 kubectl create namespace monitoring
 #helm del --purge monitoring
-#helm install --name monitoring --namespace monitoring stable/prometheus-operator --set prometheusOperator.createCustomResource=false
-helm install my-prometheus-operator --namespace monitoring prometheus-community/kube-prometheus-stack
-helm install my-prometheus-operator stable/prometheus-operator --namespace monitoring
 
+helm repo add prometheus-community https://prometheus-community.github.io/helm-charts
 helm repo update
 helm search repo prometheus-community
+helm install my-prometheus-operator --namespace monitoring prometheus-community/kube-prometheus-stack
 
 kubectl get svc -n kube-system
 kubectl get all -n monitoring
 echo "admin / prom-operator"
 kubectl config view --minify
 
-kubectl get service/monitoring-prometheus-oper-prometheus -n monitoring -o yaml > prometheus.yaml
+kubectl get service/my-prometheus-operator-kub-prometheus -n monitoring -o yaml > prometheus.yaml
 sed -ie "s|ClusterIP|LoadBalancer|g" prometheus.yaml
 kubectl apply -f prometheus.yaml
 
-kubectl get service/monitoring-grafana -n monitoring -o yaml > grafana.yaml
+kubectl get service/my-prometheus-operator-grafana -n monitoring -o yaml > grafana.yaml
 sed -ie "s|ClusterIP|LoadBalancer|g" grafana.yaml
 kubectl apply -f grafana.yaml
 
+#kubectl port-forward service/prometheus-service 8080:8080 -n monitoring
+
 sleep 60
 
-GRAFANA_LB=`kubectl get all -n monitoring | grep 'service/monitoring-grafana' | awk '{print $3}'`
+GRAFANA_LB=`kubectl get all -n monitoring | grep 'service/my-prometheus-operator-grafana' | awk '{print $3}'`
 echo "GRAFANA_LB: http://$GRAFANA_LB"
 echo "admin / prom-operator"
 echo "################################################"
 
 exit 0
+
+
+kubectl apply -f prometheus-cluster-role.yaml
+kubectl apply -f prometheus-config-map.yaml
+kubectl apply -f prometheus-deployment.yaml
+kubectl apply -f prometheus-node-exporter.yaml
+kubectl apply -f prometheus-svc.yaml
 
 
 echo "## [ Memory / CPU tunning ] ##################################################"
