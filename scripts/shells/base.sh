@@ -21,3 +21,10 @@ sudo apt-get update
 sudo apt-get install -y kubeadm
 sudo mkdir -p /root/.ssh
 
+# config DNS
+cat <<EOF > /etc/resolv.conf
+nameserver 1.1.1.1 #cloudflare DNS
+nameserver 8.8.8.8 #Google DNS
+EOF
+
+

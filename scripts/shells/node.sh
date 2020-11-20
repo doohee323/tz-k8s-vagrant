@@ -8,4 +8,4 @@ bash /vagrant/scripts/shells/base.sh
 # k8s node
 ##################################################################
 
-sudo /vagrant/join.sh
+sudo bash /vagrant/join.sh
