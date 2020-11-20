@@ -4,3 +4,4 @@ join.sh
 cluster.*
 config
 join-command
+projects
