@@ -35,10 +35,25 @@
 ## install jenkins
 ###################################################
 ```
-
 DOCKER_ID=doohee323
 DOCKER_PASSWD=
 
-bash run.sh
+bash install.sh
+
+```
+
+###################################################
+## build a simple jenkins project
+###################################################
+```
+bash build.sh
+
+```
+
+###################################################
+## build a java jenkins project
+###################################################
+```
+vi scripts/jenkins/java/README.md
 
 ```
