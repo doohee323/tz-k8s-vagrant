@@ -6,7 +6,6 @@ echo "## [ install helm ] ######################################################
 ###https://twofootdog.tistory.com/17
 ###https://gruuuuu.github.io/cloud/monitoring-02/#
 
-
 sudo curl -fsSL -o get_helm.sh https://raw.githubusercontent.com/helm/helm/master/scripts/get-helm-3
 sudo chmod 700 get_helm.sh
 sudo ./get_helm.sh
@@ -14,55 +13,68 @@ sudo ./get_helm.sh
 helm repo add stable https://charts.helm.sh/stable
 helm repo update
 
+sudo cp -Rf .kube /home/vagrant
+sudo chown -Rf vagrant:vagrant /home/vagrant/.kube
 su - vagrant
 kubectl get po -n kube-system
 
 export HELM_HOST=localhost:44134
 
-kubectl create serviceaccount --namespace kube-system tiller
-kubectl create clusterrolebinding tiller --clusterrole cluster-admin --serviceaccount=kube-system:tiller
-#kubectl create clusterrolebinding tiller-cluster-rule --clusterrole=cluster-admin --serviceaccount=kube-system:tiller
-#helm init
+echo "## [ install prometheus ] #############################"
 
-kubectl patch deploy --namespace kube-system tiller-deploy -p '{"spec":{"template":{"spec":{"serviceAccount":"tiller"}}}}'
+#kubectl create namespace monitoring
 
-echo "################################################"
+#kubectl create serviceaccount tiller -n monitoring
+#kubectl create clusterrolebinding tiller --clusterrole cluster-admin --serviceaccount=monitoring:tiller -n monitoring
+#kubectl create clusterrolebinding tiller-cluster-rule --clusterrole=cluster-admin --serviceaccount=monitoring:tiller -n monitoring
 
-echo "## [ Monitoring with prometheus ] #############################"
+helm search repo stable | grep prometheus
+helm install monitor stable/prometheus -n monitoring
 
-# A bit confusing is the whole set of such Helm charts – there is a “simple” Prometheus chart, and  kube-prometheus, and prometheus-operator:
-kubectl create namespace monitoring
-#helm del --purge monitoring
+helm inspect values stable/prometheus
 
-helm repo add prometheus-community https://prometheus-community.github.io/helm-charts
-helm repo update
-helm search repo prometheus-community
-helm install my-prometheus-operator --namespace monitoring prometheus-community/kube-prometheus-stack
+cat <<EOF > volumeF.yaml
+alertmanager:
+    persistentVolume:
+        enabled: false
+server:
+    persistentVolume:
+        enabled: false
+pushgateway:
+    persistentVolume:
+        enabled: false
+EOF
 
-kubectl get svc -n kube-system
-kubectl get all -n monitoring
-echo "admin / prom-operator"
-kubectl config view --minify
+helm upgrade -f volumeF.yaml monitor stable/prometheus -n monitoring
 
-kubectl get service/my-prometheus-operator-kub-prometheus -n monitoring -o yaml > prometheus.yaml
-sed -ie "s|ClusterIP|LoadBalancer|g" prometheus.yaml
-kubectl apply -f prometheus.yaml
+kubectl get svc -n monitoring
+kubectl patch svc monitor-prometheus-server --type='json' -p '[{"op":"replace","path":"/spec/type","value":"NodePort"},{"op":"replace","path":"/spec/ports/0/nodePort","value":32449}]' -n monitoring
+#kubectl patch svc monitor-prometheus-server --type='json' -p '[{"op":"replace","path":"/spec/type","value":"NodePort"}]' -n monitoring
 
-kubectl get service/my-prometheus-operator-grafana -n monitoring -o yaml > grafana.yaml
-sed -ie "s|ClusterIP|LoadBalancer|g" grafana.yaml
-kubectl apply -f grafana.yaml
+kubectl get svc -n monitoring | grep monitor-prometheus-server
+#monitor-prometheus-server          NodePort    10.105.94.92    <none>        80:32449/TCP             15m
+echo "curl http://192.168.1.10:32449"
 
+echo "## [ install grafana ] #############################"
+helm search repo stable | grep grafana
+helm install --generate-name stable/prometheus-operator -n monitoring
+kubectl get svc | grep grafana
+
+kubectl patch svc `kubectl get svc | grep grafana | awk '{print $1}'` --type='json' -p '[{"op":"replace","path":"/spec/type","value":"NodePort"},{"op":"replace","path":"/spec/ports/0/nodePort","value":30912}]'
+
+#kubectl get service/my-prometheus-operator-grafana -n monitoring -o yaml > grafana.yaml
+#sed -ie "s|ClusterIP|LoadBalancer|g" grafana.yaml
+#kubectl apply -f grafana.yaml
 #kubectl port-forward service/prometheus-service 8080:8080 -n monitoring
+#sleep 60
+#GRAFANA_LB=`kubectl get all -n monitoring | grep 'service/my-prometheus-operator-grafana' | awk '{print $3}'`
+#echo "GRAFANA_LB: http://$GRAFANA_LB"
 
-sleep 60
-
-GRAFANA_LB=`kubectl get all -n monitoring | grep 'service/my-prometheus-operator-grafana' | awk '{print $3}'`
-echo "GRAFANA_LB: http://$GRAFANA_LB"
+echo "curl http://192.168.1.10:30912"
 echo "admin / prom-operator"
 echo "################################################"
 
 exit 0
-
 
 kubectl apply -f prometheus-cluster-role.yaml
 kubectl apply -f prometheus-config-map.yaml
@@ -79,7 +91,7 @@ minikube addons enable metrics-server
 sleep 120
 
 kubectl describe node minikube
-kubectl get all -n kube-system
+kubectl get all -n monitoring
 kubectl top pod
 kubectl top node
 echo "################################################"
