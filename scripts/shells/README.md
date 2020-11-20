@@ -39,10 +39,10 @@
 ## test apply
 ``` 
     root@k8s-master:/home/vagrant# kubectl create deployment kubernetes-bootcamp --image=gcr.io/google-samples/kubernetes-bootcamp:v1
-    root@k8s-master:/home/vagrant# get pods -o wide
+    root@k8s-master:/home/vagrant# kubectl get pods -o wide
     NAME                                   READY   STATUS    RESTARTS   AGE     IP              NODE     NOMINATED NODE   READINESS GATES
     kubernetes-bootcamp-57978f5f5d-wrrns   1/1     Running   0          3m32s   172.16.84.129   node-1   <none>           <none>
-    root@k8s-master:/home/vagrant# curl http://10.244.1.2:8080
+    root@k8s-master:/home/vagrant# curl http://172.16.84.129:8080
     Hello Kubernetes bootcamp! | Running on: kubernetes-bootcamp-57978f5f5d-wrrns | v=1
 ```
 
