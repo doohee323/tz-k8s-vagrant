@@ -5,16 +5,10 @@
 echo "## [ Buil an app ] #############################"
 
 ########################################################################
-# - apply jenkins deployment and service
-########################################################################
-kubectl --kubeconfig ~/.kube/config apply -f jenkins_deployment.yaml
-kubectl --kubeconfig ~/.kube/config apply -f jenkins_service.yaml
-
-########################################################################
 # - get jenkins url
 ########################################################################
-# in Workloads
-# => http://192.168.1.10:31756/
+echo "curl http://192.168.1.10:31000 in k8s-master"
+echo "curl http://localhost:31000 in host"
 
 ########################################################################
 # - install jenkins plugins

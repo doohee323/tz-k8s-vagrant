@@ -31,7 +31,6 @@ sudo cp /root/.kube/config /home/vagrant/.kube/config
 sudo chown -Rf vagrant:vagrant /home/vagrant/.kube
 sudo cp /root/.kube/config /vagrant/config
 
-
 echo "" >> ~/.bashrc
 echo "alias ll='ls -al'" >> ~/.bashrc
 echo "alias k='kubectl --kubeconfig ~/.kube/config'" >> ~/.bashrc
