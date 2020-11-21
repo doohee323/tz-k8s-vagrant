@@ -26,7 +26,11 @@ kubectl apply -f https://$raw_git/172.16_net_calico.yaml
 kubectl proxy --accept-hosts='^*' &
 
 ## Copy config to local
-cp /root/.kube/config /vagrant/config
+sudo mkdir -p /home/vagrant/.kube
+sudo cp /root/.kube/config /home/vagrant/.kube/config
+sudo chown -Rf vagrant:vagrant /home/vagrant/.kube
+sudo cp /root/.kube/config /vagrant/config
+
 
 echo "" >> ~/.bashrc
 echo "alias ll='ls -al'" >> ~/.bashrc
