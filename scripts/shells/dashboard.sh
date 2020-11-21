@@ -3,6 +3,7 @@
 set -x
 
 ## install dashboard
+#kubectl create namespace kube-system
 kubectl apply -f https://raw.githubusercontent.com/kubernetes/dashboard/v2.0.0/aio/deploy/recommended.yaml
 kubectl get svc -n kubernetes-dashboard
 
@@ -12,7 +13,7 @@ cat <<EOF | kubectl create -f -
  kind: ServiceAccount
  metadata:
    name: admin-user
-   namespace: kubernetes-dashboard
+   namespace: kube-system
 EOF
 
 cat <<EOF | kubectl create -f -
@@ -27,10 +28,10 @@ cat <<EOF | kubectl create -f -
  subjects:
  - kind: ServiceAccount
    name: admin-user
-   namespace: kubernetes-dashboard
+   namespace: kube-system
 EOF
 
-kubectl -n kubernetes-dashboard describe secret $(kubectl -n kubernetes-dashboard get secret | grep admin-user | awk '{print $1}')
+kubectl -n kube-system describe secret $(kubectl -n kube-system get secret | grep admin-user | awk '{print $1}')
 
 ## export crt
 grep 'client-certificate-data' ~/.kube/config | head -n 1 | awk '{print $2}' | base64 -d >> kubecfg.crt
@@ -44,14 +45,12 @@ cat kubecfg.key
 openssl pkcs12 -export -clcerts -inkey kubecfg.key -in kubecfg.crt -out kubecfg.p12 -name "kubernetes-admin"
 Enter Export Password: secretPassword
 Verifying - Enter Export Password: secretPassword
-ll kubecfg.p12
-ll /etc/kubernetes/pki/ca.crt
 
 ## copy files to /vagrant
 sudo cp /etc/kubernetes/pki/ca.crt /vagrant/ca.crt
 sudo cp kubecfg.p12 /vagrant/kubecfg.p12
 
-## add certificate to macOS
+## add certificate in macOS
 security add-trusted-cert \
   -r trustRoot \
   -k "$HOME/Library/Keychains/login.keychain" \
@@ -68,7 +67,7 @@ Kubernetes master is running at https://192.168.1.10:6443
 KubeDNS is running at https://192.168.1.10:6443/api/v1/namespaces/kube-system/services/kube-dns:dns/proxy
 
 ## get dashboard url
-https://192.168.1.10:6443/api/v1/namespaces/kubernetes-dashboard/services/https:kubernetes-dashboard:/proxy
-https://dooheehong323:6443/api/v1/namespaces/kubernetes-dashboard/services/https:kubernetes-dashboard:/proxy
+https://192.168.1.10:6443/api/v1/namespaces/kube-system/services/https:kube-system:/proxy
+https://dooheehong323:6443/api/v1/namespaces/kube-system/services/https:kube-system:/proxy
 
 

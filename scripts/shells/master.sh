@@ -37,7 +37,18 @@ echo "alias k='kubectl --kubeconfig ~/.kube/config'" >> ~/.bashrc
 echo 'complete -F __start_kubectl k' >> ~/.bashrc
 source ~/.bashrc
 
+echo "" >> /home/vagrant/.bashrc
+echo "alias ll='ls -al'" >> /home/vagrant/.bashrc
+echo "alias k='kubectl --kubeconfig ~/.kube/config'" >> /home/vagrant/.bashrc
+echo 'complete -F __start_kubectl k' >> /home/vagrant/.bashrc
+source /home/vagrant/.bashrc
+
 ##################################################################
 # call monitoring install script
 ##################################################################
-bash /vagrant/scripts/monitor/monitor.sh
+#bash /vagrant/scripts/shells/dashboard.sh
+
+##################################################################
+# call monitoring install script
+##################################################################
+#bash /vagrant/scripts/monitor/monitor.sh
