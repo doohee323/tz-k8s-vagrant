@@ -14,6 +14,8 @@ to project root directory.
     cp scripts/shell/Vagrantfile Vagrantfile
     or
     cp scripts/ansible/Vagrantfile Vagrantfile
+    or
+    cp scripts/monitor/Vagrantfile Vagrantfile
 ```
 
 ## -. Run VMs with k8s 

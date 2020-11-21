@@ -31,9 +31,13 @@ sudo cp /root/.kube/config /home/vagrant/.kube/config
 sudo chown -Rf vagrant:vagrant /home/vagrant/.kube
 sudo cp /root/.kube/config /vagrant/config
 
-
 echo "" >> ~/.bashrc
 echo "alias ll='ls -al'" >> ~/.bashrc
 echo "alias k='kubectl --kubeconfig ~/.kube/config'" >> ~/.bashrc
 echo 'complete -F __start_kubectl k' >> ~/.bashrc
 source ~/.bashrc
+
+##################################################################
+# call monitoring install script
+##################################################################
+bash /vagrant/scripts/monitor/monitor.sh

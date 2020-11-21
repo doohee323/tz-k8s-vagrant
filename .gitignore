@@ -5,3 +5,6 @@ cluster.*
 config
 join-command
 projects
+kubecfg.p12
+ca.crt
+get_helm.sh

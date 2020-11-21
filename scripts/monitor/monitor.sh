@@ -2,18 +2,20 @@
 
 #set -x
 
-echo "## [ install helm ] ######################################################
-###https://twofootdog.tistory.com/17
-###https://gruuuuu.github.io/cloud/monitoring-02/#
+echo "" >> ~/.bashrc
+echo "alias ll='ls -al'" >> ~/.bashrc
+echo "alias k='kubectl --kubeconfig ~/.kube/config'" >> ~/.bashrc
+echo 'complete -F __start_kubectl k' >> ~/.bashrc
+source ~/.bashrc
 
+echo "## [ install helm ] ######################################################
 sudo curl -fsSL -o get_helm.sh https://raw.githubusercontent.com/helm/helm/master/scripts/get-helm-3
-sudo chmod 700 get_helm.sh
-sudo ./get_helm.sh
+sudo bash get_helm.sh
 
 helm repo add stable https://charts.helm.sh/stable
 helm repo update
 
-sudo cp -Rf .kube /home/vagrant
+sudo cp -Rf /root/.kube /home/vagrant
 sudo chown -Rf vagrant:vagrant /home/vagrant/.kube
 su - vagrant
 kubectl get po -n kube-system
@@ -21,9 +23,7 @@ kubectl get po -n kube-system
 export HELM_HOST=localhost:44134
 
 echo "## [ install prometheus ] #############################"
-
-#kubectl create namespace monitoring
-
+kubectl create namespace monitoring
 #kubectl create serviceaccount tiller -n monitoring
 #kubectl create clusterrolebinding tiller --clusterrole cluster-admin --serviceaccount=monitoring:tiller -n monitoring
 #kubectl create clusterrolebinding tiller-cluster-rule --clusterrole=cluster-admin --serviceaccount=monitoring:tiller -n monitoring
@@ -45,6 +45,8 @@ pushgateway:
         enabled: false
 EOF
 
+sleep 30
+
 helm upgrade -f volumeF.yaml monitor stable/prometheus -n monitoring
 
 kubectl get svc -n monitoring
@@ -58,9 +60,9 @@ echo "curl http://192.168.1.10:32449"
 echo "## [ install grafana ] #############################"
 helm search repo stable | grep grafana
 helm install --generate-name stable/prometheus-operator -n monitoring
-kubectl get svc | grep grafana
+kubectl get svc -n monitoring | grep grafana
 
-kubectl patch svc `kubectl get svc | grep grafana | awk '{print $1}'` --type='json' -p '[{"op":"replace","path":"/spec/type","value":"NodePort"},{"op":"replace","path":"/spec/ports/0/nodePort","value":30912}]'
+kubectl patch svc `kubectl get svc -n monitoring | grep grafana | awk '{print $1}'` --type='json' -p '[{"op":"replace","path":"/spec/type","value":"NodePort"},{"op":"replace","path":"/spec/ports/0/nodePort","value":30912}]' -n monitoring
 
 #kubectl get service/my-prometheus-operator-grafana -n monitoring -o yaml > grafana.yaml
 #sed -ie "s|ClusterIP|LoadBalancer|g" grafana.yaml
