@@ -14,10 +14,14 @@ Vagrant.configure("2") do |config|
   config.vm.define "k8s-master" do |master|
     master.vm.box = IMAGE_NAME
     master.vm.network "private_network", ip: "192.168.1.10"
+    master.vm.network "forwarded_port", guest: 22, host: 60010, auto_correct: true, id: "ssh"
     master.vm.network "forwarded_port", guest: 6443, host: 6443
     master.vm.network "forwarded_port", guest: 80, host: 8080
     master.vm.network "forwarded_port", guest: 443, host: 8080
-    master.vm.network "forwarded_port", guest: 30080, host: 30080
+    master.vm.network "forwarded_port", guest: 31000, host: 31000   # jenkins
+    master.vm.network "forwarded_port", guest: 32449, host: 32449   # prometheus
+    master.vm.network "forwarded_port", guest: 30912, host: 30912   # grafana
+    master.vm.network "forwarded_port", guest: 32062, host: 32062   # admin
     master.vm.hostname = "k8s-master"
     master.vm.provision "shell", :path => File.join(File.dirname(__FILE__),"scripts/shells/master.sh"), :args => master.vm.hostname
   end
@@ -26,6 +30,7 @@ Vagrant.configure("2") do |config|
     config.vm.define "node-#{i}" do |node|
         node.vm.box = IMAGE_NAME
         node.vm.network "private_network", ip: "192.168.1.#{i + 11}"
+        node.vm.network "forwarded_port", guest: 22, host: "6010#{i}", auto_correct: true, id: "ssh"
         node.vm.hostname = "node-#{i}"
         node.vm.provision "shell", :path => File.join(File.dirname(__FILE__),"scripts/shells/node.sh"), :args => node.vm.hostname
     end

@@ -46,14 +46,38 @@ bash install.sh
 ## build a simple jenkins project
 ###################################################
 ```
-bash build.sh
 
+ - get jenkins url
+   in Workloads
+   => http://192.168.1.10:31000/
+
+ - install jenkins plugins
+   http://192.168.1.10:31000/pluginManager/available
+   install "Kubernetes plugin"
+   https://plugins.jenkins.io/kubernetes/
+
+ - setting kubernetes plugin
+   http://192.168.1.10:31000/configureClouds/
+   $> kubectl cluster-info
+   Kubernetes Url: https://192.168.1.10
+   Disable https certificate check: check
+   Kubernetes Namespace: default
+   Credentials: Jenkins
+        Username: doohee323
+        Password: xxx    -> https://github.com/settings/tokens
+        ID: GitHub
+
+   kubectl get svc | grep jenkins
+    NAME         TYPE        CLUSTER-IP      EXTERNAL-IP   PORT(S)                          AGE
+    jenkins      NodePort    10.103.95.248   <none>        8080:31000/TCP,50000:30263/TCP   17m
+   Jenkins URL: http://10.103.95.248:8080
+
+   Pod Templates: slave1
+       Containers: slave1
+       Docker image: doohee323/jenkins-slave
+
+ - make a job
+   job name: slave1
+   build > execute shell: echo "i am slave1"; sleep 60
 ```
 
-###################################################
-## build a java jenkins project
-###################################################
-```
-vi scripts/jenkins/java/README.md
-
-```

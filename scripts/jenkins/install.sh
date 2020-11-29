@@ -1,8 +1,20 @@
 #!/usr/bin/env bash
 
-#set -x
+cd /vagrant/scripts/jenkins
 
 echo "## [ Make an jenkins env ] #############################"
+set +x
+
+echo -n "Enter your docker ID: "
+read docker_id
+echo -n "Enter your docker Password: "
+read docker_password
+
+export DOCKER_ID=${docker_id}
+export DOCKER_PASSWD=${docker_password}
+
+set -x
+
 #DOCKER_ID=doohee323
 #DOCKER_PASSWD=
 sudo chown -Rf vagrant:vagrant /var/run/docker.sock
@@ -20,7 +32,7 @@ docker push ${DOCKER_ID}/${JENKINS_IMG}:${BRANCH}
 echo "## [ Make a slave env ] #############################"
 JENKINS_SLAVE_IMG=jenkins-slave
 BRANCH=latest
-mkdir /home/vagrant/jenkins-slave
+mkdir -p /home/vagrant/jenkins-slave
 cat <<EOF | sudo tee /home/vagrant/jenkins-slave/Dockerfile
 FROM jenkins/jnlp-slave
 ENTRYPOINT ["jenkins-slave"]
@@ -41,8 +53,12 @@ echo "################################################"
 #        - name: jenkins
 #          image: doohee323/myjenkins:latest
 
-kubectl apply -f jenkins.yaml
+kubectl apply -f /vagrant/scripts/jenkins/jenkins.yaml
 
-echo "curl http://192.168.1.10:31000 in k8s-master"
-echo "curl http://localhost:31000 in host"
+echo "jenkins url: http://192.168.1.10:31000"
 
+echo "## [build a simple jenkins project] ##############################################"
+echo "read scripts/jenkins/README.md"
+
+echo "## [build a java jenkins project] ##############################################"
+echo "read scripts/jenkins/java/README.md"

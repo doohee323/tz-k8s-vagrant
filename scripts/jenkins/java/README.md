@@ -10,7 +10,7 @@ YOUR_DOCKERHUB_USERNAME: doohee323
 mkdir -p tz-k8s-vagrant/projects
 git clone https://github.com/devinterview-tz/fleetman-api-gateway.git
 
-## make a project
+## make a project in Jenkins
 new item
 name: api-gateway
 type: multibranch Pipeline
@@ -32,4 +32,5 @@ k get all | grep fleetman
 service/fleetman-api-gateway   NodePort    10.97.78.220    <none>        8080:30020/TCP                   19m
 
 curl http://10.97.78.220:8080
+
 
