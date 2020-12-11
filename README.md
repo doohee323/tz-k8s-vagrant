@@ -13,8 +13,10 @@ to project root directory.
 ## -. Refer to README.md for each version.
 ```
     - build a K8S in local vagrant VMs
+        vagrant -> VMs -> k8s -> monitoring -> jenkins -> teat-app build
         scripts/local/README.md
     - build a K8S in aws
+        vagrant -> terraform -> aws -> k8s -> monitoring -> jenkins -> teat-app build / packer
         scripts/terraform/README.md
 ```
 
