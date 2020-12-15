@@ -23,3 +23,5 @@ kubecfg.*
 .project
 *.bak
 .DS_Store
+*.csv
+tz-py-crawler
