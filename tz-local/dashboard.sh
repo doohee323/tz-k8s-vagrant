@@ -31,7 +31,7 @@ openssl pkcs12 -export -clcerts -inkey kubecfg.key -in kubecfg.crt -out kubecfg.
 
 ## copy files to /vagrant
 sudo cp -Rf /etc/kubernetes/pki/ca.crt /vagrant/ca.crt
-sudo cp -Rf kubecfg.p12 /vagrant/kubecfg.p12
+#sudo cp -Rf kubecfg.p12 /vagrant/kubecfg.p12
 
 echo "check url: "
 k cluster-info
@@ -43,7 +43,8 @@ echo "https://192.168.1.10:6443/api/v1/namespaces/kubernetes-dashboard/services/
 #https://dooheehong323:6443/api/v1/namespaces/kubernetes-dashboard/services/https:kubernetes-dashboard:/proxy/
 
 echo "get token: "
-k describe secret $(k -n kube-system get secret | grep admin-user | awk '{print $1}') -n kube-system
+TOKEN=$(k -n kube-system describe secret default| awk '$1=="token:"{print $2}')
+echo $TOKEN
 
 echo "add certificate in macOS to fix certi error!!:"
 
