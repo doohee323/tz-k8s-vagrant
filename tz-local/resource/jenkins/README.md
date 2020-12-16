@@ -5,7 +5,7 @@
 #  --docker-server=https://index.docker.io/v1/   \
 #  --docker-username=doohee323   \
 #  --docker-password=xxxxxx   \
-#  --docker-email=doohee323@gmail.com
+#  --docker-email=doohee323@gmail.com -n jenkins
 #
 #vi jenkins.yaml
 #...
