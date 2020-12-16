@@ -22,4 +22,4 @@ bash /vagrant/tz-local/resource/jenkins/install.sh
 ##################################################################
 # call tz-py-crawler app in k8s
 ##################################################################
-bash /vagrant/tz-local/resource/tz-py-crawler.sh
+bash /vagrant/projects/tz-py-crawler.sh
