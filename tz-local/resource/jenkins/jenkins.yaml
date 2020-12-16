@@ -84,9 +84,11 @@ spec:
       labels:
         app: jenkins
     spec:
+      imagePullSecrets:
+        - name: regcred
       containers:
         - name: jenkins
-          image: DOCKER_ID/myjenkins:latest
+          image: doohee323/myjenkins:latest
           env:
             - name: JAVA_OPTS
               value: -Djenkins.install.runSetupWizard=false

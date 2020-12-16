@@ -31,10 +31,6 @@ sudo cp /root/.kube/config /home/vagrant/.kube/config
 sudo chown -Rf vagrant:vagrant /home/vagrant/.kube
 sudo cp /root/.kube/config /vagrant/config
 
-sudo sed -i "s/\$KUBELET_EXTRA_ARGS/\$KUBELET_EXTRA_ARGS --node-ip=192.168.1.10/g" /etc/systemd/system/kubelet.service.d/10-kubeadm.conf
-systemctl daemon-reload && systemctl restart kubelet
-kubectl get nodes -o wide
-
 echo '
 alias ll="ls -al"
 alias k="kubectl --kubeconfig ~/.kube/config"
@@ -58,5 +54,12 @@ sudo chown -Rf vagrant:vagrant /home/vagrant/.bashrc
 # call jenkins install script
 ##################################################################
 #bash /vagrant/scripts/jenkins/install.sh
+
+exit 0
+
+sudo sed -i "s/\$KUBELET_EXTRA_ARGS/\$KUBELET_EXTRA_ARGS --node-ip=192.168.1.10/g" /etc/systemd/system/kubelet.service.d/10-kubeadm.conf
+systemctl daemon-reload && systemctl restart kubelet
+kubectl get nodes -o wide
+
 
 
