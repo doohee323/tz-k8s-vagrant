@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 #set -x
-cd /vagrant/tz-local/resource
+cd /vagrant/projects
 git clone https://github.com/doohee323/tz-py-crawler.git
 
 cd tz-py-crawler
