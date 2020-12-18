@@ -36,3 +36,12 @@ fi
 mv Vagrantfile.bak Vagrantfile
 
 exit 0
+
+vagrant snapshot ls
+
+vagrant snapshot save k8s-master k8s-master_1 --force
+vagrant snapshot save node-1 node-1_1 --force
+
+vagrant snapshot restore k8s-master k8s-master_1
+vagrant snapshot restore node-1 node-1_1
+

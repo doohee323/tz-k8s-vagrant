@@ -127,9 +127,9 @@ echo '
   bash /vagrant/scripts/terraform/remove_all.sh
   vagrant destroy -f  # in the outside of vagrant
 #######################################################################
-' > /home/vagrant/info
-sudo sed -i "s|MASTER_IP|${master_ip}|g" /home/vagrant/info
-cat /home/vagrant/info
+' > /vagrant/info
+sudo sed -i "s|MASTER_IP|${master_ip}|g" /vagrant/info
+cat /vagrant/info
 
 ############################################################
 ## install K8S monitoring tools in aws

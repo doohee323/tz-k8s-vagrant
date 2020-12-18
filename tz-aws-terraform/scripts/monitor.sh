@@ -9,18 +9,6 @@ alias k='kubectl --kubeconfig ~/.kube/config'
 
 cd /home/vagrant
 
-echo "## [ install helm ] ######################################################"
-sudo curl -fsSL -o get_helm.sh https://raw.githubusercontent.com/helm/helm/master/scripts/get-helm-3
-sudo bash get_helm.sh
-sudo rm -Rf get_helm.sh
-
-helm repo add stable https://charts.helm.sh/stable
-helm repo update
-
-k get po -n kube-system
-
-#export HELM_HOST=localhost:44134
-
 echo "## [ install prometheus ] #############################"
 k create namespace monitoring
 #k create serviceaccount tiller -n monitoring
@@ -97,8 +85,8 @@ echo '
   admin / prom-operator
   import grafana ID from https://grafana.com/grafana/dashboards into your grafana!
 #######################################################################
-' >> /home/vagrant/info
-sudo sed -i "s|MASTER_IP|${master_ip}|g" /home/vagrant/info
-cat /home/vagrant/info
+' >> /vagrant/info
+sudo sed -i "s|MASTER_IP|${master_ip}|g" /vagrant/info
+cat /vagrant/info
 
 exit 0

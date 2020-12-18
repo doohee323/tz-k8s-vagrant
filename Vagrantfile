@@ -18,8 +18,10 @@ Vagrant.configure("2") do |config|
     master.vm.network "forwarded_port", guest: 22, host: 60010, auto_correct: true, id: "ssh"
     master.vm.network "forwarded_port", guest: 6443, host: 6443
     master.vm.network "forwarded_port", guest: 80, host: 8080
-    master.vm.network "forwarded_port", guest: 443, host: 8080
-    master.vm.network "forwarded_port", guest: 443, host: 8080
+    master.vm.network "forwarded_port", guest: 8001, host: 8001
+    master.vm.network "forwarded_port", guest: 443, host: 443
+    master.vm.network "forwarded_port", guest: 32699, host: 32699   # dashboard
+    master.vm.network "forwarded_port", guest: 32698, host: 32698   # forwarding test
     master.vm.network "forwarded_port", guest: 32449, host: 32449
     master.vm.network "forwarded_port", guest: 30912, host: 30912
     master.vm.network "forwarded_port", guest: 31000, host: 31000

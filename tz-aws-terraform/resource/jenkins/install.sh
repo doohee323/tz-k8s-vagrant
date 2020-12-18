@@ -63,6 +63,6 @@ echo '
 - build a java jenkins project
   read jenkins/java/README.md
 #######################################################################
-' >> /home/vagrant/info
-sudo sed -i "s|MASTER_IP|${master_ip}|g" /home/vagrant/info
-cat /home/vagrant/info
+' >> /vagrant/info
+sudo sed -i "s|MASTER_IP|${master_ip}|g" /vagrant/info
+cat /vagrant/info

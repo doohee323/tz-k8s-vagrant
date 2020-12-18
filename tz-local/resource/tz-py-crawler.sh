@@ -13,7 +13,7 @@ echo '
   curl -d "watch_id=ioNng23DkIM" -X POST http://localhost:30007/crawl
   csv files will be made under youtube folder or ~/tz-k8s-vagrant/data
 #######################################################################
-' >> /home/vagrant/info
-cat /home/vagrant/info
+' >> /vagrant/info
+cat /vagrant/info
 
 

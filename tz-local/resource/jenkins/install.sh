@@ -47,5 +47,5 @@ echo '
 - build a java jenkins project
   read test-app/java/README.md
 #######################################################################
-' >> /home/vagrant/info
-cat /home/vagrant/info
+' >> /vagrant/info
+cat /vagrant/info
