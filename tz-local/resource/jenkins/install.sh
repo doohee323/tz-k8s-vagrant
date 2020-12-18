@@ -32,6 +32,8 @@ else
   DOCKER_ID='doohee323'
 fi
 
+k create namespace jenkins
+
 cp -Rf jenkins.yaml jenkins_run.yaml
 sudo sed -i "s|DOCKER_ID|${DOCKER_ID}|g" jenkins_run.yaml
 k apply -f jenkins_run.yaml
