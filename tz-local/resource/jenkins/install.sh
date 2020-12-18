@@ -39,7 +39,7 @@ sudo sed -i "s|DOCKER_ID|${DOCKER_ID}|g" jenkins_run.yaml
 k apply -f jenkins_run.yaml
 sudo rm -Rf jenkins_run.yaml
 
-sleep 30
+sleep 60
 
 echo '
 ##[ Jenkins ]##########################################################

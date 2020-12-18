@@ -30,18 +30,17 @@ helm repo update
 
 #export HELM_HOST=localhost:44134
 
+sudo rm -Rf /vagrant/info
+
 ##################################################################
 # call dashboard install script
 ##################################################################
-bash /vagrant/tz-local/dashboard/install.sh
+bash /vagrant/tz-local/resource/dashboard/install.sh
 
 ##################################################################
 # call monitoring install script
 ##################################################################
 bash /vagrant/tz-local/monitor.sh
-
-exit 0
-
 
 ##################################################################
 # call jenkins install script
@@ -51,4 +50,6 @@ bash /vagrant/tz-local/resource/jenkins/install.sh
 ##################################################################
 # call tz-py-crawler app in k8s
 ##################################################################
-bash /vagrant/projects/tz-py-crawler.sh
+bash /vagrant/tz-local/resource/tz-py-crawler.sh
+
+exit 0
