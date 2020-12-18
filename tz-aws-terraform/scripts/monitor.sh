@@ -1,19 +1,15 @@
 #!/usr/bin/env bash
 
-shopt -s expand_aliases
-
 #set -x
+shopt -s expand_aliases
+alias k='kubectl --kubeconfig ~/.kube/config'
 
 TZ_PROJECT=tz-aws-terraform
-alias k='kubectl --kubeconfig ~/.kube/config'
 
 cd /home/vagrant
 
 echo "## [ install prometheus ] #############################"
 k create namespace monitoring
-#k create serviceaccount tiller -n monitoring
-#k create clusterrolebinding tiller --clusterrole cluster-admin --serviceaccount=monitoring:tiller -n monitoring
-#k create clusterrolebinding tiller-cluster-rule --clusterrole=cluster-admin --serviceaccount=monitoring:tiller -n monitoring
 
 helm search repo stable | grep prometheus
 helm install monitor stable/prometheus -n monitoring
@@ -32,19 +28,12 @@ pushgateway:
         enabled: false
 EOF
 
-echo "sleep 30"
-sleep 30
-
 helm upgrade -f volumeF.yaml monitor stable/prometheus -n monitoring
 
 k get svc -n monitoring
 k patch svc monitor-prometheus-server --type='json' -p '[{"op":"replace","path":"/spec/type","value":"NodePort"},{"op":"replace","path":"/spec/ports/0/nodePort","value":32449}]' -n monitoring
-#k patch svc monitor-prometheus-server --type='json' -p '[{"op":"replace","path":"/spec/type","value":"NodePort"}]' -n monitoring
 
-echo "sleep 30"
-sleep 30
-
-cd /vagrant/${TZ_PROJECT}
+cd /home/ubuntu/${TZ_PROJECT}
 master_ip=`terraform output | grep -A 2 "public_ip" | head -n 1 | awk '{print $3}'`
 export master_ip=`echo $master_ip | sed -e 's/\"//g;s/ //;s/,//'`
 private_ip=`terraform output | grep -A 2 "private_ip" | head -n 1 | awk '{print $3}'`
@@ -55,12 +44,19 @@ k get svc -n monitoring | grep monitor-prometheus-server
 echo "curl http://${private_ip}:32449 in master"
 
 echo "## [ install grafana ] #############################"
+helm repo add stable https://charts.helm.sh/stable
+helm repo update
+
 helm search repo stable | grep grafana
-helm install --generate-name stable/prometheus-operator -n monitoring
+helm install --wait --timeout 30s --generate-name stable/prometheus-operator -n monitoring
+#helm list -n monitoring
+#helm delete prometheus-operator-1608326191 -n monitoring
 k get svc -n monitoring | grep grafana
 
 k patch svc `k get svc -n monitoring | grep grafana | awk '{print $1}'` --type='json' -p '[{"op":"replace","path":"/spec/type","value":"NodePort"},{"op":"replace","path":"/spec/ports/0/nodePort","value":30912}]' -n monitoring
 echo "curl http://${private_ip}:30912 in master"
+
+k get all -n monitoring
 
 echo '
 # prometheus

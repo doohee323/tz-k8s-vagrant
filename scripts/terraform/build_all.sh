@@ -132,6 +132,11 @@ sudo sed -i "s|MASTER_IP|${master_ip}|g" /vagrant/info
 cat /vagrant/info
 
 ############################################################
+## install K8S dashboard in aws
+############################################################
+bash /vagrant/${TZ_PROJECT}/resource/dashboard/install.sh
+
+############################################################
 ## install K8S monitoring tools in aws
 ############################################################
 bash /vagrant/${TZ_PROJECT}/scripts/monitor.sh
