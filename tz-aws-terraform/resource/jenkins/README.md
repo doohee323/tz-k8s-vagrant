@@ -4,17 +4,18 @@
 #kubectl create secret docker-registry regcred \
 #  --docker-server=https://index.docker.io/v1/   \
 #  --docker-username=doohee323   \
-#  --docker-password=   \
-#  --docker-email=doohee323@gmail.com
+#  --docker-password=xxxxxx   \
+#  --docker-email=doohee323@gmail.com -n jenkins
 #
 #vi jenkins.yaml
 #...
 #    spec:
+#      imagePullSecrets:
+#        - name: regcred
 #      containers:
 #        - name: jenkins
-#          image: myjenkins:latest
-#        imagePullSecrets:
-#        - name: regcred
+#          image: doohee323/myjenkins:latest
+#          env:
 
 #2) public image on docker hub
 #DOCKER_ID=doohee323

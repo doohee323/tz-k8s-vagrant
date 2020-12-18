@@ -84,6 +84,8 @@ spec:
       labels:
         app: jenkins
     spec:
+#      imagePullSecrets:
+#        - name: regcred
       containers:
         - name: jenkins
           image: DOCKER_ID/myjenkins:latest

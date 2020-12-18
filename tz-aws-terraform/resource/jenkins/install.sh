@@ -61,7 +61,7 @@ echo '
 - build a simple jenkins project
   read jenkins/README.md
 - build a java jenkins project
-  read jenkins/java/README.md
+  read test-app/java/README.md
 #######################################################################
 ' >> /vagrant/info
 sudo sed -i "s|MASTER_IP|${master_ip}|g" /vagrant/info
