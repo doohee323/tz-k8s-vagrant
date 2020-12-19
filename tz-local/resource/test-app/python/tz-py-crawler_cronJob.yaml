@@ -13,7 +13,7 @@ spec:
             image: doohee323/tz-py-crawler:latest
             imagePullPolicy: IfNotPresent
             args:
-            - /usr/bin/python
+            - /usr/bin/python3
             - /code/youtube/youtube/cli.py
             - -l
             - /mnt/list.txt
