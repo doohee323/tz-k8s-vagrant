@@ -2,8 +2,16 @@
 
 set -x
 
-cd /vagrant/projects/tz-py-crawler
+USERNAME=$1
+PASSWD=$2
 
+cd /var/jenkins_home/workspace/tz-py-crawler_push
+
+if [[ ! -d 'tz-py-crawler' ]]; then
+  git clone https://github.com/doohee323/tz-py-crawler.git
+fi
+
+cd tz-py-crawler
 
 #vi Dockerfile
 #CMD [ "python", "/code/youtube/youtube/server.py" ]
