@@ -10,7 +10,7 @@ spec:
         spec:
           containers:
           - name: tz-py-crawler
-            image: busybox
+            image: doohee323/tz-py-crawler:latest
             imagePullPolicy: IfNotPresent
             args:
             - /usr/bin/python
