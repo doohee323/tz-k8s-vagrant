@@ -22,8 +22,5 @@ docker login -u="$USERNAME" -p="$PASSWD"
 docker tag tz-py-crawler:latest doohee323/tz-py-crawler:latest
 docker push doohee323/tz-py-crawler:latest
 
-k delete -f tz-py-crawler_cronJob.yaml
-k apply -f tz-py-crawler_cronJob.yaml
-
 exit 0
 
