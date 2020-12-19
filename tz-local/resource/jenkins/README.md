@@ -54,6 +54,7 @@ bash install.sh
 
  - install jenkins plugins
    http://192.168.1.10:31000/pluginManager/available
+   install "Matrix Authorization Strategy"
    install "Kubernetes"
    https://plugins.jenkins.io/kubernetes/
 
