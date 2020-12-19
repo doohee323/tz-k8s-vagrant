@@ -1,0 +1,20 @@
+apiVersion: batch/v1beta1
+kind: CronJob
+metadata:
+  name: tz-py-crawler
+spec:
+  schedule: "* * * * *" # run every minute
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          containers:
+          - name: tz-py-crawler
+            image: busybox
+            imagePullPolicy: IfNotPresent
+            args:
+            - /usr/bin/python
+            - /code/youtube/youtube/cli.py
+            - -l
+            - /mnt/list.txt
+          restartPolicy: OnFailure
