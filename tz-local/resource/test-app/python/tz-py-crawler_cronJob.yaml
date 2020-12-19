@@ -14,7 +14,7 @@ spec:
             imagePullPolicy: IfNotPresent
             args:
             - /usr/bin/python3
-            - /code/youtube/youtube/cli.py
+            - /code/youtube/cli.py
             - -l
             - /mnt/list.txt
           restartPolicy: OnFailure
