@@ -7,11 +7,13 @@ PASSWD=$2
 
 cd /var/jenkins_home/workspace/tz-py-crawler_push
 
-if [[ ! -d 'tz-py-crawler' ]]; then
+if [[ ! -d 'projects/tz-py-crawler' ]]; then
+  mkdir projects
+  cd projects
   git clone https://github.com/doohee323/tz-py-crawler.git
 fi
 
-cd tz-py-crawler
+cd /var/jenkins_home/workspace/tz-py-crawler_push/projects/tz-py-crawler
 
 #vi Dockerfile
 #CMD [ "python", "/code/youtube/youtube/server.py" ]
