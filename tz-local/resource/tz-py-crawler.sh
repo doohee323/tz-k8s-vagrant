@@ -17,4 +17,4 @@ echo '
 ' >> /vagrant/info
 cat /vagrant/info
 
-#k -f apply /vagrant/tz-local/resource/test-app/python/tz-py-crawler_autoscale.yaml
+#k apply -f /vagrant/tz-local/resource/test-app/python/tz-py-crawler_autoscale.yaml
