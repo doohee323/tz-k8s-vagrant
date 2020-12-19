@@ -1,8 +1,10 @@
 #!/usr/bin/env bash
 
-#set -x
+set -x
 
 cd /vagrant/projects/tz-py-crawler
+
+
 #vi Dockerfile
 #CMD [ "python", "/code/youtube/youtube/server.py" ]
 docker build -t tz-py-crawler .
