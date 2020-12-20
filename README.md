@@ -15,7 +15,7 @@ to project root directory.
     -. build a test app(youtoube scrawler) in jenkins
     -. deploy the app to k8s 
     
-    -. support AWS with terraform
+    -. support AWS with terraform / packer
 ```
 
 ## -. Run VMs with k8s 
