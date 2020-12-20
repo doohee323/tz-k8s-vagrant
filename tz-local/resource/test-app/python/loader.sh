@@ -26,4 +26,4 @@ k describe nodes
 k autoscale deployment tz-py-crawler --cpu-percent 20 --min 1 --max 10
 k delete hpa tz-py-crawler
 
-k scale --replicas=10 deployment tz-py-crawler
+k scale --replicas=5 deployment tz-py-crawler

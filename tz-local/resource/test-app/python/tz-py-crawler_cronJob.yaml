@@ -3,7 +3,8 @@ kind: CronJob
 metadata:
   name: tz-py-crawler-job
 spec:
-  schedule: "* * * * *" # run every minute
+#  schedule: "* * * * *" # run every minute
+  schedule: "*/5 * * * *" # run every minute
   jobTemplate:
     spec:
       template:
