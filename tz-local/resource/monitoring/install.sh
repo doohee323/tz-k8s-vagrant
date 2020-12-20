@@ -52,14 +52,13 @@ echo "curl http://${master_ip}:30601 in master"
 
 k get all -n monitoring
 
-echo "## [ Monitoring with ELK ] #############################"
-k apply -f /vagrant/tz-local/resource/monitoring/fluentd-config.yaml
-k apply -f /vagrant/tz-local/resource/monitoring/elastic-stack.yaml
-k describe svc kibana-logging -n kube-system
-
-KIBANA_LB=`k describe svc kibana-logging -n kube-system | grep 'LoadBalancer Ingress:' | awk '{print $3}'`
-echo "curl http://${master_ip}:25601 in master"
-echo "################################################"
+#echo "## [ Monitoring with ELK ] #############################"
+#k apply -f /vagrant/tz-local/resource/monitoring/fluentd-config.yaml
+#k apply -f /vagrant/tz-local/resource/monitoring/elastic-stack.yaml
+#k get svc kibana-logging -n kube-system
+#KIBANA_LB=`k describe svc kibana-logging -n kube-system | grep 'LoadBalancer Ingress:' | awk '{print $3}'`
+#echo "curl http://${master_ip}:25601 in master"
+#echo "################################################"
 
 echo '
 ##[ Monitoring ]##########################################################
