@@ -13,8 +13,17 @@ spec:
             image: doohee323/tz-py-crawler:latest
             imagePullPolicy: IfNotPresent
             args:
-            - /usr/bin/python3
-            - /code/youtube/cli.py
-            - -l
-            - /mnt/list.txt
+            - /bin/sleep
+            - "10000000"
           restartPolicy: OnFailure
+
+#            args:
+#            - /usr/bin/python3
+#            - /code/youtube/cli.py
+#            - -l
+#            - /mnt/list.txt
+
+
+#            args:
+#            - /usr/sleep
+#            - "10000000"
