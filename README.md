@@ -3,6 +3,21 @@
 It supports two version of k8s installation in terraform or local VMs.
 to project root directory. 
 
+![Architecture1](./resource/tz-k8s-vagrant-env.png)
+
+## -. Features 
+`` 
+    -. build a vagrant env
+    -. install k8s master and nodes
+    -. install dashboard
+    -. install monitoring (Prometheus, Grafana)
+    -. install jenkins
+    -. build a test app(youtoube scrawler) in jenkins
+    -. deploy the app to k8s 
+    
+    -. support AWS with terraform
+``
+
 ## -. Run VMs with k8s 
 ``` 
     bash run.sh
