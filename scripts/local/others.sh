@@ -40,7 +40,7 @@ bash /vagrant/tz-local/resource/dashboard/install.sh
 ##################################################################
 # call monitoring install script
 ##################################################################
-bash /vagrant/tz-local/monitor.sh
+bash /vagrant/tz-local/resource/monitoring/install.sh
 
 ##################################################################
 # call jenkins install script
