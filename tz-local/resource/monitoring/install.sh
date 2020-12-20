@@ -48,17 +48,17 @@ helm install --wait --timeout 30s --generate-name stable/prometheus-operator -n 
 k get svc -n monitoring | grep grafana
 
 k patch svc `k get svc -n monitoring | grep grafana | awk '{print $1}'` --type='json' -p '[{"op":"replace","path":"/spec/type","value":"NodePort"},{"op":"replace","path":"/spec/ports/0/nodePort","value":30912}]' -n monitoring
-echo "curl http://${master_ip}:30912 in master"
+echo "curl http://${master_ip}:30601 in master"
 
 k get all -n monitoring
 
 echo "## [ Monitoring with ELK ] #############################"
-k apply -f /vagrant/tz-local/resource/monitoring/elastic-stack.yaml
 k apply -f /vagrant/tz-local/resource/monitoring/fluentd-config.yaml
+k apply -f /vagrant/tz-local/resource/monitoring/elastic-stack.yaml
 k describe svc kibana-logging -n kube-system
 
-KIBANA_LB=`kubectl describe svc kibana-logging -n kube-system | grep 'LoadBalancer Ingress:' | awk '{print $3}'`
-echo "KIBANA_LB: http://$KIBANA_LB:5601"
+KIBANA_LB=`k describe svc kibana-logging -n kube-system | grep 'LoadBalancer Ingress:' | awk '{print $3}'`
+echo "curl http://${master_ip}:25601 in master"
 echo "################################################"
 
 echo '

@@ -308,10 +308,12 @@ metadata:
     addonmanager.kubernetes.io/mode: Reconcile
     kubernetes.io/name: "Kibana"
 spec:
-  ports:
-  - port: 5601
-    protocol: TCP
-    targetPort: ui
+  type: NodePort
   selector:
     k8s-app: kibana-logging
-  type: LoadBalancer
+  ports:
+    - port: 5601
+      targetPort: ui
+      nodePort: 30601
+
+
