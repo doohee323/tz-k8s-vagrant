@@ -1,7 +1,7 @@
 apiVersion: batch/v1beta1
 kind: CronJob
 metadata:
-  name: tz-py-crawler
+  name: tz-py-crawler-job
 spec:
   schedule: "* * * * *" # run every minute
   jobTemplate:
@@ -9,7 +9,7 @@ spec:
       template:
         spec:
           containers:
-          - name: tz-py-crawler
+          - name: tz-py-crawler-job
             image: doohee323/tz-py-crawler:latest
             imagePullPolicy: IfNotPresent
             args:
