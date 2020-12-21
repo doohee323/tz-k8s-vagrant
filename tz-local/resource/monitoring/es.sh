@@ -28,7 +28,7 @@ k apply -f /vagrant/tz-local/resource/monitoring/elastic-stack.yaml
 
 k get all -n kube-system
 
-sleep 10
+sleep 30
 
 # if pvc issue occurs,
 k get pvc -n kube-system

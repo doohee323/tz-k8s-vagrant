@@ -1,0 +1,374 @@
+{
+    "apiVersion": "v1",
+    "kind": "Pod",
+    "metadata": {
+        "annotations": {
+            "cni.projectcalico.org/podIP": "172.16.84.161/32"
+        },
+        "creationTimestamp": "2020-12-21T19:32:23Z",
+        "generateName": "kibana-kibana-86cb487f94-",
+        "labels": {
+            "app": "kibana",
+            "pod-template-hash": "86cb487f94",
+            "release": "kibana"
+        },
+        "managedFields": [
+            {
+                "apiVersion": "v1",
+                "fieldsType": "FieldsV1",
+                "fieldsV1": {
+                    "f:metadata": {
+                        "f:generateName": {},
+                        "f:labels": {
+                            ".": {},
+                            "f:app": {},
+                            "f:pod-template-hash": {},
+                            "f:release": {}
+                        },
+                        "f:ownerReferences": {
+                            ".": {},
+                            "k:{\"uid\":\"4a06b73f-ee8d-42ea-aa9e-ccd0ce12f84b\"}": {
+                                ".": {},
+                                "f:apiVersion": {},
+                                "f:blockOwnerDeletion": {},
+                                "f:controller": {},
+                                "f:kind": {},
+                                "f:name": {},
+                                "f:uid": {}
+                            }
+                        }
+                    },
+                    "f:spec": {
+                        "f:containers": {
+                            "k:{\"name\":\"kibana\"}": {
+                                ".": {},
+                                "f:env": {
+                                    ".": {},
+                                    "k:{\"name\":\"ELASTICSEARCH_HOSTS\"}": {
+                                        ".": {},
+                                        "f:name": {},
+                                        "f:value": {}
+                                    },
+                                    "k:{\"name\":\"NODE_OPTIONS\"}": {
+                                        ".": {},
+                                        "f:name": {},
+                                        "f:value": {}
+                                    },
+                                    "k:{\"name\":\"SERVER_HOST\"}": {
+                                        ".": {},
+                                        "f:name": {},
+                                        "f:value": {}
+                                    }
+                                },
+                                "f:image": {},
+                                "f:imagePullPolicy": {},
+                                "f:name": {},
+                                "f:ports": {
+                                    ".": {},
+                                    "k:{\"containerPort\":5601,\"protocol\":\"TCP\"}": {
+                                        ".": {},
+                                        "f:containerPort": {},
+                                        "f:protocol": {}
+                                    }
+                                },
+                                "f:readinessProbe": {
+                                    ".": {},
+                                    "f:exec": {
+                                        ".": {},
+                                        "f:command": {}
+                                    },
+                                    "f:failureThreshold": {},
+                                    "f:initialDelaySeconds": {},
+                                    "f:periodSeconds": {},
+                                    "f:successThreshold": {},
+                                    "f:timeoutSeconds": {}
+                                },
+                                "f:resources": {
+                                    ".": {},
+                                    "f:limits": {
+                                        ".": {},
+                                        "f:cpu": {},
+                                        "f:memory": {}
+                                    },
+                                    "f:requests": {
+                                        ".": {},
+                                        "f:cpu": {},
+                                        "f:memory": {}
+                                    }
+                                },
+                                "f:securityContext": {
+                                    ".": {},
+                                    "f:capabilities": {
+                                        ".": {},
+                                        "f:drop": {}
+                                    },
+                                    "f:runAsNonRoot": {},
+                                    "f:runAsUser": {}
+                                },
+                                "f:terminationMessagePath": {},
+                                "f:terminationMessagePolicy": {}
+                            }
+                        },
+                        "f:dnsPolicy": {},
+                        "f:enableServiceLinks": {},
+                        "f:restartPolicy": {},
+                        "f:schedulerName": {},
+                        "f:securityContext": {
+                            ".": {},
+                            "f:fsGroup": {}
+                        },
+                        "f:terminationGracePeriodSeconds": {}
+                    }
+                },
+                "manager": "kube-controller-manager",
+                "operation": "Update",
+                "time": "2020-12-21T19:32:23Z"
+            },
+            {
+                "apiVersion": "v1",
+                "fieldsType": "FieldsV1",
+                "fieldsV1": {
+                    "f:metadata": {
+                        "f:annotations": {
+                            ".": {},
+                            "f:cni.projectcalico.org/podIP": {}
+                        }
+                    }
+                },
+                "manager": "calico",
+                "operation": "Update",
+                "time": "2020-12-21T19:32:24Z"
+            },
+            {
+                "apiVersion": "v1",
+                "fieldsType": "FieldsV1",
+                "fieldsV1": {
+                    "f:status": {
+                        "f:conditions": {
+                            "k:{\"type\":\"ContainersReady\"}": {
+                                ".": {},
+                                "f:lastProbeTime": {},
+                                "f:lastTransitionTime": {},
+                                "f:message": {},
+                                "f:reason": {},
+                                "f:status": {},
+                                "f:type": {}
+                            },
+                            "k:{\"type\":\"Initialized\"}": {
+                                ".": {},
+                                "f:lastProbeTime": {},
+                                "f:lastTransitionTime": {},
+                                "f:status": {},
+                                "f:type": {}
+                            },
+                            "k:{\"type\":\"Ready\"}": {
+                                ".": {},
+                                "f:lastProbeTime": {},
+                                "f:lastTransitionTime": {},
+                                "f:message": {},
+                                "f:reason": {},
+                                "f:status": {},
+                                "f:type": {}
+                            }
+                        },
+                        "f:containerStatuses": {},
+                        "f:hostIP": {},
+                        "f:phase": {},
+                        "f:podIP": {},
+                        "f:podIPs": {
+                            ".": {},
+                            "k:{\"ip\":\"172.16.84.161\"}": {
+                                ".": {},
+                                "f:ip": {}
+                            }
+                        },
+                        "f:startTime": {}
+                    }
+                },
+                "manager": "kubelet",
+                "operation": "Update",
+                "time": "2020-12-21T19:32:26Z"
+            }
+        ],
+        "name": "kibana-kibana-86cb487f94-bwdpq",
+        "namespace": "default",
+        "ownerReferences": [
+            {
+                "apiVersion": "apps/v1",
+                "blockOwnerDeletion": true,
+                "controller": true,
+                "kind": "ReplicaSet",
+                "name": "kibana-kibana-86cb487f94",
+                "uid": "4a06b73f-ee8d-42ea-aa9e-ccd0ce12f84b"
+            }
+        ],
+        "resourceVersion": "26516",
+        "uid": "c2a70230-6521-40f0-82dc-c098c6de4c91"
+    },
+    "spec": {
+        "containers": [
+            {
+                "env": [
+                    {
+                        "name": "ELASTICSEARCH_HOSTS",
+                        "value": "http://elasticsearch-master:9200"
+                    },
+                    {
+                        "name": "SERVER_HOST",
+                        "value": "0.0.0.0"
+                    },
+                    {
+                        "name": "NODE_OPTIONS",
+                        "value": "--max-old-space-size=1800"
+                    }
+                ],
+                "image": "docker.elastic.co/kibana/kibana:7.10.1",
+                "imagePullPolicy": "IfNotPresent",
+                "name": "kibana",
+                "ports": [
+                    {
+                        "containerPort": 5601,
+                        "protocol": "TCP"
+                    }
+                ],
+                "readinessProbe": {
+                    "exec": {
+                        "command": [
+                            "sh",
+                            "-c",
+                            "#!/usr/bin/env bash -e\n\n# Disable nss cache to avoid filling dentry cache when calling curl\n# This is required with Kibana Docker using nss \u003c 3.52\nexport NSS_SDB_USE_CACHE=no\n\nhttp () {\n    local path=\"${1}\"\n    set -- -XGET -s --fail -L\n\n    if [ -n \"${ELASTICSEARCH_USERNAME}\" ] \u0026\u0026 [ -n \"${ELASTICSEARCH_PASSWORD}\" ]; then\n      set -- \"$@\" -u \"${ELASTICSEARCH_USERNAME}:${ELASTICSEARCH_PASSWORD}\"\n    fi\n\n    STATUS=$(curl --output /dev/null --write-out \"%{http_code}\" -k \"$@\" \"http://localhost:5601${path}\")\n    if [[ \"${STATUS}\" -eq 200 ]]; then\n      exit 0\n    fi\n\n    echo \"Error: Got HTTP code ${STATUS} but expected a 200\"\n    exit 1\n}\n\nhttp \"/app/kibana\"\n"
+                        ]
+                    },
+                    "failureThreshold": 3,
+                    "initialDelaySeconds": 10,
+                    "periodSeconds": 10,
+                    "successThreshold": 3,
+                    "timeoutSeconds": 5
+                },
+                "resources": {
+                    "limits": {
+                        "cpu": "1",
+                        "memory": "2Gi"
+                    },
+                    "requests": {
+                        "cpu": "1",
+                        "memory": "2Gi"
+                    }
+                },
+                "securityContext": {
+                    "capabilities": {
+                        "drop": [
+                            "ALL"
+                        ]
+                    },
+                    "runAsNonRoot": true,
+                    "runAsUser": 1000
+                },
+                "terminationMessagePath": "/dev/termination-log",
+                "terminationMessagePolicy": "File",
+                "volumeMounts": [
+                    {
+                        "mountPath": "/var/run/secrets/kubernetes.io/serviceaccount",
+                        "name": "default-token-x5jgg",
+                        "readOnly": true
+                    }
+                ]
+            }
+        ],
+        "dnsPolicy": "ClusterFirst",
+        "enableServiceLinks": true,
+        "nodeName": "node-1",
+        "preemptionPolicy": "PreemptLowerPriority",
+        "priority": 0,
+        "restartPolicy": "Always",
+        "schedulerName": "default-scheduler",
+        "securityContext": {
+            "fsGroup": 1000
+        },
+        "serviceAccount": "default",
+        "serviceAccountName": "default",
+        "terminationGracePeriodSeconds": 30,
+        "tolerations": [
+            {
+                "effect": "NoExecute",
+                "key": "node.kubernetes.io/not-ready",
+                "operator": "Exists",
+                "tolerationSeconds": 300
+            },
+            {
+                "effect": "NoExecute",
+                "key": "node.kubernetes.io/unreachable",
+                "operator": "Exists",
+                "tolerationSeconds": 300
+            }
+        ],
+        "volumes": [
+            {
+                "name": "default-token-x5jgg",
+                "secret": {
+                    "defaultMode": 420,
+                    "secretName": "default-token-x5jgg"
+                }
+            }
+        ]
+    },
+    "status": {
+        "conditions": [
+            {
+                "lastProbeTime": null,
+                "lastTransitionTime": "2020-12-21T19:32:24Z",
+                "status": "True",
+                "type": "Initialized"
+            },
+            {
+                "lastProbeTime": null,
+                "lastTransitionTime": "2020-12-21T19:32:24Z",
+                "message": "containers with unready status: [kibana]",
+                "reason": "ContainersNotReady",
+                "status": "False",
+                "type": "Ready"
+            },
+            {
+                "lastProbeTime": null,
+                "lastTransitionTime": "2020-12-21T19:32:24Z",
+                "message": "containers with unready status: [kibana]",
+                "reason": "ContainersNotReady",
+                "status": "False",
+                "type": "ContainersReady"
+            },
+            {
+                "lastProbeTime": null,
+                "lastTransitionTime": "2020-12-21T19:32:23Z",
+                "status": "True",
+                "type": "PodScheduled"
+            }
+        ],
+        "containerStatuses": [
+            {
+                "containerID": "docker://f1afea80cd57bae4d9ad67c4817936a85da5a0d34c34445dd7dbb4a7b341af00",
+                "image": "docker.elastic.co/kibana/kibana:7.10.1",
+                "imageID": "docker-pullable://docker.elastic.co/kibana/kibana@sha256:e6488b7cdd9733ece70903f5fd587e04810f9f5115ac31b35cb44569f0b408bb",
+                "lastState": {},
+                "name": "kibana",
+                "ready": false,
+                "restartCount": 0,
+                "started": true,
+                "state": {
+                    "running": {
+                        "startedAt": "2020-12-21T19:32:25Z"
+                    }
+                }
+            }
+        ],
+        "hostIP": "192.168.1.12",
+        "phase": "Running",
+        "podIP": "172.16.84.161",
+        "podIPs": [
+            {
+                "ip": "172.16.84.161"
+            }
+        ],
+        "qosClass": "Guaranteed",
+        "startTime": "2020-12-21T19:32:24Z"
+    }
+}

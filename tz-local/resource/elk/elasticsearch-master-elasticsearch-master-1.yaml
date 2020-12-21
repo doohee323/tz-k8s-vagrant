@@ -1,0 +1,62 @@
+{
+    "apiVersion": "v1",
+    "kind": "PersistentVolumeClaim",
+    "metadata": {
+        "creationTimestamp": "2020-12-21T18:27:23Z",
+        "finalizers": [
+            "kubernetes.io/pvc-protection"
+        ],
+        "labels": {
+            "app": "elasticsearch-master"
+        },
+        "managedFields": [
+            {
+                "apiVersion": "v1",
+                "fieldsType": "FieldsV1",
+                "fieldsV1": {
+                    "f:metadata": {
+                        "f:labels": {
+                            ".": {},
+                            "f:app": {}
+                        }
+                    },
+                    "f:spec": {
+                        "f:accessModes": {},
+                        "f:resources": {
+                            "f:requests": {
+                                ".": {},
+                                "f:storage": {}
+                            }
+                        },
+                        "f:volumeMode": {}
+                    },
+                    "f:status": {
+                        "f:phase": {}
+                    }
+                },
+                "manager": "kube-controller-manager",
+                "operation": "Update",
+                "time": "2020-12-21T18:27:23Z"
+            }
+        ],
+        "name": "elasticsearch-master-elasticsearch-master-1",
+        "namespace": "default",
+        "resourceVersion": "20445",
+        "uid": "01866b26-1020-4d10-951c-e0122809ba39"
+    },
+    "spec": {
+        "accessModes": [
+            "ReadWriteOnce"
+        ],
+        "resources": {
+            "requests": {
+                "storage": "2Gi"
+            }
+        },
+        "volumeMode": "Filesystem",
+"storageClassName": "local-storage1"
+    },
+    "status": {
+        "phase": "Pending"
+    }
+}
