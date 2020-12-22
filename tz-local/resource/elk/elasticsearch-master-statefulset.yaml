@@ -5,7 +5,7 @@ metadata:
     esMajorVersion: "7"
     meta.helm.sh/release-name: elasticsearch
     meta.helm.sh/release-namespace: default
-  creationTimestamp: "2020-12-22T01:04:24Z"
+  creationTimestamp: "2020-12-22T02:35:40Z"
   generation: 1
   labels:
     app: elasticsearch-master
@@ -176,7 +176,7 @@ metadata:
         f:volumeClaimTemplates: {}
     manager: Go-http-client
     operation: Update
-    time: "2020-12-22T01:04:24Z"
+    time: "2020-12-22T02:35:40Z"
   - apiVersion: apps/v1
     fieldsType: FieldsV1
     fieldsV1:
@@ -190,11 +190,11 @@ metadata:
         f:updatedReplicas: {}
     manager: kube-controller-manager
     operation: Update
-    time: "2020-12-22T01:04:24Z"
+    time: "2020-12-22T02:35:40Z"
   name: elasticsearch-master
   namespace: default
-  resourceVersion: "54867"
-  uid: d7067ce2-dd5a-402b-8128-6bc87d9f28ec
+  resourceVersion: "16900"
+  uid: 79adcfdd-ab97-411a-82a6-abd180ca069d
 spec:
   podManagementPolicy: Parallel
   replicas: 2

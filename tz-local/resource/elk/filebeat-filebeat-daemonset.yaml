@@ -5,7 +5,7 @@ metadata:
     deprecated.daemonset.template.generation: "1"
     meta.helm.sh/release-name: filebeat
     meta.helm.sh/release-namespace: default
-  creationTimestamp: "2020-12-22T01:06:29Z"
+  creationTimestamp: "2020-12-22T02:38:55Z"
   generation: 1
   labels:
     app: filebeat-filebeat
@@ -187,7 +187,7 @@ metadata:
           f:type: {}
     manager: Go-http-client
     operation: Update
-    time: "2020-12-22T01:06:29Z"
+    time: "2020-12-22T02:38:55Z"
   - apiVersion: apps/v1
     fieldsType: FieldsV1
     fieldsV1:
@@ -199,11 +199,11 @@ metadata:
         f:updatedNumberScheduled: {}
     manager: kube-controller-manager
     operation: Update
-    time: "2020-12-22T01:06:29Z"
+    time: "2020-12-22T02:38:55Z"
   name: filebeat-filebeat
   namespace: default
-  resourceVersion: "55318"
-  uid: 4c7597be-1e87-4860-8246-7a54ec798c7a
+  resourceVersion: "17411"
+  uid: 8afc9717-0941-42e8-92eb-1bdef9ef83fb
 spec:
   revisionHistoryLimit: 10
   selector:
@@ -328,10 +328,10 @@ spec:
       maxUnavailable: 1
     type: RollingUpdate
 status:
-  currentNumberScheduled: 3
-  desiredNumberScheduled: 3
+  currentNumberScheduled: 2
+  desiredNumberScheduled: 2
   numberMisscheduled: 0
   numberReady: 0
-  numberUnavailable: 3
+  numberUnavailable: 2
   observedGeneration: 1
-  updatedNumberScheduled: 3
+  updatedNumberScheduled: 2
