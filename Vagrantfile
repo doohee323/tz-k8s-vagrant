@@ -7,8 +7,8 @@ Vagrant.configure("2") do |config|
   config.vm.box = IMAGE_NAME
   config.ssh.insert_key=false
   config.vm.provider "virtualbox" do |v|
-    v.memory = 7168
-    v.cpus = 3
+    v.memory = 4096
+    v.cpus = 2
   end
 
   config.vm.define "k8s-master" do |master|
@@ -26,8 +26,7 @@ Vagrant.configure("2") do |config|
     master.vm.network "forwarded_port", guest: 30912, host: 30912
     master.vm.network "forwarded_port", guest: 31000, host: 31000
     master.vm.network "forwarded_port", guest: 30007, host: 30007
-    master.vm.network "forwarded_port", guest: 31200, host: 31200     # es
-    master.vm.network "forwarded_port", guest: 5601, host: 30601     # kibana
+    master.vm.network "forwarded_port", guest: 30601, host: 30601     # kibana
     master.vm.hostname = "k8s-master"
     master.vm.provision "shell", :path => File.join(File.dirname(__FILE__),"scripts/local/master.sh"), :args => master.vm.hostname
   end
