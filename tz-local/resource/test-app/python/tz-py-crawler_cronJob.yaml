@@ -4,7 +4,7 @@ metadata:
   name: tz-py-crawler-job
 spec:
 #  schedule: "* * * * *" # run every minute
-  schedule: "*/5 * * * *" # run every minute
+  schedule: "*/5 * * * *"
   jobTemplate:
     spec:
       template:

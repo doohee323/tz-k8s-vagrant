@@ -1,0 +1,21 @@
+apiVersion: batch/v1beta1
+kind: CronJob
+metadata:
+  name: tz-py-sync-job
+spec:
+  schedule: "* * * * *" # run every minute
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          containers:
+          - name: tz-py-sync-job
+            command: ['sh', '-c', '/mnt/sync_json.sh']
+            volumeMounts:
+              - name: local-persistent-storage
+                mountPath: /mnt
+          volumes:
+            - name: local-persistent-storage
+              persistentVolumeClaim:
+                claimName: tz-pvc
+          restartPolicy: OnFailure
