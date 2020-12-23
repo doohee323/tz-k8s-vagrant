@@ -3,7 +3,7 @@ kind: CronJob
 metadata:
   name: tz-py-sync-job
 spec:
-  schedule: "*/5 * * * *"
+  schedule: "* * * * *"
   jobTemplate:
     spec:
       template:
