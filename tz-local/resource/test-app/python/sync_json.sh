@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+#k delete -f /vagrant/tz-local/resource/test-app/python/tz-py-crawler_cronJob.yaml
+#k apply -f /vagrant/tz-local/resource/test-app/python/tz-py-crawler_cronJob.yaml
 #k delete -f /vagrant/tz-local/resource/test-app/python/tz-py-syncJob.yaml
 #k apply -f /vagrant/tz-local/resource/test-app/python/tz-py-syncJob.yaml
 #k exec -it pod/tz-py-crawler-job-1608708060-w7gj7 -- sh
