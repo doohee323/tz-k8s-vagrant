@@ -3,14 +3,16 @@ kind: CronJob
 metadata:
   name: tz-py-sync-job
 spec:
-  schedule: "* * * * *" # run every minute
+  schedule: "*/5 * * * *"
   jobTemplate:
     spec:
       template:
         spec:
           containers:
           - name: tz-py-sync-job
-            command: ['sh', '-c', '/mnt/sync_json.sh']
+            image: eeacms/rsync
+            command: ["/bin/sh", "-ec", "/bin/sh /mnt/sync_json.sh; sleep 10;"]
+#            command: ['sleep', '3000']
             volumeMounts:
               - name: local-persistent-storage
                 mountPath: /mnt
