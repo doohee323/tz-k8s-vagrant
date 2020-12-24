@@ -1,10 +1,8 @@
 #!/usr/bin/env bash
 
-#k delete -f /vagrant/tz-local/resource/test-app/python/tz-py-crawler_cronJob.yaml
-#k apply -f /vagrant/tz-local/resource/test-app/python/tz-py-crawler_cronJob.yaml
 #k delete -f /vagrant/tz-local/resource/test-app/python/tz-py-syncJob.yaml
 #k apply -f /vagrant/tz-local/resource/test-app/python/tz-py-syncJob.yaml
-#k exec -it pod/tz-py-crawler-job-1608708060-w7gj7 -- sh
+#k exec -it pod/tz-py-sync-job-1608709260-nkx46 -- sh
 
 #set -x
 
@@ -19,6 +17,7 @@ Host 192.168.0.199
   IdentityFile /mnt/doohee323
 ' > /root/.ssh/config
 
+ssh-copy-id -i /mnt/doohee323.pub dhong@192.168.0.199
 rsync -avzh -e ssh /mnt/result/ dhong@192.168.0.199:/Volumes/workspace/etc/tz-k8s-elk/data/
 
 exit 0

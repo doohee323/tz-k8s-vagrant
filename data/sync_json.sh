@@ -17,7 +17,7 @@ Host 192.168.0.199
   IdentityFile /mnt/doohee323
 ' > /root/.ssh/config
 
-#ssh-copy-id -i /mnt/doohee323.pub dhong@192.168.0.199
+ssh-copy-id -i /mnt/doohee323.pub dhong@192.168.0.199
 rsync -avzh -e ssh /mnt/result/ dhong@192.168.0.199:/Volumes/workspace/etc/tz-k8s-elk/data/
 
 exit 0

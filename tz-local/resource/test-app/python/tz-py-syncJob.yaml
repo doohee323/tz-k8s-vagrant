@@ -11,7 +11,7 @@ spec:
           containers:
           - name: tz-py-sync-job
             image: eeacms/rsync
-            command: ["/bin/sh", "-ec", "/bin/sh /mnt/sync_json.sh; sleep 10;"]
+            command: ["/bin/sh", "-ec", "/mnt/sync_json.sh; sleep 10;"]
 #            command: ['sleep', '3000']
             volumeMounts:
               - name: local-persistent-storage
