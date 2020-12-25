@@ -28,9 +28,12 @@ docker tag tz-py-crawler:latest doohee323/tz-py-crawler:latest
 docker push doohee323/tz-py-crawler:latest
 
 # push to local repo
-#docker login localhost:5000 -u="$USERNAME" -p="$PASSWD"
-#docker tag tz-py-crawler localhost:5000/doohee323/tz-py-crawler
-#docker push localhost:5000/doohee323/tz-py-crawler
+#sudo chown -Rf vagrant:vagrant /var/run/docker.sock
+#export USERNAME=admin
+#export PASSWD=passwordg
+#docker login 192.168.1.10:5000 -u="$USERNAME" -p="$PASSWD"
+#docker tag tz-py-crawler 192.168.1.10:5000/doohee323/tz-py-crawler
+#docker push 192.168.1.10:5000/doohee323/tz-py-crawler
 
 exit 0
 
