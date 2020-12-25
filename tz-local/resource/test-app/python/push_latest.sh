@@ -18,6 +18,7 @@ cd /var/jenkins_home/workspace/tz-py-crawler_push/projects/tz-py-crawler
 
 #vi Dockerfile
 #CMD [ "python", "/code/youtube/youtube/server.py" ]
+sudo chown -Rf vagrant:vagrant /var/run/docker.sock
 docker login -u="$USERNAME" -p="$PASSWD"
 
 docker rmi tz-py-crawler
@@ -25,6 +26,11 @@ docker build -t tz-py-crawler .
 docker image ls
 docker tag tz-py-crawler:latest doohee323/tz-py-crawler:latest
 docker push doohee323/tz-py-crawler:latest
+
+# push to local repo
+#docker login localhost:5000 -u="$USERNAME" -p="$PASSWD"
+#docker tag tz-py-crawler localhost:5000/doohee323/tz-py-crawler
+#docker push localhost:5000/doohee323/tz-py-crawler
 
 exit 0
 
