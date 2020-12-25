@@ -31,4 +31,14 @@ nameserver 1.1.1.1 #cloudflare DNS
 nameserver 8.8.8.8 #Google DNS
 EOF
 
+# for local docker repo
+echo '
+{
+        "insecure-registries" : ["192.168.1.10:5000"]
+}
+' > /etc/docker/daemon.json
+
+sudo service docker restart
+
+
 
