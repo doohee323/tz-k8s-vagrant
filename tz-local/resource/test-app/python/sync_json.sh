@@ -1,5 +1,9 @@
 #!/usr/bin/env bash
 
+##########################################
+# rsync
+##########################################
+
 #k delete -f /vagrant/tz-local/resource/test-app/python/tz-py-syncJob.yaml
 #k apply -f /vagrant/tz-local/resource/test-app/python/tz-py-syncJob.yaml
 #k exec -it pod/tz-py-sync-job-1608709260-nkx46 -- sh
