@@ -47,6 +47,16 @@ source ~/.bashrc
 sudo cp -Rf ~/.bashrc /home/vagrant/.bashrc
 sudo chown -Rf vagrant:vagrant /home/vagrant/.bashrc
 
+## nfs server
+sudo apt-get install nfs-common nfs-kernel-server rpcbind portmap -y
+mkdir /home/vagrant/data
+sudo chmod -R 777 /home/vagrant/data
+echo '/home/vagrant/data 192.168.1.0/16(rw,sync,no_subtree_check)' >> /etc/exports
+exportfs -a
+systemctl restart nfs-kernel-server
+#service nfs-kernel-server status
+showmount -e 192.168.1.10
+
 echo "##################################################################"
 echo "Install other services in k8s-master"
 echo "##################################################################"
