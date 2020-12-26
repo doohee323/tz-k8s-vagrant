@@ -27,6 +27,8 @@ to project root directory.
 
 ## -. Refer to README.md for each version.
 ```
+    cf) my vagrant's host server priavte ip: 192.168.0.143
+
     - build a K8S in local vagrant VMs
         vagrant -> VMs -> k8s -> monitoring -> jenkins -> teat-app build
         scripts/local/README.md
@@ -43,4 +45,5 @@ to project root directory.
     cp tz-k8s-vagrant/config ~/.kube/config
     kubectl get nodes
 ```
+
 

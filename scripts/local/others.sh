@@ -16,6 +16,9 @@
 
 sudo chown -Rf vagrant:vagrant /var/run/docker.sock
 
+k apply -f /vagrant/tz-local/resource/standard-storage.yaml
+k patch storageclass local-storage -p '{"metadata": {"annotations":{"storageclass.kubernetes.io/is-default-class":"true"}}}'
+
 echo "## [ install helm3 ] ######################################################"
 sudo curl -fsSL -o get_helm.sh https://raw.githubusercontent.com/helm/helm/master/scripts/get-helm-3
 sudo bash get_helm.sh
