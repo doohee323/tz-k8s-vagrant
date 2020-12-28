@@ -16,8 +16,19 @@
 
 sudo chown -Rf vagrant:vagrant /var/run/docker.sock
 
+#k delete -f /vagrant/tz-local/resource/standard-storage.yaml
 k apply -f /vagrant/tz-local/resource/standard-storage.yaml
 k patch storageclass local-storage -p '{"metadata": {"annotations":{"storageclass.kubernetes.io/is-default-class":"true"}}}'
+k get storageclass,pv,pvc
+
+# nfs
+# 1. with helm
+#helm install my-release --set nfs.server=192.168.1.10 --set nfs.path=/srv/nfs/mydata stable/nfs-client-provisioner
+# 2. with manual
+#k apply -f /vagrant/tz-local/resource/dynamic-provisioning/nfs/static-nfs.yaml
+#k apply -f /vagrant/tz-local/resource/dynamic-provisioning/nfs/serviceaccount.yaml
+#k apply -f /vagrant/tz-local/resource/dynamic-provisioning/nfs/nfs.yaml
+#k apply -f /vagrant/tz-local/resource/dynamic-provisioning/nfs/nfs-claim.yaml
 
 echo "## [ install helm3 ] ######################################################"
 sudo curl -fsSL -o get_helm.sh https://raw.githubusercontent.com/helm/helm/master/scripts/get-helm-3
@@ -30,8 +41,6 @@ helm repo add stable https://charts.helm.sh/stable
 helm repo update
 
 #k get po -n kube-system
-
-#export HELM_HOST=localhost:44134
 
 sudo rm -Rf /vagrant/info
 

@@ -9,9 +9,11 @@ spec:
     spec:
       template:
         spec:
+          serviceAccountName: jenkins
           containers:
           - name: tz-py-crawler-job
-            image: doohee323/tz-py-crawler:24
+            image: doohee323/tz-py-crawler:35
+#            image: ${REPOSITORY_TAG}
             imagePullPolicy: IfNotPresent
             args:
             - /usr/bin/python3
