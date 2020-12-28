@@ -37,11 +37,21 @@ mv Vagrantfile.bak Vagrantfile
 
 exit 0
 
-vagrant snapshot ls
+vagrant snapshot list
 
 vagrant snapshot save k8s-master k8s-master_python --force
 vagrant snapshot save node-1 node-1_python --force
+vagrant snapshot save node-2 node-2_python --force
+
+vagrant snapshot save k8s-master k8s-master_latest --force
+vagrant snapshot save node-1 node-1_latest --force
+vagrant snapshot save node-2 node-2_latest --force
 
 vagrant snapshot restore k8s-master k8s-master_python
 vagrant snapshot restore node-1 node-1_python
+vagrant snapshot restore node-2 node-2_python
+
+vagrant snapshot restore k8s-master k8s-master_latest
+vagrant snapshot restore node-1 node-1_latest
+vagrant snapshot restore node-2 node-2_latest
 

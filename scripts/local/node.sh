@@ -4,12 +4,6 @@
 
 bash /vagrant/scripts/local/base.sh
 
-## nfs ubuntu client
-sudo apt-get install nfs-common
-mkdir -p /data
-mount -t nfs -vvvv 192.168.1.10:/home/vagrant/data /data
-echo '192.168.1.10:/home/vagrant/data /data  nfs      defaults    0       0' >> /etc/fstab
-
 ##################################################################
 # k8s node
 ##################################################################
@@ -24,4 +18,10 @@ sudo bash /vagrant/join.sh
 cat /vagrant/info
 
 exit 0
+
+## nfs ubuntu client
+sudo apt-get install nfs-common
+mkdir -p /data
+mount -t nfs -vvvv 192.168.1.10:/home/vagrant/data /data
+echo '192.168.1.10:/home/vagrant/data /data  nfs      defaults    0       0' >> /etc/fstab
 
