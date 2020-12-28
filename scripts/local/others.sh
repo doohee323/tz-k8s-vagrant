@@ -16,8 +16,17 @@
 
 sudo chown -Rf vagrant:vagrant /var/run/docker.sock
 
+#k delete -f /vagrant/tz-local/resource/standard-storage.yaml
 k apply -f /vagrant/tz-local/resource/standard-storage.yaml
 k patch storageclass local-storage -p '{"metadata": {"annotations":{"storageclass.kubernetes.io/is-default-class":"true"}}}'
+k get storageclass,pv,pvc
+
+# nfs
+#k apply -f /vagrant/tz-local/resource/dynamic-provisioning/static-nfs.yaml
+#k delete -f /vagrant/tz-local/resource/dynamic-provisioning/nfs-claim.yaml
+#k delete -f /vagrant/tz-local/resource/dynamic-provisioning/nfs.yaml
+k apply -f /vagrant/tz-local/resource/dynamic-provisioning/nfs.yaml
+k apply -f /vagrant/tz-local/resource/dynamic-provisioning/nfs-claim.yaml
 
 echo "## [ install helm3 ] ######################################################"
 sudo curl -fsSL -o get_helm.sh https://raw.githubusercontent.com/helm/helm/master/scripts/get-helm-3

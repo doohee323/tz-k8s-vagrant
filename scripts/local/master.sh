@@ -52,6 +52,8 @@ sudo apt-get install nfs-common nfs-kernel-server rpcbind portmap -y
 mkdir /home/vagrant/data
 sudo chmod -R 777 /home/vagrant/data
 echo '/home/vagrant/data 192.168.1.0/16(rw,sync,no_subtree_check)' >> /etc/exports
+mount -t nfs -vvvv 192.168.1.10:/home/vagrant/data /home/vagrant/data
+echo '192.168.1.10:/home/vagrant/data /home/vagrant/data  nfs      defaults    0       0' >> /etc/fstab
 exportfs -a
 systemctl restart nfs-kernel-server
 #service nfs-kernel-server status
