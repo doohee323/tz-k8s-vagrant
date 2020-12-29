@@ -1,5 +1,9 @@
 #!/usr/bin/env bash
 
+shopt -s expand_aliases
+
+alias k='kubectl --kubeconfig ~/.kube/config'
+
 k create namespace kafka
 
 k delete -f /vagrant/tz-local/resource/kafka/storage-local.yaml -n kafka
@@ -10,7 +14,19 @@ k get pvc -n kafka
 helm repo add bitnami https://charts.bitnami.com/bitnami
 helm repo update
 #helm uninstall bonah -n kafka
-helm install bonah bitnami/kafka -n kafka
+#helm install bonah bitnami/kafka -n kafka
+ZOOKEEPER_SERVICE_NAME=bonah-zookeeper
+helm install kafka bitnami/kafka
+  --set zookeeper.enabled=false
+  --set replicaCount=3
+  --set externalZookeeper.servers=ZOOKEEPER_SERVICE_NAME -n kafka
+
+helm install zookeeper bitnami/zookeeper \
+  --set replicaCount=3 \
+  --set auth.enabled=false \
+  --set allowAnonymousLogin=true
+
+sleep 30
 
 k get all -n kafka
 
@@ -47,3 +63,14 @@ $ kafka-console-consumer.sh \
 #######################################################################
 ' >> /vagrant/info
 cat /vagrant/info
+
+ZOOKEEPER_SERVICE_NAME=bonah-zookeeper
+helm upgrade bonah bitnami/kafka \
+  --set zookeeper.enabled=false \
+  --set replicaCount=2 \
+  --set externalZookeeper.servers=${ZOOKEEPER_SERVICE_NAME} -n kafka
+
+#helm upgrade zookeeper bitnami/zookeeper \
+#  --set replicaCount=5 \
+#  --set auth.enabled=false \
+#  --set allowAnonymousLogin=true -n kafka

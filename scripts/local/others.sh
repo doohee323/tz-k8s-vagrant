@@ -65,3 +65,5 @@ bash /vagrant/tz-local/resource/jenkins/install.sh
 bash /vagrant/tz-local/resource/tz-py-crawler.sh
 
 exit 0
+
+bash /vagrant/tz-local/resource/kafka/install.sh
