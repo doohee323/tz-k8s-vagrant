@@ -1,15 +1,8 @@
+## kafka-pv-0
 apiVersion: storage.k8s.io/v1
 kind: StorageClass
 metadata:
-  name: local-storage0
-provisioner: kubernetes.io/no-provisioner
-volumeBindingMode: WaitForFirstConsumer
-
----
-apiVersion: storage.k8s.io/v1
-kind: StorageClass
-metadata:
-  name: local-storage1
+  name: kafka-pv-0
 provisioner: kubernetes.io/no-provisioner
 volumeBindingMode: WaitForFirstConsumer
 
@@ -17,14 +10,14 @@ volumeBindingMode: WaitForFirstConsumer
 apiVersion: v1
 kind: PersistentVolume
 metadata:
-  name: kafka-pv0
+  name: kafka-pv-0
 spec:
   capacity:
-    storage: 2Gi
+    storage: 200Mi
   accessModes:
   - ReadWriteOnce
   persistentVolumeReclaimPolicy: Retain
-  storageClassName: local-storage0
+  storageClassName: kafka-pv-0
   local:
     path: /vagrant/kafka/index0
   nodeAffinity:
@@ -37,16 +30,38 @@ spec:
 
 ---
 apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: data-kafka-0
+spec:
+  accessModes:
+  - ReadWriteOnce
+  storageClassName: kafka-pv-0
+  resources:
+    requests:
+      storage: 100Mi
+
+---
+## zookeeper-0
+apiVersion: storage.k8s.io/v1
+kind: StorageClass
+metadata:
+  name: zookeeper-pv-0
+provisioner: kubernetes.io/no-provisioner
+volumeBindingMode: WaitForFirstConsumer
+
+---
+apiVersion: v1
 kind: PersistentVolume
 metadata:
-  name: kafka-pv1
+  name: zookeeper-pv-0
 spec:
   capacity:
-    storage: 2Gi
+    storage: 200Mi
   accessModes:
   - ReadWriteOnce
   persistentVolumeReclaimPolicy: Retain
-  storageClassName: local-storage1
+  storageClassName: zookeeper-pv-0
   local:
     path: /vagrant/kafka/index1
   nodeAffinity:
@@ -61,26 +76,12 @@ spec:
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
-  name: data-bonah-kafka-0
+  name: data-zookeeper-0
 spec:
   accessModes:
-    - ReadWriteOnce
-  volumeMode: Filesystem
+  - ReadWriteOnce
+  storageClassName: zookeeper-pv-0
   resources:
     requests:
-      storage: 2Gi
-  storageClassName: local-storage0
+      storage: 100Mi
 
----
-apiVersion: v1
-kind: PersistentVolumeClaim
-metadata:
-  name: data-bonah-zookeeper-0
-spec:
-  accessModes:
-    - ReadWriteOnce
-  volumeMode: Filesystem
-  resources:
-    requests:
-      storage: 2Gi
-  storageClassName: local-storage1
