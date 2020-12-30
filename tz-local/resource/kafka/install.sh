@@ -55,6 +55,7 @@ echo '
 ##[ Kafka ]##########################################################
 
 # make a producer
+k exec --tty -i kafka-client -n kafka -- bash
 $ kafka-console-producer.sh \
 --broker-list kafka-0.kafka-headless.kafka.svc.cluster.local:9092 \
 --topic quickstart-events
@@ -70,6 +71,24 @@ $ kafka-console-consumer.sh \
 k exec --tty -i kafka-client -n kafka -- bash
 $ kafka-topics.sh --create --bootstrap-server kafka-0.kafka-headless.kafka.svc.cluster.local:9092 \
 --topic quickstart-events
+
+### with zookeeper ###
+# create with zookeeper
+kafka-topics.sh --create --zookeeper zookeeper.kafka.svc.cluster.local:2181 --replication-factor 1 --partitions 1 --topic sample
+
+# list
+kafka-topics.sh --list --zookeeper zookeeper.kafka.svc.cluster.local:2181
+kafka-topics.sh --describe --zookeeper zookeeper.kafka.svc.cluster.local:2181 --topic sample
+
+# Delete 1
+kafka-configs.sh --zookeeper zookeeper.kafka.svc.cluster.local:2181 --alter --entity-name quickstart-events1 --entity-type topics  --add-config retention.ms=1000
+
+# Delete 2
+# kafka-topics.sh --zookeeper zookeeper.kafka.svc.cluster.local:2181 --delete --topic quickstart-events1
+kubectl exec -it pod/zookeeper-0 -n kafka -- zkCli.sh
+get /brokers/topics/quickstart-events
+deleteall /brokers/topics/quickstart-events
+delete /admin/delete_topics/quickstart-events
 
 #######################################################################
 ' >> /vagrant/info
