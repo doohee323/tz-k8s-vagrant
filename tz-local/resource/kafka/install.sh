@@ -76,8 +76,8 @@ $ kafka-topics.sh --create --bootstrap-server kafka-0.kafka-headless.kafka.svc.c
 cat /vagrant/info
 
 # 4: Scale Apache Kafka
-k scale statefulset.apps/kafka --replicas=2 -n kafka
-
 k scale statefulset.apps/zookeeper --replicas=2 -n kafka
+
+k scale statefulset.apps/kafka --replicas=2 -n kafka
 
 exit 0
