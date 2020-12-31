@@ -44,6 +44,11 @@ k apply -f /vagrant/tz-local/resource/kafka/zookeeper.yaml -n kafka
 k get statefulset.apps/kafka -n kafka -o yaml > /vagrant/tz-local/resource/kafka/kafka.yaml
 k delete statefulset.apps/kafka -n kafka
 sudo sed -i "s|8Gi|100Mi|g" /vagrant/tz-local/resource/kafka/kafka.yaml
+sudo sed -i "s|failureThreshold: 3|failureThreshold: 1|g" /vagrant/tz-local/resource/kafka/kafka.yaml
+## for access from external device
+sudo sed -i "s|INTERNAL\:PLAINTEXT,CLIENT\:PLAINTEXT|INTERNAL\:PLAINTEXT,CLIENT\:PLAINTEXT,EXTERNAL\:PLAINTEXT|g" /vagrant/tz-local/resource/kafka/kafka.yaml
+sudo sed -i "s|CLIENT\://\:9092|CLIENT\://\:9092,EXTERNAL\://0.0.0.0\:9094|g" /vagrant/tz-local/resource/kafka/kafka.yaml
+sudo sed -i "s|kafka-headless.kafka.svc.cluster.local\:9092|kafka-headless.kafka.svc.cluster.local\:9092,EXTERNAL\://localhost:9094|g" /vagrant/tz-local/resource/kafka/kafka.yaml
 k apply -f /vagrant/tz-local/resource/kafka/kafka.yaml -n kafka
 
 # run client
@@ -95,8 +100,7 @@ delete /admin/delete_topics/quickstart-events
 cat /vagrant/info
 
 # 4: Scale Apache Kafka
-k scale statefulset.apps/zookeeper --replicas=2 -n kafka
-
-k scale statefulset.apps/kafka --replicas=2 -n kafka
+#k scale statefulset.apps/zookeeper --replicas=2 -n kafka
+#k scale statefulset.apps/kafka --replicas=2 -n kafka
 
 exit 0
