@@ -1,18 +1,16 @@
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
-  name: test-claim
+  name: nfs-pvc-test
 spec:
-  storageClassName: nfs-client # SAME NAME AS THE STORAGECLASS
+  storageClassName: nfs-storageclass # SAME NAME AS THE STORAGECLASS
   accessModes:
-    - ReadWriteMany #  must be the same as PersistentVolume
+    - ReadWriteOnce #  must be the same as PersistentVolume
   resources:
     requests:
-      storage: 50Mi
-
+      storage: 100Mi
 
 ---
-
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -32,10 +30,10 @@ spec:
       volumes:
       - name: nfs-test #
         persistentVolumeClaim:
-          claimName: nfs-pvc-test  # same name of pvc that was created
+          claimName: nfs-pvc-test
       containers:
       - image: nginx
         name: nginx
         volumeMounts:
         - name: nfs-test # name of volume should match claimName volume
-          mountPath: mydata # mount inside of contianer
+          mountPath: /mydata # mount inside of contianer
