@@ -2,7 +2,18 @@
 
 #set -x
 
-if [[ "$1" == "down" ]]; then
+WORKING_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
+cd ${WORKING_DIR}
+
+if [[ "$1" == "reload" ]]; then
+  echo "Vagrant reload!"
+  vagrant reload
+  exit 0
+elif [[ "$1" == "halt" ]]; then
+  echo "Vagrant halt!"
+  vagrant halt
+  exit 0
+elif [[ "$1" == "down" ]]; then
   if [[ -f "./tz-aws-terraform/terraform.tfstate" ]]; then
       cp -Rf Vagrantfile Vagrantfile.bak
       cp -Rf ./scripts/terraform/Vagrantfile Vagrantfile
@@ -42,6 +53,10 @@ vagrant snapshot list
 vagrant snapshot save k8s-master k8s-master_python --force
 vagrant snapshot save node-1 node-1_python --force
 vagrant snapshot save node-2 node-2_python --force
+
+vagrant snapshot save k8s-master k8s-master_kafka --force
+vagrant snapshot save node-1 node-1_kafka --force
+vagrant snapshot save node-2 node-2_kafka --force
 
 vagrant snapshot save k8s-master k8s-master_latest --force
 vagrant snapshot save node-1 node-1_latest --force
