@@ -4,31 +4,44 @@ shopt -s expand_aliases
 alias k='kubectl --kubeconfig ~/.kube/config'
 
 # install NFS in k8s
-https://github.com/kubernetes-csi/csi-driver-nfs/blob/master/deploy/example/nfs-provisioner/README.md
+#https://github.com/kubernetes-csi/csi-driver-nfs/blob/master/deploy/example/nfs-provisioner/README.md
 
-kubectl create -f https://raw.githubusercontent.com/kubernetes-csi/csi-driver-nfs/master/deploy/example/nfs-provisioner/nfs-server.yaml
+# 1. Create a NFS provisioner
+k create -f https://raw.githubusercontent.com/kubernetes-csi/csi-driver-nfs/master/deploy/example/nfs-provisioner/nfs-server.yaml
 
-Install NFS CSI driver master version on a kubernetes cluster
+# 2. Install NFS CSI driver master version on a kubernetes cluster
 curl -skSL https://raw.githubusercontent.com/kubernetes-csi/csi-driver-nfs/master/deploy/install-driver.sh | bash -s master --
 
-kubectl -n kube-system get pod -o wide -l app=csi-nfs-controller
-kubectl -n kube-system get pod -o wide -l app=csi-nfs-node
+k -n kube-system get pod -o wide -l app=csi-nfs-controller
+k -n kube-system get pod -o wide -l app=csi-nfs-node
 
-kubectl create -f https://raw.githubusercontent.com/kubernetes-csi/csi-driver-nfs/master/deploy/example/nfs-provisioner/nginx-pod.yaml
-kubectl exec nginx-nfs-example -- bash -c "findmnt /var/www -o TARGET,SOURCE,FSTYPE"
+# may need to reboot vagrant reload
+k get all --all-namespaces | grep nfs
 
-kubectl delete -f https://raw.githubusercontent.com/kubernetes-csi/csi-driver-nfs/master/deploy/example/nfs-provisioner/nginx-pod.yaml
+# 3. Verifying a driver installation
+k get csinodes \
+-o jsonpath='{range .items[*]} {.metadata.name}{": "} {range .spec.drivers[*]} {.name}{"\n"} {end}{end}'
 
-# make default storage with NFS
+k create -f https://raw.githubusercontent.com/kubernetes-csi/csi-driver-nfs/master/deploy/example/nfs-provisioner/nginx-pod.yaml
+k exec nginx-nfs-example -- bash -c "findmnt /var/www -o TARGET,SOURCE,FSTYPE"
 
-k delete -f nfs-test.yaml
-k delete -f nfs-claim.yaml
-k delete -f nfs.yaml
-k delete -f serviceaccount.yaml
+k delete -f https://raw.githubusercontent.com/kubernetes-csi/csi-driver-nfs/master/deploy/example/nfs-provisioner/nginx-pod.yaml
 
-k apply -f serviceaccount.yaml
-k apply -f nfs.yaml
-k apply -f nfs-claim.yaml
-k apply -f nfs-test.yaml
+cd /vagrant/tz-local/resource/dynamic-provisioning/nfs
+###############################################################
+# !!! Storage Class Usage (Dynamic Provisioning)
+###############################################################
+k apply -f dynamic-provisioning-nfs.yaml
+k apply -f dynamic-provisioning-nfs-test.yaml
+k get pv,pvc
+k delete -f dynamic-provisioning-nfs-test.yaml
+
+###############################################################
+# !!! PV/PVC Usage (Static Provisioning)
+###############################################################
+k apply -f static-provisioning-nfs.yaml
+k apply -f static-provisioning-nfs-test.yaml
+k get pv,pvc
+k delete -f static-provisioning-nfs-test.yaml
 
 exit 0
