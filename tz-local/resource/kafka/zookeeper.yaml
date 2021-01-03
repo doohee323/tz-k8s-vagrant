@@ -4,7 +4,7 @@ metadata:
   annotations:
     meta.helm.sh/release-name: zookeeper
     meta.helm.sh/release-namespace: kafka
-  creationTimestamp: "2020-12-30T01:25:39Z"
+  creationTimestamp: "2021-01-03T01:24:52Z"
   generation: 1
   labels:
     app.kubernetes.io/component: zookeeper
@@ -188,6 +188,27 @@ metadata:
                     f:mountPath: {}
                     f:name: {}
             f:dnsPolicy: {}
+            f:initContainers:
+              .: {}
+              k:{"name":"volume-permissions"}:
+                .: {}
+                f:args: {}
+                f:command: {}
+                f:image: {}
+                f:imagePullPolicy: {}
+                f:name: {}
+                f:resources: {}
+                f:securityContext:
+                  .: {}
+                  f:runAsUser: {}
+                f:terminationMessagePath: {}
+                f:terminationMessagePolicy: {}
+                f:volumeMounts:
+                  .: {}
+                  k:{"mountPath":"/bitnami/zookeeper"}:
+                    .: {}
+                    f:mountPath: {}
+                    f:name: {}
             f:restartPolicy: {}
             f:schedulerName: {}
             f:securityContext:
@@ -201,7 +222,7 @@ metadata:
         f:volumeClaimTemplates: {}
     manager: Go-http-client
     operation: Update
-    time: "2020-12-30T01:25:39Z"
+    time: "2021-01-03T01:24:52Z"
   - apiVersion: apps/v1
     fieldsType: FieldsV1
     fieldsV1:
@@ -210,16 +231,17 @@ metadata:
         f:currentReplicas: {}
         f:currentRevision: {}
         f:observedGeneration: {}
+        f:readyReplicas: {}
         f:replicas: {}
         f:updateRevision: {}
         f:updatedReplicas: {}
     manager: kube-controller-manager
     operation: Update
-    time: "2020-12-30T01:25:39Z"
+    time: "2021-01-03T01:25:02Z"
   name: zookeeper
   namespace: kafka
-  resourceVersion: "245942"
-  uid: 29bd4550-7ad6-4f27-8cd4-48d54d846baa
+  resourceVersion: "243080"
+  uid: 922da116-654a-4d3a-9cab-f925e118d47c
 spec:
   podManagementPolicy: Parallel
   replicas: 1
@@ -359,6 +381,24 @@ spec:
         - mountPath: /bitnami/zookeeper
           name: data
       dnsPolicy: ClusterFirst
+      initContainers:
+      - args:
+        - -R
+        - 1001:1001
+        - /bitnami/zookeeper
+        command:
+        - chown
+        image: docker.io/bitnami/minideb:buster
+        imagePullPolicy: Always
+        name: volume-permissions
+        resources: {}
+        securityContext:
+          runAsUser: 0
+        terminationMessagePath: /dev/termination-log
+        terminationMessagePolicy: File
+        volumeMounts:
+        - mountPath: /bitnami/zookeeper
+          name: data
       restartPolicy: Always
       schedulerName: default-scheduler
       securityContext:
@@ -380,14 +420,16 @@ spec:
       resources:
         requests:
           storage: 100Mi
+      storageClassName: nfs-csi
       volumeMode: Filesystem
     status:
       phase: Pending
 status:
   collisionCount: 0
   currentReplicas: 1
-  currentRevision: zookeeper-6f4b799f7d
+  currentRevision: zookeeper-777dc654cc
   observedGeneration: 1
+  readyReplicas: 1
   replicas: 1
-  updateRevision: zookeeper-6f4b799f7d
+  updateRevision: zookeeper-777dc654cc
   updatedReplicas: 1

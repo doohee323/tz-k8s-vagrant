@@ -12,6 +12,7 @@ k delete -f /vagrant/tz-local/resource/kafka/storage-local.yaml -n kafka
 k apply -f /vagrant/tz-local/resource/kafka/storage-local.yaml -n kafka
 k get pv -n kafka
 k get pvc -n kafka
+k get storageclass -n kafka
 
 # 1. Deploy Apache Zookeeper
 helm repo add bitnami https://charts.bitnami.com/bitnami
@@ -24,13 +25,23 @@ ZOOKEEPER_SERVICE_NAME=zookeeper
 helm install ${ZOOKEEPER_SERVICE_NAME} bitnami/zookeeper \
   --set replicaCount=1 \
   --set auth.enabled=false \
-  --set allowAnonymousLogin=true -n kafka
+  --set allowAnonymousLogin=true \
+  --set volumePermissions.enabled=true \
+  --set zookeeper.volumePermissions.enabled=true \
+  --set global.storageClass=nfs-csi \
+  --set persistence.storageClass=nfs-csi \
+  -n kafka
 
 # 2: Deploy Apache Kafka
 helm install kafka bitnami/kafka \
   --set zookeeper.enabled=false \
   --set replicaCount=1 \
-  --set externalZookeeper.servers=${ZOOKEEPER_SERVICE_NAME} -n kafka
+  --set externalZookeeper.servers=${ZOOKEEPER_SERVICE_NAME} \
+  --set volumePermissions.enabled=true \
+  --set zookeeper.volumePermissions.enabled=true \
+  --set global.storageClass=nfs-csi \
+  --set persistence.storageClass=nfs-csi \
+  -n kafka
 
 sleep 30
 
@@ -46,9 +57,9 @@ k delete statefulset.apps/kafka -n kafka
 sudo sed -i "s|8Gi|100Mi|g" /vagrant/tz-local/resource/kafka/kafka.yaml
 sudo sed -i "s|failureThreshold: 3|failureThreshold: 1|g" /vagrant/tz-local/resource/kafka/kafka.yaml
 ## for access from external device
-sudo sed -i "s|INTERNAL\:PLAINTEXT,CLIENT\:PLAINTEXT|INTERNAL\:PLAINTEXT,CLIENT\:PLAINTEXT,EXTERNAL\:PLAINTEXT|g" /vagrant/tz-local/resource/kafka/kafka.yaml
-sudo sed -i "s|CLIENT\://\:9092|CLIENT\://\:9092,EXTERNAL\://0.0.0.0\:9094|g" /vagrant/tz-local/resource/kafka/kafka.yaml
-sudo sed -i "s|kafka-headless.kafka.svc.cluster.local\:9092|kafka-headless.kafka.svc.cluster.local\:9092,EXTERNAL\://localhost:9094|g" /vagrant/tz-local/resource/kafka/kafka.yaml
+#sudo sed -i "s|INTERNAL\:PLAINTEXT,CLIENT\:PLAINTEXT|INTERNAL\:PLAINTEXT,CLIENT\:PLAINTEXT,EXTERNAL\:PLAINTEXT|g" /vagrant/tz-local/resource/kafka/kafka.yaml
+#sudo sed -i "s|CLIENT\://\:9092|CLIENT\://\:9092,EXTERNAL\://0.0.0.0\:9094|g" /vagrant/tz-local/resource/kafka/kafka.yaml
+#sudo sed -i "s|kafka-headless.kafka.svc.cluster.local\:9092|kafka-headless.kafka.svc.cluster.local\:9092,EXTERNAL\://localhost:9094|g" /vagrant/tz-local/resource/kafka/kafka.yaml
 k apply -f /vagrant/tz-local/resource/kafka/kafka.yaml -n kafka
 
 # run client
