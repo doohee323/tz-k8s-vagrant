@@ -25,5 +25,8 @@ tz-py-crawler
 info
 list.txt
 es
-
+kafka
+data/result
+data/doohee323*
+data/*.json
 

@@ -58,5 +58,22 @@ sudo sed -i "s/\$KUBELET_EXTRA_ARGS/\$KUBELET_EXTRA_ARGS --node-ip=192.168.1.10/
 systemctl daemon-reload && systemctl restart kubelet
 kubectl get nodes -o wide
 
+## nfs server
+## !!! Warning: Authentication failure. Retrying... after nfs setting and vagrant up
+sudo apt-get install nfs-common nfs-kernel-server rpcbind portmap -y
+sudo mkdir -p /home/vagrant/data
+sudo chmod -Rf 777 /home/vagrant/
+#sudo chown -Rf nobody:nogroup /home/vagrant/
+echo '/home/vagrant/data 192.168.1.0/16(rw,sync,no_subtree_check)' >> /etc/exports
+exportfs -a
+systemctl stop nfs-kernel-server
+systemctl start nfs-kernel-server
+#service nfs-kernel-server status
+showmount -e 192.168.1.10
+#sudo mkdir /data
+#mount -t nfs -vvvv 192.168.1.10:/home/vagrant/data /data
+#echo '192.168.1.10:/home/vagrant/data /data  nfs      defaults    0       0' >> /etc/fstab
 
+k patch storageclass nfs-storageclass -p '{"metadata": {"annotations":{"storageclass.kubernetes.io/is-default-class":"true"}}}'
+k get storageclass,pv,pvc
 
