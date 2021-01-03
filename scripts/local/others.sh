@@ -45,6 +45,11 @@ helm repo update
 sudo rm -Rf /vagrant/info
 
 ##################################################################
+# call nfs dynamic-provisioning
+##################################################################
+bash /vagrant/tz-local/resource/dynamic-provisioning/nfs/install.sh
+
+##################################################################
 # call dashboard install script
 ##################################################################
 bash /vagrant/tz-local/resource/dashboard/install.sh
