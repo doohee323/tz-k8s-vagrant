@@ -41,7 +41,7 @@ sleep 60
 
 echo '
 ##[ Jenkins ]##########################################################
-- jenkins url: http://192.168.1.10:31000
+- jenkins url: http://192.168.2.10:31000
 - build a simple jenkins project
   read jenkins/README.md
 - build a java jenkins project

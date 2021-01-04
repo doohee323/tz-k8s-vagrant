@@ -37,7 +37,7 @@ sudo systemctl start nexus
 
 echo '
 {
-        "insecure-registries" : ["192.168.1.10:5000"]
+        "insecure-registries" : ["192.168.2.10:5000"]
 }
 ' > /etc/docker/daemon.json
 
@@ -45,17 +45,17 @@ sudo service docker restart
 
 echo '
 ##[ Nexus ]##########################################################
-- url: http://192.168.1.10:8081
+- url: http://192.168.2.10:8081
 - id: admin
 - passwd: cat /opt/sonatype-work/nexus3/admin.password
 
-http://192.168.1.10:8081/#admin/repository/blobstores
+http://192.168.2.10:8081/#admin/repository/blobstores
 
 Create blob store
 docker-hosted
 docker-hub
 
-http://192.168.1.10:8081/#admin/repository/repositories
+http://192.168.2.10:8081/#admin/repository/repositories
 Repositories > Select Recipe > Create repository: docker (hosted)
 name: docker-hosted
 http: 5000
@@ -69,16 +69,16 @@ Remote storage: https://registry-1.docker.io
 select Use Docker Hub
 Blob store: docker-hub
 
-http://192.168.1.10:8081/#admin/security/realms
+http://192.168.2.10:8081/#admin/security/realms
 add Docker Bearer Token Realm Active
 
-docker login 192.168.1.10:5000
+docker login 192.168.2.10:5000
 docker pull busybox
 RMI=`docker images -a | grep busybox | awk '{print $3}'`
-docker tag $RMI 192.168.1.10:5000/busybox:v20201225
-docker push 192.168.1.10:5000/busybox:v20201225
+docker tag $RMI 192.168.2.10:5000/busybox:v20201225
+docker push 192.168.2.10:5000/busybox:v20201225
 
-http://192.168.1.10:8081/#browse/browse:docker-hosted
+http://192.168.2.10:8081/#browse/browse:docker-hosted
 
 #######################################################################
 ' >> /vagrant/info

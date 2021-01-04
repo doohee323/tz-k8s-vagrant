@@ -13,7 +13,7 @@ Vagrant.configure("2") do |config|
 
   config.vm.define "k8s-master" do |master|
     master.vm.box = IMAGE_NAME
-    master.vm.network "private_network", ip: "192.168.1.10"
+    master.vm.network "private_network", ip: "192.168.2.10"
     #master.vm.network "public_network"
     master.vm.network "forwarded_port", guest: 22, host: 60010, auto_correct: true, id: "ssh"
     master.vm.network "forwarded_port", guest: 6443, host: 6443
@@ -38,7 +38,7 @@ Vagrant.configure("2") do |config|
   (1..COUNTER).each do |i|
     config.vm.define "node-#{i}" do |node|
         node.vm.box = IMAGE_NAME
-        node.vm.network "private_network", ip: "192.168.1.#{i + 11}"
+        node.vm.network "private_network", ip: "192.168.2.#{i + 11}"
         node.vm.network "forwarded_port", guest: 22, host: "6010#{i}", auto_correct: true, id: "ssh"
         node.vm.hostname = "node-#{i}"
         node.vm.provision "shell", :path => File.join(File.dirname(__FILE__),"scripts/local/node.sh"), :args => node.vm.hostname

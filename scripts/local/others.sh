@@ -23,7 +23,7 @@ k get storageclass,pv,pvc
 
 # nfs
 # 1. with helm
-#helm install my-release --set nfs.server=192.168.1.10 --set nfs.path=/srv/nfs/mydata stable/nfs-client-provisioner
+#helm install my-release --set nfs.server=192.168.2.10 --set nfs.path=/srv/nfs/mydata stable/nfs-client-provisioner
 # 2. with manual
 #k apply -f /vagrant/tz-local/resource/dynamic-provisioning/nfs/static-nfs.yaml
 #k apply -f /vagrant/tz-local/resource/dynamic-provisioning/nfs/serviceaccount.yaml

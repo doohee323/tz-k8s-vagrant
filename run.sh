@@ -58,6 +58,10 @@ vagrant snapshot save k8s-master k8s-master_kafka --force
 vagrant snapshot save node-1 node-1_kafka --force
 vagrant snapshot save node-2 node-2_kafka --force
 
+vagrant snapshot save k8s-master k8s-master_nexus --force
+vagrant snapshot save node-1 node-1_nexus --force
+vagrant snapshot save node-2 node-2_nexus --force
+
 vagrant snapshot save k8s-master k8s-master_latest --force
 vagrant snapshot save node-1 node-1_latest --force
 vagrant snapshot save node-2 node-2_latest --force
@@ -69,6 +73,10 @@ vagrant snapshot restore node-2 node-2_python
 vagrant snapshot restore k8s-master k8s-master_kafka
 vagrant snapshot restore node-1 node-1_kafka
 vagrant snapshot restore node-2 node-2_kafka
+
+vagrant snapshot restore k8s-master k8s-master_nexus
+vagrant snapshot restore node-1 node-1_nexus
+vagrant snapshot restore node-2 node-2_nexus
 
 vagrant snapshot restore k8s-master k8s-master_latest
 vagrant snapshot restore node-1 node-1_latest
