@@ -50,17 +50,17 @@ bash install.sh
 
  - get jenkins url
    in Workloads
-   => http://192.168.2.10:31756/
+   => http://192.168.1.10:31756/
 
  - install jenkins plugins
-   http://192.168.2.10:31756/pluginManager/available
+   http://192.168.1.10:31756/pluginManager/available
    install "Kubernetes plugin"
    https://plugins.jenkins.io/kubernetes/
 
  - setting kubernetes plugin
-   http://192.168.2.10:31756/configureClouds/
+   http://192.168.1.10:31756/configureClouds/
    kubectl cluster-info
-   Kubernetes Url: https://192.168.2.10
+   Kubernetes Url: https://192.168.1.10
     $> kubectl config view
    Disable https certificate check: check
    Kubernetes Namespace: default

@@ -34,7 +34,10 @@ EOF
 # for local docker repo
 echo '
 {
-        "insecure-registries" : ["192.168.2.10:5000"]
+        "insecure-registries" : [
+          "192.168.1.10:5000",
+          "192.168.2.2:5000"
+        ]
 }
 ' > /etc/docker/daemon.json
 
@@ -43,5 +46,4 @@ sudo service docker restart
 sudo mkdir -p /home/vagrant/data/postgres
 sudo mkdir -p /home/vagrant/data/postgres-1
 sudo ln -s /home/vagrant/data /vagrant/data2
-
 

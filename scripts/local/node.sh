@@ -7,7 +7,7 @@ bash /vagrant/scripts/local/base.sh
 ##################################################################
 # k8s node
 ##################################################################
-MY_IP=`ifconfig | grep '192.168.2.' | awk '{print $2}'`
+MY_IP=`ifconfig | grep '192.168.1.' | awk '{print $2}'`
 sudo sed -i "s/\$KUBELET_EXTRA_ARGS/\$KUBELET_EXTRA_ARGS --node-ip=${MY_IP}/g" /etc/systemd/system/kubelet.service.d/10-kubeadm.conf
 systemctl daemon-reload && systemctl restart kubelet
 
@@ -22,6 +22,6 @@ exit 0
 ## nfs ubuntu client
 sudo apt-get install nfs-common
 mkdir -p /data
-mount -t nfs -vvvv 192.168.2.10:/home/vagrant/data /data
-echo '192.168.2.10:/home/vagrant/data /data  nfs      defaults    0       0' >> /etc/fstab
+mount -t nfs -vvvv 192.168.1.10:/home/vagrant/data /data
+echo '192.168.1.10:/home/vagrant/data /data  nfs      defaults    0       0' >> /etc/fstab
 
