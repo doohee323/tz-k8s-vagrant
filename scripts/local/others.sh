@@ -38,13 +38,6 @@ sudo rm -Rf /vagrant/info
 bash /vagrant/tz-local/resource/dashboard/install.sh
 
 ##################################################################
-# call es install script
-##################################################################
-bash /vagrant/tz-local/resource/monitoring/es.sh
-
-exit 0
-
-##################################################################
 # call monitoring install script
 ##################################################################
 bash /vagrant/tz-local/resource/monitoring/install.sh
