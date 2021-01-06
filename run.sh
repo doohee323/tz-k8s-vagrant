@@ -54,6 +54,10 @@ vagrant snapshot save k8s-master k8s-master_python --force
 vagrant snapshot save node-1 node-1_python --force
 vagrant snapshot save node-2 node-2_python --force
 
+vagrant snapshot delete k8s-master k8s-master_python
+vagrant snapshot delete node-1 node-1_python
+vagrant snapshot delete node-2 node-2_python
+
 vagrant snapshot save k8s-master k8s-master_kafka --force
 vagrant snapshot save node-1 node-1_kafka --force
 vagrant snapshot save node-2 node-2_kafka --force

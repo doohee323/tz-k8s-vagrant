@@ -1,56 +1,106 @@
 #!/usr/bin/env bash
 
-#set -x
-shopt -s expand_aliases
-alias k='kubectl'
+set -x
 
-brew install kubectl
-brew install helm
+# https://rancher.com/docs/rancher/v2.x/en/installation/other-installation-methods/single-node-docker/
 
-helm repo add stable https://charts.helm.sh/stable
-helm repo update
-k create namespace ingress-nginx
-helm install ingress-nginx stable/nginx-ingress -n ingress-nginx
-helm uninstall ingress-nginx stable/nginx-ingress
+##################################################################
+# - install docker
+##################################################################
+sudo su
 
-k create namespace cert-manager
+sudo swapoff -a
+sudo sed -i '/swap/d' /etc/fstab
+sudo apt-get update
+sudo apt-get -y install apt-transport-https ca-certificates curl software-properties-common
+curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
+sudo add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable"
+sudo apt-get -y install docker-ce
+sudo systemctl start docker
+sudo systemctl enable docker
 
-k apply --validate=false -f https://raw.githubusercontent.com/jetstack/cert-manager/release-0.12/deploy/manifests/00-crds.yaml
-k label namespace cert-manager certmanager.k8s.io/disable-validation=true
+cat <<EOF | sudo tee /etc/docker/daemon.json
+{
+  "group": "root"
+}
+EOF
 
-helm repo add jetstack https://charts.jetstack.io
-helm repo update
-helm install cert-manager jetstack/cert-manager \
-  --namespace cert-manager \
-  --version v0.12.0
-  # --set installCRDs=true
+sudo service docker restart
+sudo systemctl enable docker
 
-k get pods -n cert-manager
-k get services -n cert-manager
+sudo groupadd ubuntu
+sudo useradd -m ubuntu -g ubuntu -s /bin/bash
+echo -e "ubuntu\nubuntu" | passwd ubuntu
+sudo mkdir /home/ubuntu
+sudo chown ubuntu:ubuntu /home/ubuntu
+sudo groupadd docker
+sudo usermod -aG docker ubuntu
 
-helm repo add rancher-stable https://releases.rancher.com/server-charts/stable
-helm repo update
-k create namespace cattle-system
-helm install rancher rancher-stable/rancher \
-  -n cattle-system \
-  --set hostname=rancher.localdev
+#add /etc/sudoers
+cat <<EOF | sudo tee /etc/sudoers.d/rancher
+ubuntu ALL=(ALL) NOPASSWD:ALL
+EOF
 
-k get services -n cattle-system
-k get pods -n cattle-system
-k get ingresses -n cattle-system
+##################################################################
+# - install rancher
+##################################################################
+docker run -d --restart=unless-stopped \
+  -p 80:80 -p 443:443 \
+  --privileged \
+  rancher/rancher:latest
 
-# in my macos
-sudo vi /etc/hosts
-127.0.0.1   rancher.localdev
+sleep 120
+echo docker ps | grep 'rancher/rancher' | awk '{print $1}' | xargs docker logs -f
 
-curl http://rancher.localdev
+echo "##################################################################"
+echo " Rancher URL: https://192.168.1.10"
+echo "##################################################################"
 
-echo '
-##[ Rancher ]##########################################################
-- url: http://rancher.localdev
+##################################################################
+# - install rke
+##################################################################
+#sudo service docker restart
 
+wget https://github.com/rancher/rke/releases/download/v1.2.1/rke_linux-amd64
+curl https://github.com/rancher/rke/releases/download/v1.2.1/rke_linux-amd64 --output rke_linux-amd64
+sudo mv rke_linux-amd64 /usr/bin/rke
+sudo chmod 755 /usr/bin/rke
+rke -v
 
-#######################################################################
-' >> /vagrant/info
-cat /vagrant/info
+##################################################################
+# - rke config (with ubuntu account)
+##################################################################
+sudo chown -Rf ubuntu:ubuntu /home/ubuntu
+su - ubuntu
+mkdir /home/ubuntu/.ssh
+cd /home/ubuntu/.ssh
+ssh-keygen -t rsa -C ubuntu -P "" -f /home/ubuntu/.ssh/id_rsa -q
+sudo chown ubuntu:ubuntu /home/ubuntu/.ssh/id_rsa
+sudo chmod 600 /home/ubuntu/.ssh/id_rsa
+eval `ssh-agent`
+ssh-add id_rsa
 
+sudo mkdir /vagrant/shared
+sudo cp /home/ubuntu/.ssh/id_rsa.pub /vagrant/shared/authorized_keys
+#sudo chmod 700 /home/ubuntu/.ssh
+#sudo chmod 640 /home/ubuntu/.ssh/authorized_keys
+
+########################################################################
+# - install kubectl
+########################################################################
+sudo apt-get update && sudo apt-get install -y apt-transport-https gnupg2 curl
+curl -s https://packages.cloud.google.com/apt/doc/apt-key.gpg | sudo apt-key add -
+echo "deb https://apt.kubernetes.io/ kubernetes-xenial main" | sudo tee -a /etc/apt/sources.list.d/kubernetes.list
+sudo apt-get update
+sudo apt-get install -y kubectl
+
+cd /home/ubuntu
+
+bash /vagrant/scripts/ubuntu/rancher-01.sh
+
+echo ########################################################################
+echo Need to run and follow two shells!!!
+echo
+echo bash /vagrant/scripts/ubuntu/rancher-02.sh
+echo bash /vagrant/scripts/ubuntu/rancher-03.sh
+echo ########################################################################
