@@ -1,6 +1,8 @@
 # -*- mode: ruby -*-
 # vi: set ft=ruby :
 
+default_network_interface=`ip addr show | awk '/inet.*brd/{print $NF}'`.split(/\n+/)
+
 IMAGE_NAME = "bento/ubuntu-18.04"
 COUNTER = 2
 Vagrant.configure("2") do |config|
@@ -11,10 +13,14 @@ Vagrant.configure("2") do |config|
     v.cpus = 2
   end
 
+  config.trigger.before :all do |trigger|
+    trigger.name = "Finished Message"
+    trigger.info = "Machine is up!"
+  end
+
   config.vm.define "k8s-master" do |master|
     master.vm.box = IMAGE_NAME
-    master.vm.network "public_network", bridge: "eno1:"
-    master.vm.network "forwarded_port", guest: 22, host: 60010, auto_correct: true, id: "ssh"
+    master.vm.network "public_network", bridge: default_network_interface
     master.vm.hostname = "k8s-master"
     master.vm.provision "shell", :path => File.join(File.dirname(__FILE__),"scripts/local/master.sh"), :args => master.vm.hostname
   end
@@ -22,7 +28,7 @@ Vagrant.configure("2") do |config|
   (1..COUNTER).each do |i|
     config.vm.define "node-#{i}" do |node|
         node.vm.box = IMAGE_NAME
-        node.vm.network "public_network", bridge: "eno1:"
+        node.vm.network "public_network", bridge: default_network_interface
         node.vm.hostname = "node-#{i}"
         node.vm.provision "shell", :path => File.join(File.dirname(__FILE__),"scripts/local/node.sh"), :args => node.vm.hostname
     end
