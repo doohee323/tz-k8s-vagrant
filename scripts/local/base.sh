@@ -24,6 +24,17 @@ sudo mkdir -p /root/.ssh
 sudo groupadd ubuntu
 sudo useradd -g ubuntu -d /home/ubuntu -s /bin/bash -m ubuntu
 sudo echo "ubuntu:ubuntu" | chpasswd
+sudo groupadd docker
+sudo usermod -aG docker ubuntu
+
+sudo mkdir -p /home/ubuntu/.ssh
+sudo chown -Rf ubuntu:ubuntu /home/ubuntu
+sudo chmod 700 /home/ubuntu/.ssh
+
+#add /etc/sudoers
+cat <<EOF | sudo tee /etc/sudoers.d/rancher
+ubuntu ALL=(ALL) NOPASSWD:ALL
+EOF
 
 # config DNS
 cat <<EOF > /etc/resolv.conf
@@ -34,16 +45,18 @@ EOF
 # for local docker repo
 echo '
 {
-        "insecure-registries" : [
-          "192.168.1.10:5000",
-          "192.168.2.2:5000"
-        ]
+  "group": "ubuntu",
+  "insecure-registries" : [
+    "192.168.1.10:5000",
+    "192.168.2.2:5000"
+  ]
 }
 ' > /etc/docker/daemon.json
 
+sudo chown -Rf ubuntu:ubuntu /var/run/docker.sock
 sudo service docker restart
 
 sudo mkdir -p /home/vagrant/data/postgres
 sudo mkdir -p /home/vagrant/data/postgres-1
-sudo ln -s /home/vagrant/data /vagrant/data2
+#sudo ln -s /home/vagrant/data /vagrant/data2
 

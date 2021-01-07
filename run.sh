@@ -50,6 +50,10 @@ exit 0
 
 vagrant snapshot list
 
+vagrant snapshot save k8s-master k8s-master_init --force
+vagrant snapshot save node-1 node-1_init --force
+vagrant snapshot save node-2 node-2_init --force
+
 vagrant snapshot save k8s-master k8s-master_python --force
 vagrant snapshot save node-1 node-1_python --force
 vagrant snapshot save node-2 node-2_python --force

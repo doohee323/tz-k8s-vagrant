@@ -6,6 +6,8 @@ alias k='kubectl --kubeconfig ~/.kube/config'
 
 bash /vagrant/scripts/local/base.sh
 
+exit 0
+
 ##################################################################
 # k8s master
 ##################################################################
