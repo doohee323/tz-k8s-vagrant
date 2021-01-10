@@ -21,7 +21,7 @@ sudo systemctl enable docker
 
 cat <<EOF | sudo tee /etc/docker/daemon.json
 {
-  "group": "root"
+  "group": "ubuntu"
 }
 EOF
 
@@ -41,6 +41,14 @@ cat <<EOF | sudo tee /etc/sudoers.d/rancher
 ubuntu ALL=(ALL) NOPASSWD:ALL
 EOF
 
+# config DNS
+sudo service systemd-resolved stop
+sudo systemctl disable systemd-resolved
+cat <<EOF > /etc/resolv.conf
+nameserver 1.1.1.1 #cloudflare DNS
+nameserver 8.8.8.8 #Google DNS
+EOF
+
 ##################################################################
 # - install rancher
 ##################################################################
@@ -50,7 +58,7 @@ docker run -d --restart=unless-stopped \
   rancher/rancher:latest
 
 sleep 120
-echo docker ps | grep 'rancher/rancher' | awk '{print $1}' | xargs docker logs -f
+echo "docker ps | grep 'rancher/rancher' | awk '{print $1}' | xargs docker logs -f"
 
 echo "##################################################################"
 echo " Rancher URL: https://192.168.1.10"
