@@ -1,7 +1,8 @@
 # -*- mode: ruby -*-
 # vi: set ft=ruby :
 
-default_network_interface=`ip addr show | awk '/inet.*brd/{print $NF}'`.split(/\n+/)
+# default_network_interface=`ip addr show | awk '/inet.*brd/{print $NF}'`.split(/\n+/)
+default_network_interface=`ifconfig | awk '/UP/ && !/LOOPBACK/ && !/POINTOPOINT/' | awk '{print substr($1, 1, length($1)-1)}'`.split(/\n+/)
 
 IMAGE_NAME = "bento/ubuntu-18.04"
 COUNTER = 2
@@ -11,11 +12,6 @@ Vagrant.configure("2") do |config|
   config.vm.provider "virtualbox" do |v|
     v.memory = 4096
     v.cpus = 2
-  end
-
-  config.trigger.before :all do |trigger|
-    trigger.name = "Finished Message"
-    trigger.info = "Machine is up!"
   end
 
   config.vm.define "k8s-master" do |master|
