@@ -13,16 +13,11 @@ Vagrant.configure("2") do |config|
     v.cpus = 2
   end
 
-  config.trigger.before :all do |trigger|
-    trigger.name = "Finished Message"
-    trigger.info = "Machine is up!"
-  end
-
   config.vm.define "k8s-master" do |master|
     master.vm.box = IMAGE_NAME
     master.vm.network "public_network", bridge: default_network_interface
     master.vm.hostname = "k8s-master"
-    master.vm.provision "shell", :path => File.join(File.dirname(__FILE__),"scripts/local/master.sh"), :args => master.vm.hostname
+    master.vm.provision "shell", :path => File.join(File.dirname(__FILE__),"scripts/nodes/master.sh"), :args => master.vm.hostname
   end
 
   (1..COUNTER).each do |i|
@@ -30,7 +25,7 @@ Vagrant.configure("2") do |config|
         node.vm.box = IMAGE_NAME
         node.vm.network "public_network", bridge: default_network_interface
         node.vm.hostname = "node-#{i}"
-        node.vm.provision "shell", :path => File.join(File.dirname(__FILE__),"scripts/local/node.sh"), :args => node.vm.hostname
+        node.vm.provision "shell", :path => File.join(File.dirname(__FILE__),"scripts/nodes/node.sh"), :args => node.vm.hostname
     end
   end
 end
