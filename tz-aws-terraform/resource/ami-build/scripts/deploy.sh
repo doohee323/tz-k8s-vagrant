@@ -27,7 +27,10 @@ sudo useradd -g ubuntu -d /home/ubuntu -s /bin/bash -m ubuntu
 sudo echo "ubuntu:ubuntu" | chpasswd
 
 # config DNS
-cat <<EOF > /etc/resolv.conf
+sudo service systemd-resolved stop
+sudo systemctl disable systemd-resolved
+sudo rm -Rf /etc/resolv.conf
+cat <<EOF | sudo tee /etc/resolv.conf
 nameserver 1.1.1.1 #cloudflare DNS
 nameserver 8.8.8.8 #Google DNS
 EOF

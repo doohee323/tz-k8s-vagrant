@@ -41,7 +41,8 @@ EOF
 # config DNS
 sudo service systemd-resolved stop
 sudo systemctl disable systemd-resolved
-cat <<EOF > /etc/resolv.conf
+sudo rm -Rf /etc/resolv.conf
+cat <<EOF | sudo tee /etc/resolv.conf
 nameserver 1.1.1.1 #cloudflare DNS
 nameserver 8.8.8.8 #Google DNS
 EOF
