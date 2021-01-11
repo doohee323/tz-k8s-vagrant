@@ -36,7 +36,13 @@ EOF
 # for local docker repo
 echo '
 {
-        "insecure-registries" : ["192.168.1.10:5000"]
+  "group": "ubuntu",
+  "insecure-registries" : [
+    "192.168.0.10:5000",
+    "192.168.1.10:5000",
+    "192.168.0.0/16",
+    "192.168.1.0/16"
+  ]
 }
 ' > /etc/docker/daemon.json
 
