@@ -7,7 +7,7 @@ set -x
 
 # check access is ok
 #ssh -i ~/.ssh/id_rsa ubuntu@192.168.1.12
-ssh -i ~/.ssh/id_rsa -p 2222 vagrant@dooheehong323
+#ssh -i ~/.ssh/id_rsa -p 22 ubuntu@192.168.0.134
 
 cd /home/ubuntu
 
@@ -48,6 +48,7 @@ sudo chown -Rf ubuntu:ubuntu /var/run/docker.sock
 docker ps
 rm -Rf /home/ubuntu/cluster.rkestate
 rm -Rf /home/ubuntu/kube_config_cluster.yml
+#rke remove -dind --force
 rke up --ignore-docker-version
 
 ls /home/ubuntu/kube_config_cluster.yml
