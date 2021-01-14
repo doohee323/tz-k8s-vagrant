@@ -16,8 +16,8 @@ k create secret generic -n metallb-system memberlist --from-literal=secretkey="$
 
 k get pods -n metallb-system
 
-k apply -f /vagrant/tz-local/resource/metallb/layer2-config.yaml
 k delete -f /vagrant/tz-local/resource/metallb/layer2-config.yaml
+k apply -f /vagrant/tz-local/resource/metallb/layer2-config.yaml
 
 k logs -l component=speaker -n metallb-system
 

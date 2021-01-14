@@ -25,24 +25,22 @@ User=root
 Group=root
 ExecStart=/opt/nexus/bin/nexus start
 ExecStop=/opt/nexus/bin/nexus stop
-User=root
 Restart=on-abort
 [Install]
 WantedBy=multi-user.target
 ' > /etc/systemd/system/nexus.service
 
 sudo systemctl enable nexus
-sudo systemctl start nexus
-sudo systemctl stop nexus
-#sudo systemctl restart nexus
-#sudo systemctl status nexus
+sudo service nexus start
+sudo service nexus stop
+#sudo service nexus status
 
 # every client pc needs this setting
 echo '
 {
         "insecure-registries" : [
           "192.168.1.10:5000",
-          "192.168.2.2:5000"
+          "192.168.0.180:5000",
         ]
 }
 ' > /etc/docker/daemon.json
