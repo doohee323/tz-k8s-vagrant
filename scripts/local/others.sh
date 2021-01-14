@@ -50,6 +50,11 @@ sudo rm -Rf /vagrant/info
 bash /vagrant/tz-local/resource/dynamic-provisioning/nfs/install.sh
 
 ##################################################################
+# call metallb
+##################################################################
+bash /vagrant/tz-local/resource/metallb/install.sh
+
+##################################################################
 # call dashboard install script
 ##################################################################
 bash /vagrant/tz-local/resource/dashboard/install.sh
