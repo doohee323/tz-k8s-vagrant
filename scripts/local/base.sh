@@ -43,7 +43,4 @@ echo '
 
 sudo service docker restart
 
-sudo mkdir -p /home/vagrant/data/postgres
-sudo mkdir -p /home/vagrant/data/postgres-1
-sudo ln -s /home/vagrant/data /vagrant/data2
 

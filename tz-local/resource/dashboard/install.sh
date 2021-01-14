@@ -8,7 +8,13 @@ cd /vagrant
 
 ## install dashboard
 k apply -f https://raw.githubusercontent.com/kubernetes/dashboard/v2.1.0/aio/deploy/recommended.yaml
-k patch svc kubernetes-dashboard --type='json' -p '[{"op":"replace","path":"/spec/type","value":"NodePort"},{"op":"replace","path":"/spec/ports/0/nodePort","value":32699}]' -n kubernetes-dashboard
+
+k get svc kubernetes-dashboard -n kubernetes-dashboard -o yaml > /vagrant/tz-local/resource/dashboard/kubernetes-dashboard.yaml
+
+# to NodePort
+#k patch svc kubernetes-dashboard --type='json' -p '[{"op":"replace","path":"/spec/type","value":"NodePort"},{"op":"replace","path":"/spec/ports/0/nodePort","value":32699}]' -n kubernetes-dashboard
+## to LoadBalancer
+#k patch svc kubernetes-dashboard --type='json' -p '[{"op":"replace","path":"/spec/type","value":"LoadBalancer"}]' -n kubernetes-dashboard
 k get svc -n kubernetes-dashboard
 
 ## make a admin
