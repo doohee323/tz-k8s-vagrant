@@ -73,6 +73,7 @@ showmount -e 192.168.1.10
 #sudo mkdir /data
 #mount -t nfs -vvvv 192.168.1.10:/home/vagrant/data /data
 #echo '192.168.1.10:/home/vagrant/data /data  nfs      defaults    0       0' >> /etc/fstab
+#sudo mount -t nfs -o resvport,rw 192.168.3.1:/Volumes/workspace/etc /Volumes/sambashare
 
 k patch storageclass nfs-storageclass -p '{"metadata": {"annotations":{"storageclass.kubernetes.io/is-default-class":"true"}}}'
 k get storageclass,pv,pvc
