@@ -2,7 +2,18 @@
 
 #set -x
 
-if [[ "$1" == "down" ]]; then
+WORKING_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
+cd ${WORKING_DIR}
+
+if [[ "$1" == "reload" ]]; then
+  echo "Vagrant reload!"
+  vagrant reload
+  exit 0
+elif [[ "$1" == "halt" ]]; then
+  echo "Vagrant halt!"
+  vagrant halt
+  exit 0
+elif [[ "$1" == "down" ]]; then
   if [[ -f "./tz-aws-terraform/terraform.tfstate" ]]; then
       cp -Rf Vagrantfile Vagrantfile.bak
       cp -Rf ./scripts/terraform/Vagrantfile Vagrantfile
@@ -43,6 +54,18 @@ vagrant snapshot save k8s-master k8s-master_python --force
 vagrant snapshot save node-1 node-1_python --force
 vagrant snapshot save node-2 node-2_python --force
 
+vagrant snapshot save k8s-master k8s-master_kafka --force
+vagrant snapshot save node-1 node-1_kafka --force
+vagrant snapshot save node-2 node-2_kafka --force
+
+vagrant snapshot save k8s-master k8s-master_nexus --force
+vagrant snapshot save node-1 node-1_nexus --force
+vagrant snapshot save node-2 node-2_nexus --force
+
+vagrant snapshot save k8s-master k8s-master_rancher --force
+vagrant snapshot save node-1 node-1_rancher --force
+vagrant snapshot save node-2 node-2_rancher --force
+
 vagrant snapshot save k8s-master k8s-master_latest --force
 vagrant snapshot save node-1 node-1_latest --force
 vagrant snapshot save node-2 node-2_latest --force
@@ -50,6 +73,18 @@ vagrant snapshot save node-2 node-2_latest --force
 vagrant snapshot restore k8s-master k8s-master_python
 vagrant snapshot restore node-1 node-1_python
 vagrant snapshot restore node-2 node-2_python
+
+vagrant snapshot restore k8s-master k8s-master_kafka
+vagrant snapshot restore node-1 node-1_kafka
+vagrant snapshot restore node-2 node-2_kafka
+
+vagrant snapshot restore k8s-master k8s-master_nexus
+vagrant snapshot restore node-1 node-1_nexus
+vagrant snapshot restore node-2 node-2_nexus
+
+vagrant snapshot restore k8s-master k8s-master_rancher
+vagrant snapshot restore node-1 node-1_rancher
+vagrant snapshot restore node-2 node-2_rancher
 
 vagrant snapshot restore k8s-master k8s-master_latest
 vagrant snapshot restore node-1 node-1_latest

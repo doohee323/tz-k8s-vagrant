@@ -22,12 +22,15 @@ Vagrant.configure("2") do |config|
     master.vm.network "forwarded_port", guest: 443, host: 443
     master.vm.network "forwarded_port", guest: 32699, host: 32699   # dashboard
     master.vm.network "forwarded_port", guest: 32698, host: 32698   # forwarding test
-    master.vm.network "forwarded_port", guest: 32449, host: 32449
-    master.vm.network "forwarded_port", guest: 30912, host: 30912
+    master.vm.network "forwarded_port", guest: 32449, host: 32449   # prometheus
+    master.vm.network "forwarded_port", guest: 30912, host: 30912   # grafana
     master.vm.network "forwarded_port", guest: 31000, host: 31000
     master.vm.network "forwarded_port", guest: 30007, host: 30007
     master.vm.network "forwarded_port", guest: 8081, host: 8081     # nexus
     master.vm.network "forwarded_port", guest: 5000, host: 5000     # docker_repo
+    master.vm.network "forwarded_port", guest: 32181, host: 32181   # zookeeper
+    master.vm.network "forwarded_port", guest: 30092, host: 30092   # kafka
+    master.vm.network "forwarded_port", guest: 30432, host: 30432   # postgresql
     master.vm.hostname = "k8s-master"
     master.vm.provision "shell", :path => File.join(File.dirname(__FILE__),"scripts/local/master.sh"), :args => master.vm.hostname
   end
