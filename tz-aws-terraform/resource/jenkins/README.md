@@ -58,16 +58,16 @@ bash install.sh
    https://plugins.jenkins.io/kubernetes/
 
  - setting kubernetes plugin
-   http://192.168.1.10:31756/configureClouds/
-   kubectl cluster-info
-   Kubernetes Url: https://192.168.1.10
-    $> kubectl config view
+   http://192.168.1.10:31000/configureClouds/
+   $> kubectl cluster-info
+   Kubernetes URL: https://192.168.1.10:6443
+    * kubectl config view --minify | grep server
    Disable https certificate check: check
    Kubernetes Namespace: default
-   Credentials: Jenkins
-        Username: doohee323
-        Password: xxx    -> https://github.com/settings/tokens
-        ID: GitHub
+   Credentials: Secret file
+        file: ~/.kube/config
+        ID: kubeconfig
+        Description: kubeconfig
 
    kubectl get svc | grep jenkins
     NAME         TYPE        CLUSTER-IP      EXTERNAL-IP   PORT(S)                          AGE

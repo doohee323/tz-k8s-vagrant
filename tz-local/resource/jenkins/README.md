@@ -61,7 +61,7 @@ bash install.sh
  - setting kubernetes plugin
    http://192.168.1.10:31000/configureClouds/
    $> kubectl cluster-info
-   Kubernetes Url: https://192.168.1.10:6443
+   Kubernetes URL: https://192.168.1.10:6443
     * kubectl config view --minify | grep server
    Disable https certificate check: check
    Kubernetes Namespace: default
