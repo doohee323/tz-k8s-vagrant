@@ -18,7 +18,7 @@ k get svc kubernetes-dashboard -n kubernetes-dashboard -o yaml > /vagrant/tz-loc
 k get svc -n kubernetes-dashboard
 
 ## make a admin
-k apply -f /vagrant/tz-local/dashboard/dashboard-admin.yaml
+k apply -f /vagrant/tz-local/resource/dashboard/dashboard-admin.yaml
 
 echo "get dashboard url: "
 k cluster-info
