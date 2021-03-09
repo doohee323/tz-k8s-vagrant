@@ -9,7 +9,7 @@
 sudo swapoff -a
 sudo sed -i '/swap/d' /etc/fstab
 sudo apt-get update
-sudo apt-get install -y docker.io apt-transport-https curl
+sudo apt-get install -y docker.io apt-transport-https curl unzip
 sudo systemctl start docker
 sudo systemctl enable docker
 sudo apt-get update

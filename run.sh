@@ -62,9 +62,9 @@ vagrant snapshot save k8s-master k8s-master_longhorn --force
 vagrant snapshot save node-1 node-1_longhorn --force
 vagrant snapshot save node-2 node-2_longhorn --force
 
-vagrant snapshot save k8s-master k8s-master_python --force
-vagrant snapshot save node-1 node-1_python --force
-vagrant snapshot save node-2 node-2_python --force
+vagrant snapshot save k8s-master k8s-master_consul --force
+vagrant snapshot save node-1 node-1_consul --force
+vagrant snapshot save node-2 node-2_consul --force
 
 vagrant snapshot save k8s-master k8s-master_kafka --force
 vagrant snapshot save node-1 node-1_kafka --force
@@ -99,7 +99,13 @@ vagrant snapshot restore k8s-master k8s-master_rancher
 vagrant snapshot restore node-1 node-1_rancher
 vagrant snapshot restore node-2 node-2_rancher
 
-vagrant snapshot restore k8s-master k8s-master_master
-vagrant snapshot restore node-1 node-1_master
-vagrant snapshot restore node-2 node-2_master
+vagrant snapshot restore k8s-master k8s-master_longhorn
+vagrant snapshot restore node-1 node-1_longhorn
+vagrant snapshot restore node-2 node-2_longhorn
+
+vagrant snapshot restore k8s-master k8s-master_consul
+vagrant snapshot restore node-1 node-1_consul
+vagrant snapshot restore node-2 node-2_consul
+
+
 
