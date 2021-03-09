@@ -50,6 +50,18 @@ exit 0
 
 vagrant snapshot list
 
+vagrant snapshot save k8s-master k8s-master_latest --force
+vagrant snapshot save node-1 node-1_latest --force
+vagrant snapshot save node-2 node-2_latest --force
+
+vagrant snapshot save k8s-master k8s-master_rancher --force
+vagrant snapshot save node-1 node-1_rancher --force
+vagrant snapshot save node-2 node-2_rancher --force
+
+vagrant snapshot save k8s-master k8s-master_longhorn --force
+vagrant snapshot save node-1 node-1_longhorn --force
+vagrant snapshot save node-2 node-2_longhorn --force
+
 vagrant snapshot save k8s-master k8s-master_python --force
 vagrant snapshot save node-1 node-1_python --force
 vagrant snapshot save node-2 node-2_python --force
@@ -62,13 +74,14 @@ vagrant snapshot save k8s-master k8s-master_nexus --force
 vagrant snapshot save node-1 node-1_nexus --force
 vagrant snapshot save node-2 node-2_nexus --force
 
-vagrant snapshot save k8s-master k8s-master_rancher --force
-vagrant snapshot save node-1 node-1_rancher --force
-vagrant snapshot save node-2 node-2_rancher --force
-
 vagrant snapshot save k8s-master k8s-master_master --force
 vagrant snapshot save node-1 node-1_master --force
 vagrant snapshot save node-2 node-2_master --force
+
+vagrant snapshot save k8s-master k8s-master_python --force
+vagrant snapshot save node-1 node-1_python --force
+vagrant snapshot save node-2 node-2_python --force
+
 
 vagrant snapshot restore k8s-master k8s-master_latest
 vagrant snapshot restore node-1 node-1_latest

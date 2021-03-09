@@ -1,0 +1,12 @@
+server:
+  enabled: true
+  replicas: 3
+  storage: 100Mi
+
+  service:
+    enabled: true
+
+ui:
+  enabled: true
+  service:
+    enabled: true
