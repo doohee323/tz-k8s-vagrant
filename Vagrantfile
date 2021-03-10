@@ -35,6 +35,7 @@ Vagrant.configure("2") do |config|
     master.vm.network "forwarded_port", guest: 30085, host: 30085   # wordpress
     master.vm.network "forwarded_port", guest: 8500, host: 8500     # consul-server
     master.vm.network "forwarded_port", guest: 31699, host: 31699   # consul-ui
+    master.vm.network "forwarded_port", guest: 31092, host: 31092   # consul-test
     master.vm.network "forwarded_port", guest: 30685, host: 30685   # vault
     master.vm.network "forwarded_port", guest: 30246, host: 30246   # vault
 

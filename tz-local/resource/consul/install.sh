@@ -22,6 +22,11 @@ k port-forward service/consul-consul-server 8500:8500 -n consul &
 
 #k get pod/tz-consul-deployment-78597cd9c5-vsbg4 -o yaml > a.yaml
 
+k create -f /vagrant/tz-local/resource/consul/counting.yaml -n consul
+k create -f /vagrant/tz-local/resource/consul/dashboard.yaml -n consul
+
+#curl http://dooheehong323:31092/
+
 echo '
 ##[ Consul ]##########################################################
 - url: http://dooheehong323:31699
