@@ -9,7 +9,7 @@ helm search repo hashicorp/consul
 
 k create namespace consul
 helm install consul hashicorp/consul -f /vagrant/tz-local/resource/consul/values.yaml -n consul
-#helm uninstall consul hashicorp/consul -n consul
+#helm uninstall consul -n consul
 #helm install consul hashicorp/consul --set global.name=consul
 
 # to NodePort
@@ -21,6 +21,52 @@ k port-forward service/consul-consul-server 8500:8500 -n consul &
 #k apply -f /vagrant/tz-local/resource/consul/consul.yaml -n consul
 
 #k get pod/tz-consul-deployment-78597cd9c5-vsbg4 -o yaml > a.yaml
+
+echo '
+##[ Consul ]##########################################################
+- url: http://dooheehong323:31699
+
+# install for test on host
+wget https://releases.hashicorp.com/consul/1.8.4/consul_1.8.4_linux_amd64.zip
+unzip consul_1.8.4_linux_amd64.zip
+mv consul /usr/local/bin/
+
+export CONSUL_HTTP_ADDR="localhost:8500"
+#export CONSUL_HTTP_ADDR="dooheehong323:8500"
+consul members
+curl http://localhost:8500/v1/status/leader
+#curl http://dooheehong323:8500/v1/status/leader
+
+consul kv put hello world
+consul kv put redis/config/connections 5
+consul kv get redis/config/connections
+consul kv get -recurse redis/config
+
+consul watch -type=key -key=redis/config/connections ./my-key-handler.sh
+#consul watch -type=keyprefix -prefix=redis/config/ ./my-key-handler.sh
+vi my-key-handler.sh
+#!/bin/bash
+while read line
+do
+    echo $line >> dump.txt
+done
+
+consul kv put redis/config/connections 5
+vi dump.txt
+{"Key":"redis/config/connections","CreateIndex":510,"ModifyIndex":510,"LockIndex":0,"Flags":0,"Value":"NQ==","Session":""}
+echo "NQ==" | base64 --decode
+
+consul watch -type=event -name=web-deploy ./my-key-handler.sh -web-deploy
+consul event -name=web-deploy 1609030
+[{"ID":"b3abd566-f0c9-ce2d-1359-b855fd9050eb","Name":"web-deploy","Payload":"MTYwOTAzMA==","NodeFilter":"","ServiceFilter":"","TagFilter":"","Version":1,"LTime":3}]
+echo "MTYwOTAzMA==" | base64 --decode
+
+#######################################################################
+' >> /vagrant/info
+cat /vagrant/info
+
+
+exit 0
 
 cat <<EOF | sudo tee /etc/systemd/system/consulw.service
 [Unit]
@@ -70,47 +116,4 @@ sudo systemctl daemon-reload
 sudo systemctl enable consulw
 service consulw start
 
-
-echo '
-##[ Consul ]##########################################################
-- url: http://dooheehong323:31699
-
-# install for test on host
-wget https://releases.hashicorp.com/consul/1.8.4/consul_1.8.4_linux_amd64.zip
-unzip consul_1.8.4_linux_amd64.zip
-mv consul /usr/local/bin/
-
-export CONSUL_HTTP_ADDR="localhost:8500"
-#export CONSUL_HTTP_ADDR="dooheehong323:8500"
-consul members
-curl http://localhost:8500/v1/status/leader
-#curl http://dooheehong323:8500/v1/status/leader
-
-consul kv put hello world
-consul kv put redis/config/connections 5
-consul kv get redis/config/connections
-consul kv get -recurse redis/config
-
-consul watch -type=key -key=redis/config/connections ./my-key-handler.sh
-#consul watch -type=keyprefix -prefix=redis/config/ ./my-key-handler.sh
-vi my-key-handler.sh
-#!/bin/bash
-while read line
-do
-    echo $line >> dump.txt
-done
-
-consul kv put redis/config/connections 5
-vi dump.txt
-{"Key":"redis/config/connections","CreateIndex":510,"ModifyIndex":510,"LockIndex":0,"Flags":0,"Value":"NQ==","Session":""}
-echo "NQ==" | base64 --decode
-
-consul watch -type=event -name=web-deploy ./my-key-handler.sh -web-deploy
-consul event -name=web-deploy 1609030
-[{"ID":"b3abd566-f0c9-ce2d-1359-b855fd9050eb","Name":"web-deploy","Payload":"MTYwOTAzMA==","NodeFilter":"","ServiceFilter":"","TagFilter":"","Version":1,"LTime":3}]
-echo "MTYwOTAzMA==" | base64 --decode
-
-#######################################################################
-' >> /vagrant/info
-cat /vagrant/info
 
