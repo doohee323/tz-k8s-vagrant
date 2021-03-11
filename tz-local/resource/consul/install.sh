@@ -43,6 +43,7 @@ curl http://localhost:8500/v1/status/leader
 #curl http://dooheehong323:8500/v1/status/leader
 
 consul kv put hello world
+consul kv get hello
 consul kv put redis/config/connections 5
 consul kv get redis/config/connections
 consul kv get -recurse redis/config
@@ -65,6 +66,12 @@ consul watch -type=event -name=web-deploy ./my-key-handler.sh -web-deploy
 consul event -name=web-deploy 1609030
 [{"ID":"b3abd566-f0c9-ce2d-1359-b855fd9050eb","Name":"web-deploy","Payload":"MTYwOTAzMA==","NodeFilter":"","ServiceFilter":"","TagFilter":"","Version":1,"LTime":3}]
 echo "MTYwOTAzMA==" | base64 --decode
+
+
+consul snapshot save tz-consul.snap
+ls tz-consul.snap
+consul snapshot inspect tz-consul.snap
+
 
 #######################################################################
 ' >> /vagrant/info

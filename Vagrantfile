@@ -36,8 +36,8 @@ Vagrant.configure("2") do |config|
     master.vm.network "forwarded_port", guest: 8500, host: 8500     # consul-server
     master.vm.network "forwarded_port", guest: 31699, host: 31699   # consul-ui
     master.vm.network "forwarded_port", guest: 31092, host: 31092   # consul-test
-    master.vm.network "forwarded_port", guest: 30685, host: 30685   # vault
-    master.vm.network "forwarded_port", guest: 30246, host: 30246   # vault
+    master.vm.network "forwarded_port", guest: 8200, host: 8200     # vault
+    master.vm.network "forwarded_port", guest: 31700, host: 31700   # vault-ui
 
     master.vm.hostname = "k8s-master"
     master.vm.provision "shell", :path => File.join(File.dirname(__FILE__),"scripts/local/master.sh"), :args => master.vm.hostname

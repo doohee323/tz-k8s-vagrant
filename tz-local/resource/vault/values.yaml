@@ -1,0 +1,31 @@
+server:
+  ha:
+    enabled: true
+    replicas: 2
+  config: |
+    ui = true
+    api_addr = "http://localhost:8200"
+    listener "tcp" {
+        tls_disable = 1
+        address     = "0.0.0.0:8200"
+    }
+
+    storage "consul" {
+        path = "vault"
+        address = "localhost:8500"
+    }
+
+ui:
+  service:
+    type: 'ClusterIP'
+
+injector:
+  enabled: true
+
+auditStorage:
+  enabled: true
+  size: 100Mi
+
+dataStorage:
+  enabled: true
+  size: 100Mi
