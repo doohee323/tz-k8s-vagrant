@@ -3,9 +3,6 @@
 ### https://www.vaultproject.io/api
 
 #set -x
-shopt -s expand_aliases
-alias k='kubectl'
-
 vault -autocomplete-install
 complete -C /usr/local/bin/vault vault
 vault -h

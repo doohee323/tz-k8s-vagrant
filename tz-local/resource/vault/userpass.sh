@@ -1,9 +1,6 @@
 #!/usr/bin/env bash
 
 #set -x
-shopt -s expand_aliases
-alias k='kubectl'
-
 export VAULT_ADDR=http://10.106.177.255:8200
 #export VAULT_ADDR=http://dooheehong323:8200
 vault login s.qBPblA0U9Bzmhgr8eRnukSqR
