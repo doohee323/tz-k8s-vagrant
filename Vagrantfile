@@ -38,6 +38,8 @@ Vagrant.configure("2") do |config|
     master.vm.network "forwarded_port", guest: 31092, host: 31092   # consul-test
     master.vm.network "forwarded_port", guest: 8200, host: 8200     # vault
     master.vm.network "forwarded_port", guest: 31700, host: 31700   # vault-ui
+    master.vm.network "forwarded_port", guest: 31701, host: 31701     # openldap
+    master.vm.network "forwarded_port", guest: 32520, host: 32520     # openldap2
 
     master.vm.hostname = "k8s-master"
     master.vm.provision "shell", :path => File.join(File.dirname(__FILE__),"scripts/local/master.sh"), :args => master.vm.hostname

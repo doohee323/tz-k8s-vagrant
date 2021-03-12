@@ -2,6 +2,7 @@
 
 ### https://lejewk.github.io/vault-get-started/
 ### https://www.udemy.com/course/hashicorp-vault/learn/lecture/17017040#overview
+### https://github.com/btkrausen/hashicorp
 
 #set -x
 shopt -s expand_aliases
