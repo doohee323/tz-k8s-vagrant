@@ -1,6 +1,16 @@
 global:
 #  name: consul
   datacenter: tz-dc
+  enabled: true
+
+  gossipEncryption:
+    secretName: "consul-gossip-encryption-key"
+    secretKey: "key"
+
+  tls:
+    enabled: true
+    enableAutoEncrypt: true
+    verify: true
 
   acls:
     manageSystemACLs: true
@@ -21,6 +31,7 @@ client:
 server:
   replicas: 3
   storage: 100Mi
+  connect: true
   disruptionBudget:
     enabled: true
     maxUnavailable: 0
