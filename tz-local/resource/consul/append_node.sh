@@ -24,9 +24,9 @@ sudo useradd -s /sbin/nologin --system -g consul consul
 /bin/chown -R consul:consul /var/run/consul
 
 # 192.168.1.10: k8s-master's ip
-# 172.16.247.7: consul-consul-server-0
-# 172.16.84.173: consul-consul-server-1
-# 172.16.235.236: consul-consul-server-2
+# 172.16.247.7: consul-server-0
+# 172.16.84.173: consul-server-1
+# 172.16.235.236: consul-server-2
 
 echo '
 {

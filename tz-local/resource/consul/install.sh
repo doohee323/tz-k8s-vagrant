@@ -13,9 +13,9 @@ helm install consul hashicorp/consul -f /vagrant/tz-local/resource/consul/values
 #helm install consul hashicorp/consul --set global.name=consul
 
 # to NodePort
-k patch svc consul-consul-ui --type='json' -p '[{"op":"replace","path":"/spec/type","value":"NodePort"},{"op":"replace","path":"/spec/ports/0/nodePort","value":31699}]' -n consul
+k patch svc consul-ui --type='json' -p '[{"op":"replace","path":"/spec/type","value":"NodePort"},{"op":"replace","path":"/spec/ports/0/nodePort","value":31699}]' -n consul
 
-#k port-forward service/consul-consul-server 8500:8500 -n consul &
+#k port-forward service/consul-server 8500:8500 -n consul &
 
 #k delete -f /vagrant/tz-local/resource/consul/consul.yaml -n consul
 #k apply -f /vagrant/tz-local/resource/consul/consul.yaml -n consul

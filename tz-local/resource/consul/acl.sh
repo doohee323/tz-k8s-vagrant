@@ -48,4 +48,6 @@ helm upgrade consul hashicorp/consul -f ./secure-dc1.yaml -n consul --wait
 export CONSUL_HTTP_ADDR="localhost:8500"
 consul members
 
+consul acl bootstrap
+
 

@@ -11,9 +11,18 @@ global:
     enabled: true
     enableAutoEncrypt: true
     verify: true
+    caCert:
+      secretName: ""
+      secretKey: ""
+    caKey:
+      secretName: ""
+      secretKey: ""
 
   acls:
     manageSystemACLs: true
+    bootstrapToken:
+      secretName: ""
+      secretKey: ""
 
 ui:
   service:
