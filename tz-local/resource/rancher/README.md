@@ -21,13 +21,13 @@
 
 ## get a join script
 ```
-open https://rancher.localdev
+open https://192.168.0.232
 
 # from Import Cluster page
 # 1. create a cluster
 #    Add Cluster > Other Cluster > Cluster Name: tz-k8s-vagrant
 # 2. import cluster
-# https://rancher.localdev/g/clusters/add/launch/import?importProvider=other
+# https://192.168.0.232/g/clusters/add/launch/import?importProvider=other
 
 ```
 
@@ -44,10 +44,13 @@ EOF
 
 # on a master node
 
-curl --insecure -sfL https://rancher.localdev/v3/import/zmb5vvkk8d9g29pzxqkrlz6qsrbvlxg6nxvqk7npkdz42476dxwhfb.yaml | kubectl apply -f -
+curl --insecure -sfL https://192.168.0.232/v3/import/bqbz8cfhg897lt95nhlq2pqfltbczztdjlzkgnpmqhxsnwr5wntj6x_c-4fjf7.yaml | kubectl apply -f -
 or
-wget https://rancher.localdev/v3/import/zmb5vvkk8d9g29pzxqkrlz6qsrbvlxg6nxvqk7npkdz42476dxwhfb.yaml --no-check-certificate
-kubectl apply -f zmb5vvkk8d9g29pzxqkrlz6qsrbvlxg6nxvqk7npkdz42476dxwhfb.yaml --kubeconfig=kube_config_cluster.yml
+wget https://192.168.0.232/v3/import/bqbz8cfhg897lt95nhlq2pqfltbczztdjlzkgnpmqhxsnwr5wntj6x_c-4fjf7.yaml --no-check-certificate
+kubectl apply -f bqbz8cfhg897lt95nhlq2pqfltbczztdjlzkgnpmqhxsnwr5wntj6x_c-4fjf7.yaml --kubeconfig=kube_config_cluster.yml
+
+curl --insecure -sfL https://192.168.0.232/v3/import/bqbz8cfhg897lt95nhlq2pqfltbczztdjlzkgnpmqhxsnwr5wntj6x_c-4fjf7.yaml | kubectl apply -f -
+
 
 kubectl get all -n cattle-system
 

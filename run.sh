@@ -50,6 +50,10 @@ exit 0
 
 vagrant snapshot list
 
+rm -Rf ../tz-k8s-vagrant_backup/.vagrant
+cp -Rf .vagrant/ ../tz-k8s-vagrant_backup/
+cp -Rf ../tz-k8s-vagrant_backup/.vagrant .
+
 vagrant snapshot save k8s-master k8s-master_latest --force
 vagrant snapshot save node-1 node-1_latest --force
 vagrant snapshot save node-2 node-2_latest --force
