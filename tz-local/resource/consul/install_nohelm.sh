@@ -25,17 +25,16 @@ consul tls cert create -client
 mkdir certs
 mv *.pem certs
 
-cd production
+cd production/consul
 
 #Hashicorp Consul
 #Create secret for the gossip protocol
 export GOSSIP_ENCRYPTION_KEY=$(consul keygen)
-
+kubectl delete namespace consul
 #Step 1 bootstrap Consul cluster without ACL
-k create namespace consul
+kubectl apply -f consul_namespace.yml
 kubectl apply -f consul_service.yml
 kubectl apply -f consul_serviceaccount.yml
-
-kubectl -n consul create configmap consul --from-file=config.json=config/01_no_acl_config.json -o yaml --dry-run | kubectl replace -f -
+kubectl -n consul create configmap consul --from-file=config.json=config/01_no_acl_config.json -o yaml --dry-run
 
 kubectl apply -f 01consul_statefulset_noacl.yml

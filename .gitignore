@@ -15,7 +15,6 @@ dockerhub
 projects
 s3_bucket_id
 join.sh
-config
 join-command
 get_helm.sh
 volumeF.yaml
