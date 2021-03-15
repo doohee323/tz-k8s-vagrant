@@ -18,11 +18,18 @@ sudo cp bin/cfssl /usr/sbin
 sudo cp cfssl/bin/cfssljson /usr/sbin
 
 #2- Consul deployment :
+
+# install for test on host
+wget https://releases.hashicorp.com/consul/1.8.4/consul_1.8.4_linux_amd64.zip
+sudo apt-get install -y unzip jq
+unzip consul_1.8.4_linux_amd64.zip
+sudo mv consul /usr/local/bin/
+rm -Rf consul_1.8.4_linux_amd64.zip
+
 # Generate CA and sign request for Consul
+cd /vagrant/tz-local/resource/consul/vault/consul
 
-
-
-cfssl gencert -initca ca/ca-csr.json | cfssljson -bare ca
+cfssl gencert -initca consul/ca/ca-csr.json | cfssljson -bare ca
 # Generate SSL certificates for Consul
 cfssl gencert \
 -ca=ca.pem \
@@ -33,3 +40,24 @@ ca/consul-csr.json | cfssljson -bare consul
 # Perpare a GOSSIP key for Consul members communication encryptation
 GOSSIP_ENCRYPTION_KEY=$(consul keygen)
 
+#2. Create secret with Gossip key and public/private keys
+k delete secret consul-gossip-encryption-key
+k create secret generic consul \
+--from-literal=key="${GOSSIP_ENCRYPTION_KEY}" \
+--from-file=ca.pem \
+--from-file=consul.pem \
+--from-file=consul-key.pem
+
+#3. Deploy 3 Consul members (Statefulset)
+kubectl apply -f consul/service.yaml
+kubectl apply -f consul/rbac.yaml
+kubectl apply -f consul/config.yaml
+kubectl apply -f consul/consul.yaml
+
+#4. Prepare SSL certificates for Consul client, it will be used by vault consul client (sidecar).
+cfssl gencert \
+-ca=ca.pem \
+-ca-key=ca-key.pem \
+-config=ca/ca-config.json \
+-profile=default \
+consul/ca/consul-csr.json | cfssljson -bare client-vault

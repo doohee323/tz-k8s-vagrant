@@ -34,7 +34,7 @@ spec:
             valueFrom:
               secretKeyRef:
                 name: consul
-                key: gossip-encryption-key
+                key: key
         args:
           - "agent"
           - "-advertise=$(POD_IP)"

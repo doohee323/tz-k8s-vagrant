@@ -51,7 +51,7 @@ spec:
             valueFrom:
               secretKeyRef:
                 name: client-vault
-                key: gossip-encryption-key
+                key: key
         livenessProbe:
           exec:
             command:
