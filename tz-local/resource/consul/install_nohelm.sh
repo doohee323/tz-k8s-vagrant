@@ -1,40 +1,35 @@
 #!/usr/bin/env bash
 
-# https://caylent.com/hashicorp-vault-on-kubernetes
-#https://github.com/kainlite/vault-consul-tls/tree/master/consul
-#https://medium.com/swlh/consul-in-kubernetes-pushing-to-production-223506bbe8db
-git clone https://github.com/liejuntao001/consul-k8s-production.git
+#https://github.com/mmohamed/vault-kubernetes
+# https://blog.medinvention.dev/vault-consul-kubernetes-deployment/
 
-#set -x
-shopt -s expand_aliases
-alias k='kubectl'
+##1- build cfssl
+wget https://dl.google.com/go/go1.16.2.linux-amd64.tar.gz
+tar xvfz go1.16.2.linux-amd64.tar.gz
+sudo rm -rf /usr/local/go && sudo tar -C /usr/local -xzf go1.16.2.linux-amd64.tar.gz
+export PATH=$PATH:/usr/local/go/bin
 
-# install for test on host
-wget https://releases.hashicorp.com/consul/1.8.4/consul_1.8.4_linux_amd64.zip
-unzip consul_1.8.4_linux_amd64.zip
-sudo mv consul /usr/local/bin/
-rm consul_1.8.4_linux_amd64.zip
+sudo apt install build-essential -y
+git clone https://github.com/cloudflare/cfssl.git
+cd cfssl
+make
 
-mkdir -p /vagrant/tz-local/resource/consul
-cd /vagrant/tz-local/resource/consul
+sudo cp bin/cfssl /usr/sbin
+sudo cp cfssl/bin/cfssljson /usr/sbin
 
-#Creating Certificates for Hashicorp Consul and Vault
-consul tls ca create
-consul tls cert create -server -additional-dnsname server.dc1.cluster.local
-consul tls cert create -client
-mkdir certs
-mv *.pem certs
+#2- Consul deployment :
+# Generate CA and sign request for Consul
 
-cd production/consul
 
-#Hashicorp Consul
-#Create secret for the gossip protocol
-export GOSSIP_ENCRYPTION_KEY=$(consul keygen)
-kubectl delete namespace consul
-#Step 1 bootstrap Consul cluster without ACL
-kubectl apply -f consul_namespace.yml
-kubectl apply -f consul_service.yml
-kubectl apply -f consul_serviceaccount.yml
-kubectl -n consul create configmap consul --from-file=config.json=config/01_no_acl_config.json -o yaml --dry-run
 
-kubectl apply -f 01consul_statefulset_noacl.yml
+cfssl gencert -initca ca/ca-csr.json | cfssljson -bare ca
+# Generate SSL certificates for Consul
+cfssl gencert \
+-ca=ca.pem \
+-ca-key=ca-key.pem \
+-config=ca/ca-config.json \
+-profile=default \
+ca/consul-csr.json | cfssljson -bare consul
+# Perpare a GOSSIP key for Consul members communication encryptation
+GOSSIP_ENCRYPTION_KEY=$(consul keygen)
+

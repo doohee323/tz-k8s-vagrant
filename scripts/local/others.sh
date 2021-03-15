@@ -64,6 +64,8 @@ bash /vagrant/tz-local/resource/dashboard/install.sh
 ##################################################################
 bash /vagrant/tz-local/resource/monitoring/install.sh
 
+# kubectl taint nodes $(kubectl get nodes --selector=node-role.kubernetes.io/master | awk 'FNR==2{print $1}') node-role.kubernetes.io/master-
+
 ##################################################################
 # call jenkins install script
 ##################################################################
