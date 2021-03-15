@@ -23,7 +23,7 @@ sudo useradd -s /sbin/nologin --system -g consul consul
 /bin/mkdir -p /var/run/consul
 /bin/chown -R consul:consul /var/run/consul
 
-# 192.168.1.10: k8s-master's ip
+# 192.168.1.10: server1.dc1.consul's ip
 # 172.16.247.7: consul-server-0
 # 172.16.84.173: consul-server-1
 # 172.16.235.236: consul-server-2
@@ -32,7 +32,7 @@ echo '
 {
   "server": false,
   "datacenter": "tz-dc",
-  "node_name": "k8s-master2",
+  "node_name": "server1.dc1.consul2",
   "data_dir": "/var/consul/data",
   "bind_addr": "192.168.1.10",
   "client_addr": "127.0.0.1",

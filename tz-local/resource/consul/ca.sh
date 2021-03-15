@@ -34,8 +34,8 @@ consul tls ca create
 #Create the server certificates
 consul tls cert create -server
 #Step 1: create server certificate signing requests
-#openssl req -new -newkey rsa:2048 -nodes -keyout k8s-master.key -out k8s-master.csr -subj '/CN=k8s-master'
-openssl req -new -newkey rsa:2048 -nodes -keyout k8s-master.key -out k8s-master.csr -subj '/CN=k8s-master' -config <(
+#openssl req -new -newkey rsa:2048 -nodes -keyout server1.dc1.consul.key -out server1.dc1.consul.csr -subj '/CN=server1.dc1.consul'
+openssl req -new -newkey rsa:2048 -nodes -keyout server1.dc1.consul.key -out server1.dc1.consul.csr -subj '/CN=server1.dc1.consul' -config <(
 cat <<-EOF
 [req]
 req_extensions = req_ext
@@ -46,17 +46,17 @@ CN = *.dc1.consul
 basicConstraints=CA:FALSE
 subjectAltName = @alt_names
 [ alt_names ]
-DNS.1 = k8s-master
+DNS.1 = server1.dc1.consul
 DNS.2 = localhost
 IP.1  = 127.0.0.1
 EOF
 )
-#ls -al k8s-master*
+#ls -al server1.dc1.consul*
 
 #Step 2: sign the CSR
-openssl x509 -req -in k8s-master.csr -CA consul-agent-ca.pem -CAkey consul-agent-ca-key.pem -CAcreateserial -out k8s-master.crt
+openssl x509 -req -in server1.dc1.consul.csr -CA consul-agent-ca.pem -CAkey consul-agent-ca-key.pem -CAcreateserial -out server1.dc1.consul.crt
 #ls -1
-openssl x509 -text -noout -in k8s-master.crt
+openssl x509 -text -noout -in server1.dc1.consul.crt
 ########################################################################
 
 ########################################################################
@@ -76,7 +76,7 @@ CN = *.dc1.consul
 basicConstraints=CA:FALSE
 subjectAltName = @alt_names
 [ alt_names ]
-DNS.1 = k8s-master
+DNS.1 = server1.dc1.consul
 DNS.2 = localhost
 IP.1  = 127.0.0.1
 EOF
@@ -102,7 +102,7 @@ CN = *.dc1.consul
 basicConstraints=CA:FALSE
 subjectAltName = @alt_names
 [ alt_names ]
-DNS.1 = k8s-master
+DNS.1 = server1.dc1.consul
 DNS.2 = localhost
 IP.1  = 127.0.0.1
 EOF
@@ -125,8 +125,8 @@ openssl x509 -req -in cli.client.dc1.consul.csr -CA consul-agent-ca.pem -CAkey c
 
 #Step 1: distribute the certificates
 #- CA public certificate: consul-agent-ca.pem
-#- Consul agent public certificate: k8s-master.crt
-#- Consul agent private key: k8s-master.key
+#- Consul agent public certificate: server1.dc1.consul.crt
+#- Consul agent private key: server1.dc1.consul.key
 
 #Step 2: configure servers   -> pod/consul-server-0
 echo '
@@ -135,8 +135,8 @@ echo '
   "verify_outgoing": true,
   "verify_server_hostname": true,
   "ca_file": "consul-agent-ca.pem",
-  "cert_file": "k8s-master.crt",
-  "key_file": "k8s-master.key",
+  "cert_file": "server1.dc1.consul.crt",
+  "key_file": "server1.dc1.consul.key",
   "ports": {
     "http": -1,
     "https": 8501

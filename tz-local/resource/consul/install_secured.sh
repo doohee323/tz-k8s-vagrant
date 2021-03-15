@@ -70,7 +70,7 @@ k get secret consul-gossip-encryption-key
 k get secret consul-ca-cert
 k get secret consul-ca-key
 
-openssl req -new -newkey rsa:2048 -nodes -keyout k8s-master.key -out k8s-master.csr -subj '/CN=k8s-master' -config <(
+openssl req -new -newkey rsa:2048 -nodes -keyout server1.dc1.consul.key -out server1.dc1.consul.csr -subj '/CN=server1.dc1.consul' -config <(
 cat <<-EOF
 [req]
 req_extensions = req_ext
@@ -81,16 +81,16 @@ CN = *.dc1.consul
 basicConstraints=CA:FALSE
 subjectAltName = @alt_names
 [ alt_names ]
-DNS.1 = k8s-master
+DNS.1 = server1.dc1.consul
 DNS.2 = localhost
 IP.1  = 127.0.0.1
 EOF
 )
-#ls -al k8s-master*
+#ls -al server1.dc1.consul*
 
 #Step 2: sign the CSR
-openssl x509 -req -in k8s-master.csr -CA consul-agent-ca.pem -CAkey consul-agent-ca-key.pem -CAcreateserial -out k8s-master.crt
-openssl x509 -text -noout -in k8s-master.crt
+openssl x509 -req -in server1.dc1.consul.csr -CA consul-agent-ca.pem -CAkey consul-agent-ca-key.pem -CAcreateserial -out server1.dc1.consul.crt
+openssl x509 -text -noout -in server1.dc1.consul.crt
 
 #Create a certificate for clients:
 consul tls cert create -client
@@ -107,7 +107,7 @@ CN = *.dc1.consul
 basicConstraints=CA:FALSE
 subjectAltName = @alt_names
 [ alt_names ]
-DNS.1 = k8s-master
+DNS.1 = server1.dc1.consul
 DNS.2 = localhost
 IP.1  = 127.0.0.1
 EOF
@@ -131,7 +131,7 @@ global:
     enableAutoEncrypt: true
     verify: true
     serverAdditionalDNSSANs:
-    - "k8s-master"
+    - "server1.dc1.consul"
     caCert:
       secretName: "consul-ca-cert"
       secretKey: "tls.crt"
@@ -199,7 +199,7 @@ CN = *.dc1.consul
 basicConstraints=CA:FALSE
 subjectAltName = @alt_names
 [ alt_names ]
-DNS.1 = k8s-master
+DNS.1 = server1.dc1.consul
 DNS.2 = localhost
 IP.1  = 127.0.0.1
 EOF
@@ -212,15 +212,15 @@ openssl x509 -text -noout -in cli.client.dc1.consul.crt
 openssl x509 -req -in cli.client.dc1.consul.csr -CA consul-agent-ca.pem -CAkey consul-agent-ca-key.pem -out cli.client.dc1.consul.crt
 
 
-export CONSUL_HTTP_ADDR=https://k8s-master:8501
+export CONSUL_HTTP_ADDR=https://server1.dc1.consul:8501
 k get secret consul-ca-cert -o jsonpath="{.data['tls\.crt']}" | base64 --decode > ca.pem
 consul members -ca-file ca.pem
 #consul members -http-addr="https://localhost:8501"
 
 consul members -ca-file=consul-agent-ca.pem -client-cert=dc1-cli-consul-0.pem \
-  -client-key=dc1-cli-consul-0-key.pem -http-addr="https://k8s-master:8501"
+  -client-key=dc1-cli-consul-0-key.pem -http-addr="https://server1.dc1.consul:8501"
 
-consul members -http-addr="https://k8s-master:8501"
+consul members -http-addr="https://server1.dc1.consul:8501"
 
 #Configure the Consul CLI for HTTPS
 export CONSUL_HTTP_ADDR=https://localhost:8501
@@ -230,7 +230,7 @@ export CONSUL_CLIENT_KEY=cli.client.dc1.consul.key
 consul members
 
 consul members \
-    -http-addr="https://k8s-master:8501" \
+    -http-addr="https://server1.dc1.consul:8501" \
     -ca-file="consul-agent-ca.pem" \
     -client-cert="cli.client.dc1.consul.crt" \
     -client-key="cli.client.dc1.consul.key"
