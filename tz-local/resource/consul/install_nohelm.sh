@@ -65,6 +65,19 @@ kubectl apply -f consul/consul.yaml
 cfssl gencert \
 -ca=ca.pem \
 -ca-key=ca-key.pem \
--config=ca/ca-config.json \
+-config=consul/ca/ca-config.json \
 -profile=default \
 consul/ca/consul-csr.json | cfssljson -bare client-vault
+
+#5. Create secret for Consul client (like members)
+k -n vault create secret generic client-vault \
+--from-literal=key="${GOSSIP_ENCRYPTION_KEY}" \
+--from-file=ca.pem \
+--from-file=client-vault.pem \
+--from-file=client-vault-key.pem
+
+#3- Vault deployment :
+kubectl apply -f vault/service.yaml
+kubectl apply -f vault/config.yaml
+kubectl apply -f vault/vault.yaml
+
