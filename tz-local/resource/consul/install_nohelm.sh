@@ -27,7 +27,7 @@ sudo mv consul /usr/local/bin/
 rm -Rf consul_1.8.4_linux_amd64.zip
 
 # Generate CA and sign request for Consul
-cd /vagrant/tz-local/resource/consul/vault/consul
+cd /vagrant/tz-local/resource/consul/vault
 
 cfssl gencert -initca consul/ca/ca-csr.json | cfssljson -bare ca
 # Generate SSL certificates for Consul
@@ -49,6 +49,11 @@ k create secret generic consul \
 --from-file=consul-key.pem
 
 #3. Deploy 3 Consul members (Statefulset)
+kubectl delete -f consul/service.yaml
+kubectl delete -f consul/rbac.yaml
+kubectl delete -f consul/config.yaml
+kubectl delete -f consul/consul.yaml
+
 kubectl apply -f consul/service.yaml
 kubectl apply -f consul/rbac.yaml
 kubectl apply -f consul/config.yaml

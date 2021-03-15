@@ -3,6 +3,7 @@ apiVersion: v1
 kind: ConfigMap
 metadata:
   name: consul-config
+  namespace: vault
 data:
   config.json: |
     {
