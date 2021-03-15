@@ -25,7 +25,7 @@ consul tls cert create -client
 mkdir certs
 mv *.pem certs
 
-cd consul-k8s-production
+cd production
 
 #Hashicorp Consul
 #Create secret for the gossip protocol
