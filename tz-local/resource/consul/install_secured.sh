@@ -43,6 +43,11 @@ EOF
 helm install -f ./dc1.yaml tutorial hashicorp/consul --version "0.23.1" --wait
 #helm uninstall tutorial
 #k exec -it consul-server-0 -- /bin/sh
+k patch svc consul-ui --type='json' -p '[{"op":"replace","path":"/spec/type","value":"NodePort"},{"op":"replace","path":"/spec/ports/0/nodePort","value":31699}]'
+
+#kubectl exec -it consul-server-0 -- /bin/sh
+#apk update && apk add bind-tools && apk add tcpdump
+#tcpdump -an portrange 8300-8700 -A
 
 ##################################################
 # Upgrade an unsecured Consul service
