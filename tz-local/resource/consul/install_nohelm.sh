@@ -41,15 +41,16 @@ ca/consul-csr.json | cfssljson -bare consul
 GOSSIP_ENCRYPTION_KEY=$(consul keygen)
 
 #2. Create secret with Gossip key and public/private keys
-k delete secret consul-gossip-encryption-key
-k create secret generic consul \
+k create namespace vault
+k delete secret consul
+k -n vault create secret generic consul \
 --from-literal=key="${GOSSIP_ENCRYPTION_KEY}" \
 --from-file=ca.pem \
 --from-file=consul.pem \
 --from-file=consul-key.pem
+k get secret consul -n vault
 
 #3. Deploy 3 Consul members (Statefulset)
-k create namespace vault
 kubectl delete -f consul/service.yaml
 kubectl delete -f consul/rbac.yaml
 kubectl delete -f consul/config.yaml
