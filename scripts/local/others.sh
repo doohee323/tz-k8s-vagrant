@@ -67,12 +67,12 @@ bash /vagrant/tz-local/resource/monitoring/install.sh
 ##################################################################
 # call jenkins install script
 ##################################################################
-bash /vagrant/tz-local/resource/jenkins/install.sh
+#bash /vagrant/tz-local/resource/jenkins/install.sh
 
 ##################################################################
 # call tz-py-crawler app in k8s
 ##################################################################
-bash /vagrant/tz-local/resource/tz-py-crawler/install.sh
+#bash /vagrant/tz-local/resource/tz-py-crawler/install.sh
 
 exit 0
 
