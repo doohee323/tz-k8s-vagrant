@@ -49,6 +49,7 @@ k create secret generic consul \
 --from-file=consul-key.pem
 
 #3. Deploy 3 Consul members (Statefulset)
+k create namespace vault
 kubectl delete -f consul/service.yaml
 kubectl delete -f consul/rbac.yaml
 kubectl delete -f consul/config.yaml
