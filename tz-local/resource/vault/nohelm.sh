@@ -10,22 +10,25 @@ tar xvfz go1.16.2.linux-amd64.tar.gz
 sudo rm -rf /usr/local/go && sudo tar -C /usr/local -xzf go1.16.2.linux-amd64.tar.gz
 export PATH=$PATH:/usr/local/go/bin
 
+sudo apt-get update
 sudo apt install build-essential -y
 git clone https://github.com/cloudflare/cfssl.git
 cd cfssl
 make
 
 sudo cp bin/cfssl /usr/sbin
-sudo cp cfssl/bin/cfssljson /usr/sbin
+sudo cp bin/cfssljson /usr/sbin
 
 #2- Consul deployment :
 
 # install for test on host
+mkdir sample && cd sample
 wget https://releases.hashicorp.com/consul/1.8.4/consul_1.8.4_linux_amd64.zip
 sudo apt-get install -y unzip jq
 unzip consul_1.8.4_linux_amd64.zip
 sudo mv consul /usr/local/bin/
-rm -Rf consul_1.8.4_linux_amd64.zip
+cd ..
+rm -Rf sample
 
 # Generate CA and sign request for Consul
 cd /vagrant/tz-local/resource/vault/nohelm
@@ -35,9 +38,9 @@ cfssl gencert -initca consul/ca/ca-csr.json | cfssljson -bare ca
 cfssl gencert \
 -ca=ca.pem \
 -ca-key=ca-key.pem \
--config=ca/ca-config.json \
+-config=consul/ca/ca-config.json \
 -profile=default \
-ca/consul-csr.json | cfssljson -bare consul
+consul/ca/consul-csr.json | cfssljson -bare consul
 # Perpare a GOSSIP key for Consul members communication encryptation
 GOSSIP_ENCRYPTION_KEY=$(consul keygen)
 
