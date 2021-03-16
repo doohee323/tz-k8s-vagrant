@@ -2,6 +2,7 @@
 
 # https://blog.medinvention.dev/vault-consul-kubernetes-deployment/
 # https://github.com/mmohamed/vault-kubernetes
+# https://luniverse.io/vault-service-1/?lang=ko
 
 ##1- build cfssl
 wget https://dl.google.com/go/go1.16.2.linux-amd64.tar.gz
