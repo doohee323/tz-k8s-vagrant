@@ -28,7 +28,7 @@ sudo mv consul /usr/local/bin/
 rm -Rf consul_1.8.4_linux_amd64.zip
 
 # Generate CA and sign request for Consul
-cd /vagrant/tz-local/resource/consul/nohelm
+cd /vagrant/tz-local/resource/vault/nohelm
 
 cfssl gencert -initca consul/ca/ca-csr.json | cfssljson -bare ca
 # Generate SSL certificates for Consul
@@ -101,7 +101,7 @@ unzip vault_1.6.2_linux_amd64.zip
 chmod +x vault
 sudo mv vault /usr/local/bin/
 
-cd /vagrant/tz-local/resource/consul/nohelm
+cd /vagrant/tz-local/resource/vault/nohelm
 #http://dooheehong323:31699/ui/vault/nodes/vault-6db4484b8-wx4m4/service-instances
 export VAULT_ADDR=http://172.16.84.186:8200
 vault status
