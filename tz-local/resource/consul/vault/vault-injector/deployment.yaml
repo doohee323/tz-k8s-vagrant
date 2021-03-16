@@ -2,6 +2,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: vault-agent-injector
+  namespace: vault
   labels:
     app.kubernetes.io/name: vault-agent-injector
     component: webhook
@@ -85,6 +86,7 @@ apiVersion: networking.k8s.io/v1
 kind: NetworkPolicy
 metadata:
   name: vault-agent-injector
+  namespace: vault
   labels:
     app.kubernetes.io/name: vault-agent-injector
 spec:

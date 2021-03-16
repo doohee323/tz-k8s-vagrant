@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
-#https://github.com/mmohamed/vault-kubernetes
 # https://blog.medinvention.dev/vault-consul-kubernetes-deployment/
+# https://github.com/mmohamed/vault-kubernetes
 
 ##1- build cfssl
 wget https://dl.google.com/go/go1.16.2.linux-amd64.tar.gz
@@ -86,3 +86,9 @@ kubectl apply -f vault/vault.yaml
 k -n vault patch svc consul-ui --type='json' -p '[{"op":"replace","path":"/spec/type","value":"NodePort"},{"op":"replace","path":"/spec/ports/0/nodePort","value":31699}]'
 
 k -n vault patch svc vault-ui --type='json' -p '[{"op":"replace","path":"/spec/type","value":"NodePort"},{"op":"replace","path":"/spec/ports/0/nodePort","value":31700}]'
+
+#6- Vault Injector deployment
+kubectl apply -f vault-injector/serivce.yaml
+kubectl apply -f vault-injector/rbac.yaml
+kubectl apply -f vault-injector/deployment.yaml
+kubectl apply -f vault-injector/webhook.yaml # webhook must be created after deployment
