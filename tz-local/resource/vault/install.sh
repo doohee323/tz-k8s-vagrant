@@ -12,7 +12,7 @@ helm repo add hashicorp https://helm.releases.hashicorp.com
 helm search repo hashicorp/vault
 
 k create namespace vault
-helm uninstall vault -n vault
+#helm uninstall vault -n vault
 helm install vault hashicorp/vault -f /vagrant/tz-local/resource/vault/values.yaml -n vault
 k get all -n vault
 
@@ -26,14 +26,13 @@ k get pods -l app.kubernetes.io/name=vault -n vault
 # vault operator init
 # vault operator init -key-shares=3 -key-threshold=2
 k -n vault exec -ti vault-0 -- vault operator init
-
-#Unseal Key 1: a/62Q/Q/eWuX3WlJVL7bNQkIm2Qr59eipOb5PkQmr+Xd
-#Unseal Key 2: wLfzEwrLaCPYCnVCFvvqDPx1jPodKGRqNwhp57QCFlS5
-#Unseal Key 3: Z/0/HAeLx6iSCPjOKP9C/YIfNlbxtzMK6pWBQUYioeK/
-#Unseal Key 4: oisGOpvlF6NDpCPhBmRIkOWt6Pd46VD9Z7gkifSnq31X
-#Unseal Key 5: qRe2t6aRlYP8gp60fJebvpeO1tqgSWqAgAJQzUaUNPe+
+#Unseal Key 1: tziIFhisqHbhPMAyWmZ1EF8dCdBazAirTKPqoSEQRnE5
+#Unseal Key 2: 2OBomu+0eEug197BA+X/Gj6bO4LLyhogycJqob6LMywk
+#Unseal Key 3: XW0lD/jSmzB6kEQEXGpWKY1GGSEb3TVtcKkQhGfFGQ17
+#Unseal Key 4: 8X4geWBLDsykoNAG9e2Xkp6cHZPng3LlGdwS5395hrfJ
+#Unseal Key 5: miXWXx5llHptPwf7sI2gLdkK06FZ085bJ25eYTJFk24I
 #
-#Initial Root Token: s.qBPblA0U9Bzmhgr8eRnukSqR
+#Initial Root Token: s.n0VkXLpWp165y2SzBp4X3KWr
 
 # vault operator unseal
 k -n vault exec -ti vault-0 -- vault operator unseal # ... Unseal Key 1
@@ -49,7 +48,6 @@ k -n vault get pods -l app.kubernetes.io/name=vault
 
 VAULT_VERSION="1.3.1"
 curl -sO https://releases.hashicorp.com/vault/${VAULT_VERSION}/vault_${VAULT_VERSION}_linux_amd64.zip
-
 unzip vault_${VAULT_VERSION}_linux_amd64.zip
 sudo mv vault /usr/local/bin/
 vault --version
@@ -112,62 +110,4 @@ secrets
 cat /vagrant/info
 
 exit 0
-
-
-
-
-cat <<EOF | sudo tee /etc/vault/config.hcl
-disable_cache = true
-disable_mlock = true
-ui = true
-api_addr         = "http://0.0.0.0:8200"
-listener "tcp" {
-   address          = "0.0.0.0:8200"
-   tls_disable      = 1
-}
-storage "file" {
-   path  = "/var/lib/vault/data"
-}
-max_lease_ttl         = "10h"
-default_lease_ttl    = "10h"
-cluster_name         = "vault"
-raw_storage_endpoint     = true
-disable_sealwrap     = true
-disable_printable_check = true
-EOF
-
-# production ex)
-cat <<EOF | sudo tee /etc/vault/config.hcl
-storage "consul" {
-    path = "vault"
-    address = "localhost:8500"
-}
-listener "tcp" {
-   address          = "0.0.0.0:8200"
-   cluster_address  = "0.0.0.0:8201"
-   tls_cert_file    = "/etc/certs/vault.crt"
-   tls_cert_key     = "/etc/certs/vault.key"
-}
-seal "awskms" {
-  region = "us-west-02"
-  kms_key_id = "aaaaaaa"
-}
-api_addr            = "http://0.0.0.0:8200"
-ui = true
-cluster_name        = "tz-vault"
-log_level           = "info"
-
-disable_cache = true
-disable_mlock = true
-max_lease_ttl       = "10h"
-default_lease_ttl   = "10h"
-raw_storage_endpoint = true
-disable_sealwrap     = true
-disable_printable_check = true
-EOF
-
-
-kubectl create secret generic vault-storage-config \
-    --from-file=/etc/vault/config.hcl
-
 
