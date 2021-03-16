@@ -192,8 +192,8 @@ vault read aws/creds/my-role
 #lease_id           aws/creds/my-role/7cJAIfwcoDSBitZXKZ1ybGON
 #lease_duration     768h
 #lease_renewable    true
-#access_key         AKIAW354R7YBVWVNW6OD
-#secret_key         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
+#access_key         xxxxxx
+#secret_key         xxxxx
 #security_token     <nil>
 
 #renew secret with lease_id
