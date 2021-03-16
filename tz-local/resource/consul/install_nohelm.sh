@@ -98,9 +98,12 @@ cd sample
 curl https://releases.hashicorp.com/vault/1.6.2/vault_1.6.2_linux_amd64.zip -o vault_1.6.2_linux_amd64.zip
 unzip vault_1.6.2_linux_amd64.zip
 chmod +x vault
+sudo mv vault /usr/local/bin/
+
+cd /vagrant/tz-local/resource/consul/vault
 #http://dooheehong323:31699/ui/vault/nodes/vault-6db4484b8-wx4m4/service-instances
 export VAULT_ADDR=http://172.16.84.186:8200
-./vault status
+vault status
 
 #7.1- Unseal
 k get all -n vault
@@ -120,24 +123,45 @@ vault operator init
 # vault operator unseal
 vault operator unseal
 
-./vault login s.IBa4LZiOSsP8wyhhe9YXQKAw
+vault login s.IBa4LZiOSsP8wyhhe9YXQKAw
 
 #3. Create key/value for testing
-./vault secrets enable kv
-./vault kv put kv/myapp/config username="admin" password="hdh971097"
+vault secrets enable kv
+vault kv put kv/myapp/config username="admin" password="hdh971097"
 
-#4. Connect Kube to Vault
+#4. Connect K8S to Vault
 # Create the service account to access secret
 kubectl apply -f myapp/service-account.yaml
 # Enable kubernetes support
-./vault auth enable kubernetes
+vault auth enable kubernetes
 # Prepare kube api server data
-export SECRET_NAME="$(kubectl get serviceaccount vault-auth  -o go-template='{{ (index .secrets 0).name }}')"
-export TR_ACCOUNT_TOKEN="$(kubectl get secret ${SECRET_NAME} -o go-template='{{ .data.token }}' | base64 --decode)"
-export K8S_API_SERVER="$(kubectl config view --raw -o go-template="{{ range .clusters }}{{ index .cluster \"server\" }}{{ end }}")"
-export K8S_CACERT="$(kubectl config view --raw -o go-template="{{ range .clusters }}{{ index .cluster \"certificate-authority-data\" }}{{ end }}" | base64 --decode)"
+export SECRET_NAME="$(kubectl -n vault get serviceaccount vault-auth  -o go-template='{{ (index .secrets 0).name }}')"
+export TR_ACCOUNT_TOKEN="$(kubectl -n vault get secret ${SECRET_NAME} -o go-template='{{ .data.token }}' | base64 --decode)"
+export K8S_API_SERVER="$(kubectl -n vault config view --raw -o go-template="{{ range .clusters }}{{ index .cluster \"server\" }}{{ end }}")"
+export K8S_CACERT="$(kubectl -n vault config view --raw -o go-template="{{ range .clusters }}{{ index .cluster \"certificate-authority-data\" }}{{ end }}" | base64 --decode)"
 # Send kube config to vault
-./vault write auth/kubernetes/config kubernetes_host="${K8S_API_SERVER}" kubernetes_ca_cert="${K8S_CACERT}" token_reviewer_jwt="${TR_ACCOUNT_TOKEN}"
+vault write auth/kubernetes/config kubernetes_host="${K8S_API_SERVER}" kubernetes_ca_cert="${K8S_CACERT}" token_reviewer_jwt="${TR_ACCOUNT_TOKEN}"
+
+#5. Create Vault policy and role for "myapp"
+#myapp/policy.json
+#path "kv/myapp/*" {
+#  capabilities = ["read", "list"]
+#}
+
+#Create the application role
+vault policy write myapp-ro myapp/policy.json
+vault write auth/kubernetes/role/myapp-role bound_service_account_names=vault-auth bound_service_account_namespaces=vault policies=default,myapp-ro ttl=15m
+
+#6. Deploy "myapp" for testing
+#edit admin / password
+#vi vault/myapp/deployment.yaml
+
+kubectl apply -f myapp/deployment.yaml
+export POD=$(kubectl -n vault get pods --selector=app=myapp --output=jsonpath={.items..metadata.name})
+kubectl -n vault log ${POD} myapp
+
+
+
 
 
 

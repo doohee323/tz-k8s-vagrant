@@ -17,7 +17,7 @@ spec:
         vault.hashicorp.com/agent-inject-secret-account: "kv/myapp/config"
         vault.hashicorp.com/agent-inject-template-account: |
           {{- with secret "kv/myapp/config" -}}
-          dsn://{{ .Data.username }}:{{ .Data.password }}@database:port/mydb?sslmode=disable
+          dsn://admin:hdh971097@database:port/mydb?sslmode=disable
           {{- end }}
         vault.hashicorp.com/role: "myapp-role"
       labels:
