@@ -21,7 +21,7 @@ vault read auth/userpass/users/dewey
 
 vault login -method=userpass username=dewey
 
-# add a userpass
+# add a certs
 vault kv put skylines/apps/certs/database cert=@authorized_keys
 vault secrets list -detailed | grep skylines
 vault kv enable-versioning skylines
