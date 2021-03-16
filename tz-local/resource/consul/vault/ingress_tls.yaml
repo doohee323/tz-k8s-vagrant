@@ -18,7 +18,7 @@ metadata:
   namespace: vault
 spec:
   rules:
-    - host: YOUR_VAULT_HOST
+    - host: "consul.localdev"
       http:
         paths:
           - backend:
@@ -27,5 +27,5 @@ spec:
             path: /
   tls:
     - hosts:
-      - YOUR_VAULT_HOST
+      - "https-consul.localdev"
       secretName: ui-tls
