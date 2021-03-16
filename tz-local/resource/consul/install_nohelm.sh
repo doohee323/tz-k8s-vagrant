@@ -82,10 +82,9 @@ kubectl apply -f vault/config.yaml
 kubectl apply -f vault/vault.yaml
 
 #5- UI:
-#kubectl apply -f ingress.yaml
-k -n vault patch svc consul-ui --type='json' -p '[{"op":"replace","path":"/spec/type","value":"NodePort"},{"op":"replace","path":"/spec/ports/0/nodePort","value":31699}]'
-
-k -n vault patch svc vault-ui --type='json' -p '[{"op":"replace","path":"/spec/type","value":"NodePort"},{"op":"replace","path":"/spec/ports/0/nodePort","value":31700}]'
+kubectl apply -f ingress.yaml
+#k -n vault patch svc consul-ui --type='json' -p '[{"op":"replace","path":"/spec/type","value":"NodePort"},{"op":"replace","path":"/spec/ports/0/nodePort","value":31699}]'
+#k -n vault patch svc vault-ui --type='json' -p '[{"op":"replace","path":"/spec/type","value":"NodePort"},{"op":"replace","path":"/spec/ports/0/nodePort","value":31700}]'
 
 #6- Vault Injector deployment
 kubectl apply -f vault-injector/serivce.yaml
