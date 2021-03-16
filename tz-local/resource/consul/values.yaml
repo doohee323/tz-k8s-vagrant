@@ -2,27 +2,15 @@ global:
 #  name: consul
   datacenter: tz-dc
 
-  acls:
-    manageSystemACLs: true
-
-ui:
-  service:
-    type: 'ClusterIP'
-
-connectInject:
-  enabled: true
-# Enable CRD Controller
-#controller:
-#  enabled: true
-
-client:
-  enabled: true
-
 server:
+  enabled: true
   replicas: 3
   storage: 100Mi
-  disruptionBudget:
+
+  service:
     enabled: true
-    maxUnavailable: 0
+
+ui:
+  enabled: true
   service:
     enabled: true
