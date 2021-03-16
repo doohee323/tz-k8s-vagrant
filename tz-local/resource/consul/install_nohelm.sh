@@ -87,7 +87,58 @@ kubectl apply -f ingress.yaml
 #k -n vault patch svc vault-ui --type='json' -p '[{"op":"replace","path":"/spec/type","value":"NodePort"},{"op":"replace","path":"/spec/ports/0/nodePort","value":31700}]'
 
 #6- Vault Injector deployment
-kubectl apply -f vault-injector/serivce.yaml
+kubectl apply -f vault-injector/service.yaml
 kubectl apply -f vault-injector/rbac.yaml
 kubectl apply -f vault-injector/deployment.yaml
 kubectl apply -f vault-injector/webhook.yaml # webhook must be created after deployment
+
+#7- Sample deployment :
+mkdir sample
+cd sample
+curl https://releases.hashicorp.com/vault/1.6.2/vault_1.6.2_linux_amd64.zip -o vault_1.6.2_linux_amd64.zip
+unzip vault_1.6.2_linux_amd64.zip
+chmod +x vault
+#http://dooheehong323:31699/ui/vault/nodes/vault-6db4484b8-wx4m4/service-instances
+export VAULT_ADDR=http://172.16.84.186:8200
+./vault status
+
+#7.1- Unseal
+k get all -n vault
+#pod/vault-6db4484b8-wx4m4
+k -n vault exec -ti vault-6db4484b8-wx4m4 -- sh
+export VAULT_ADDR=http://localhost:8200
+vault operator init
+
+#Unseal Key 1: y6DY7tv72f2OQ0nlvrbB90s8h5zrDu8jk5y9ruM7kRix
+#Unseal Key 2: CPpP2zkuanKLQTLsaEE4nn7jjhO5YFRnkjjMSbCtvOYX
+#Unseal Key 3: 8UDH3d4sTjeGagT2DiCAxvs2BB/TaB4QlXv3viFEfkSz
+#Unseal Key 4: 9uM4CQc/M8iLs1r456FuYOyfsXwtwCObZtjg9y8+sOwl
+#Unseal Key 5: q8oQEVyQclD7TZj5oCmJX3MpMx8mS2jbvMgayderjB0F
+#
+#Initial Root Token: s.IBa4LZiOSsP8wyhhe9YXQKAw
+
+# vault operator unseal
+vault operator unseal
+
+./vault login s.IBa4LZiOSsP8wyhhe9YXQKAw
+
+#3. Create key/value for testing
+./vault secrets enable kv
+./vault kv put kv/myapp/config username="admin" password="hdh971097"
+
+#4. Connect Kube to Vault
+# Create the service account to access secret
+kubectl apply -f myapp/service-account.yaml
+# Enable kubernetes support
+./vault auth enable kubernetes
+# Prepare kube api server data
+export SECRET_NAME="$(kubectl get serviceaccount vault-auth  -o go-template='{{ (index .secrets 0).name }}')"
+export TR_ACCOUNT_TOKEN="$(kubectl get secret ${SECRET_NAME} -o go-template='{{ .data.token }}' | base64 --decode)"
+export K8S_API_SERVER="$(kubectl config view --raw -o go-template="{{ range .clusters }}{{ index .cluster \"server\" }}{{ end }}")"
+export K8S_CACERT="$(kubectl config view --raw -o go-template="{{ range .clusters }}{{ index .cluster \"certificate-authority-data\" }}{{ end }}" | base64 --decode)"
+# Send kube config to vault
+./vault write auth/kubernetes/config kubernetes_host="${K8S_API_SERVER}" kubernetes_ca_cert="${K8S_CACERT}" token_reviewer_jwt="${TR_ACCOUNT_TOKEN}"
+
+
+
+
