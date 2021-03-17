@@ -3,6 +3,7 @@
 https://www.youtube.com/watch?v=PXjBkVonMQI
 https://min.io/
 https://www.civo.com/learn/backup-longhorn-volumes-to-a-minio-s3-bucket
+https://medium.com/hashicorp-engineering/how-to-backup-a-hashicorp-vault-integrated-storage-cluster-with-minio-33b88399bf63
 
 Access key ID,Secret access key
 AKIAW354R7YB4MT3U4NI,Hggvb9TZVir6YmWCXQQrJKDtUqob6OsNy0x1FRDw
