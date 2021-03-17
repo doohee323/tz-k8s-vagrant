@@ -12,7 +12,7 @@ helm repo add hashicorp https://helm.releases.hashicorp.com
 helm search repo hashicorp/vault
 
 k create namespace vault
-helm uninstall vault -n vault
+#helm uninstall vault -n vault
 helm install vault hashicorp/vault -f /vagrant/tz-local/resource/vault/values.yaml -n vault
 k get all -n vault
 
@@ -49,7 +49,6 @@ k -n vault get pods -l app.kubernetes.io/name=vault
 
 VAULT_VERSION="1.3.1"
 curl -sO https://releases.hashicorp.com/vault/${VAULT_VERSION}/vault_${VAULT_VERSION}_linux_amd64.zip
-
 unzip vault_${VAULT_VERSION}_linux_amd64.zip
 sudo mv vault /usr/local/bin/
 vault --version

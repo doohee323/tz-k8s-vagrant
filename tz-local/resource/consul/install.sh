@@ -11,6 +11,7 @@ k create namespace consul
 helm install consul hashicorp/consul -f /vagrant/tz-local/resource/consul/values.yaml -n consul
 #helm uninstall consul -n consul
 #helm install consul hashicorp/consul --set global.name=consul
+k taint nodes --all node-role.kubernetes.io/master-
 
 # to NodePort
 k patch svc consul-ui --type='json' -p '[{"op":"replace","path":"/spec/type","value":"NodePort"},{"op":"replace","path":"/spec/ports/0/nodePort","value":31699}]' -n consul
