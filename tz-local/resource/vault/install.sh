@@ -168,12 +168,12 @@ k get secret consul -n consul
 
 #3. Deploy 3 Consul members (Statefulset)
 #kubectl delete -f consul/service.yaml
-#kubectl delete -f consul/rbac.yaml
+kubectl delete -f consul/rbac.yaml
 kubectl delete -f consul/config.yaml
 #kubectl delete -f consul/consul.yaml
 
 #kubectl apply -f consul/service.yaml
-#kubectl apply -f consul/rbac.yaml
+kubectl apply -f consul/rbac.yaml
 kubectl apply -f consul/config.yaml
 #kubectl apply -f consul/consul.yaml
 
@@ -198,9 +198,8 @@ kubectl apply -f vault/config.yaml
 kubectl apply -f vault/vault.yaml
 
 #5- UI:
-kubectl apply -f ingress.yaml
-#k -n consul patch svc consul-ui --type='json' -p '[{"op":"replace","path":"/spec/type","value":"NodePort"},{"op":"replace","path":"/spec/ports/0/nodePort","value":31699}]'
-#k -n consul patch svc vault-ui --type='json' -p '[{"op":"replace","path":"/spec/type","value":"NodePort"},{"op":"replace","path":"/spec/ports/0/nodePort","value":31700}]'
+#kubectl apply -f ingress.yaml
+k -n consul patch svc vault-ui --type='json' -p '[{"op":"replace","path":"/spec/type","value":"NodePort"},{"op":"replace","path":"/spec/ports/0/nodePort","value":31700}]'
 
 #6- Vault Injector deployment
 kubectl apply -f vault-injector/service.yaml
