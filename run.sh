@@ -122,9 +122,6 @@ vagrant snapshot restore k8s-master k8s-master_consul
 vagrant snapshot restore node-1 node-1_consul
 vagrant snapshot restore node-2 node-2_consul
 
-vagrant snapshot restore k8s-master k8s-master_vault
-vagrant snapshot restore node-1 node-1_vault
-vagrant snapshot restore node-2 node-2_vault
-
-
-
+vagrant snapshot restore k8s-master k8s-master_vault_nohelm
+vagrant snapshot restore node-1 node-1_vault_nohelm
+vagrant snapshot restore node-2 node-2_vault_nohelm

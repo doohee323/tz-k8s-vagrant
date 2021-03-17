@@ -24,13 +24,13 @@ k -n vault exec -ti vault-6db4484b8-wx4m4 -- sh
 export VAULT_ADDR=http://localhost:8200
 vault operator init
 
-#Unseal Key 1: tziIFhisqHbhPMAyWmZ1EF8dCdBazAirTKPqoSEQRnE5
-#Unseal Key 2: 2OBomu+0eEug197BA+X/Gj6bO4LLyhogycJqob6LMywk
-#Unseal Key 3: XW0lD/jSmzB6kEQEXGpWKY1GGSEb3TVtcKkQhGfFGQ17
-#Unseal Key 4: 8X4geWBLDsykoNAG9e2Xkp6cHZPng3LlGdwS5395hrfJ
-#Unseal Key 5: miXWXx5llHptPwf7sI2gLdkK06FZ085bJ25eYTJFk24I
+#Unseal Key 1: y6DY7tv72f2OQ0nlvrbB90s8h5zrDu8jk5y9ruM7kRix
+#Unseal Key 2: CPpP2zkuanKLQTLsaEE4nn7jjhO5YFRnkjjMSbCtvOYX
+#Unseal Key 3: 8UDH3d4sTjeGagT2DiCAxvs2BB/TaB4QlXv3viFEfkSz
+#Unseal Key 4: 9uM4CQc/M8iLs1r456FuYOyfsXwtwCObZtjg9y8+sOwl
+#Unseal Key 5: q8oQEVyQclD7TZj5oCmJX3MpMx8mS2jbvMgayderjB0F
 #
-#Initial Root Token: s.n0VkXLpWp165y2SzBp4X3KWr
+#Initial Root Token: s.IBa4LZiOSsP8wyhhe9YXQKAw
 
 # vault operator unseal
 vault operator unseal
