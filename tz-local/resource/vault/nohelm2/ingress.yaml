@@ -7,7 +7,7 @@ metadata:
     nginx.ingress.kubernetes.io/auth-secret: consul-auth
     nginx.ingress.kubernetes.io/auth-realm: 'Authentication Required - Consul - MedInvention'
   name: consul
-  namespace: vault
+  namespace: consul
 spec:
   rules:
     - host: "consul.localdev"

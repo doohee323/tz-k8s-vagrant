@@ -157,8 +157,8 @@ consul/ca/consul-csr.json | cfssljson -bare consul
 GOSSIP_ENCRYPTION_KEY=$(consul keygen)
 
 #2. Create secret with Gossip key and public/private keys
-k create namespace consul
-k delete secret consul
+#k create namespace consul
+k delete secret consul -n consul
 k -n consul create secret generic consul \
 --from-literal=key="${GOSSIP_ENCRYPTION_KEY}" \
 --from-file=ca.pem \

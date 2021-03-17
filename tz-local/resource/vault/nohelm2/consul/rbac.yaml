@@ -3,7 +3,7 @@ apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRole
 metadata:
   name: consul
-  namespace: vault
+  namespace: consul
   labels:
     app: consul
 rules:
@@ -19,7 +19,7 @@ apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRoleBinding
 metadata:
   name: consul
-  namespace: vault
+  namespace: consul
 roleRef:
   apiGroup: rbac.authorization.k8s.io
   kind: ClusterRole
@@ -27,13 +27,13 @@ roleRef:
 subjects:
   - kind: ServiceAccount
     name: consul
-    namespace: vault
+    namespace: consul
 
 ---
 apiVersion: v1
 kind: ServiceAccount
 metadata:
   name: consul
-  namespace: vault
+  namespace: consul
   labels:
     app: consul
