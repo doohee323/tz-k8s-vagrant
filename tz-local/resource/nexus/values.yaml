@@ -1,0 +1,4 @@
+nexusProxy:
+  env:
+    nexusDockerHost: dooheehong323
+    nexusHttpHost: dooheehong323
