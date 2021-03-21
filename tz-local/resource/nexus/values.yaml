@@ -128,6 +128,7 @@ persistence:
   # annotations:
   #  "helm.sh/resource-policy": keep
   # storageClass: "-"
+  storageClass: "longhorn"
   storageSize: 1Gi
   # If PersistentDisk already exists you can create a PV for it by including the 2 following keypairs.
   # pdName: nexus-data-disk
@@ -149,6 +150,7 @@ nexusBackup:
     accessMode: ReadWriteOnce
     # See comment above for information on setting the backup storageClass
     # storageClass: "-"
+    storageClass: "longhorn"
     storageSize: 1Gi
     # If PersistentDisk already exists you can create a PV for it by including the 2 following keypairs.
     # pdName: nexus-backup-disk
