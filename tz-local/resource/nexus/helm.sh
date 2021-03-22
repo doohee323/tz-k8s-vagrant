@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
 
+#cd /vagrant/tz-local/resource/nexus
 helm repo add oteemocharts https://oteemo.github.io/charts
 helm search repo oteemocharts/sonatype-nexus
 helm repo update
