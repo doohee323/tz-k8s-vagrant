@@ -2,7 +2,7 @@
 apiVersion: storage.k8s.io/v1
 kind: StorageClass
 metadata:
-  name: nfs-csi
+  name: nfscsi
 provisioner: nfs.csi.k8s.io
 parameters:
   server: nfs-server.default.svc.cluster.local
@@ -24,6 +24,6 @@ spec:
   resources:
     requests:
       storage: 200Mi
-  storageClassName: nfs-csi
+  storageClassName: nfscsi
 
 

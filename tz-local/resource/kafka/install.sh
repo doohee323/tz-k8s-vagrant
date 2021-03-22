@@ -28,8 +28,8 @@ helm install ${ZOOKEEPER_SERVICE_NAME} bitnami/zookeeper \
   --set allowAnonymousLogin=true \
   --set volumePermissions.enabled=true \
   --set zookeeper.volumePermissions.enabled=true \
-  --set global.storageClass=nfs-csi \
-  --set persistence.storageClass=nfs-csi \
+  --set global.storageClass=nfscsi \
+  --set persistence.storageClass=nfscsi \
   -n kafka
 
 # 2: Deploy Apache Kafka
@@ -39,8 +39,8 @@ helm install kafka bitnami/kafka \
   --set externalZookeeper.servers=${ZOOKEEPER_SERVICE_NAME} \
   --set volumePermissions.enabled=true \
   --set zookeeper.volumePermissions.enabled=true \
-  --set global.storageClass=nfs-csi \
-  --set persistence.storageClass=nfs-csi \
+  --set global.storageClass=nfscsi \
+  --set persistence.storageClass=nfscsi \
   -n kafka
 
 sleep 30

@@ -420,7 +420,7 @@ spec:
       resources:
         requests:
           storage: 100Mi
-      storageClassName: nfs-csi
+      storageClassName: nfscsi
       volumeMode: Filesystem
     status:
       phase: Pending
