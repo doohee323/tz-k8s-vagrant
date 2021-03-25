@@ -41,8 +41,8 @@ Vagrant.configure("2") do |config|
     master.vm.network "forwarded_port", guest: 31701, host: 31701     # openldap
     master.vm.network "forwarded_port", guest: 32520, host: 32520     # openldap2
 
-    master.vm.network "forwarded_port", guest: 30500, host: 30500     # tgd-nginx
-    master.vm.network "forwarded_port", guest: 30800, host: 30800     # tgd-web
+    master.vm.network "forwarded_port", guest: 30500, host: 30500     # tgd-web
+    master.vm.network "forwarded_port", guest: 30800, host: 30800     # tgd-nginx
 
     master.vm.hostname = "k8s-master"
     master.vm.provision "shell", :path => File.join(File.dirname(__FILE__),"scripts/local/master.sh"), :args => master.vm.hostname

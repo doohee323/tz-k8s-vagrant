@@ -5,10 +5,6 @@ https://min.io/
 https://www.civo.com/learn/backup-longhorn-volumes-to-a-minio-s3-bucket
 https://medium.com/hashicorp-engineering/how-to-backup-a-hashicorp-vault-integrated-storage-cluster-with-minio-33b88399bf63
 
-Access key ID,Secret access key
-AKIAW354R7YB4MT3U4NI,Hggvb9TZVir6YmWCXQQrJKDtUqob6OsNy0x1FRDw
-
-
 {
     "Version": "2012-10-17",
     "Statement": [
@@ -36,8 +32,8 @@ AKIAW354R7YB4MT3U4NI,Hggvb9TZVir6YmWCXQQrJKDtUqob6OsNy0x1FRDw
 https://www.civo.com/learn/backup-longhorn-volumes-to-a-minio-s3-bucket
 
 A_AWS_ENDPOINTS="backup"
-A_AWS_ACCESS_KEY_ID="AKIAW354R7YB4MT3U4NI"
-A_AWS_SECRET_ACCESS_KEY="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"
+A_AWS_ACCESS_KEY_ID="xxxx"
+A_AWS_SECRET_ACCESS_KEY="xxxx"
 
 A_AWS_ENDPOINTS=`echo -n ${A_AWS_ENDPOINTS} | base64`
 A_AWS_ACCESS_KEY_ID=`echo -n ${A_AWS_ACCESS_KEY_ID} | base64`
