@@ -33,7 +33,7 @@ cp -Rf Vagrantfile Vagrantfile.bak
 if [[ "${A_ENV}" == "" || "${A_ENV}" == "V" ]]; then
   cp -Rf ./scripts/local/Vagrantfile Vagrantfile
   vagrant up
-#  vagrant ssh kube-master -- -t 'bash /vagrant/scripts/local/others.sh'
+  vagrant ssh kube-master -- -t 'bash /vagrant/scripts/local/kubespray.sh'
 fi
 if [[ "${A_ENV}" == "A" ]]; then
   if [[ ! -f "./tz-aws-terraform/resource/aws/credentials" ]]; then

@@ -22,6 +22,8 @@ exec bash
 kubectl get nodes
 kubectl cluster-info
 
+sudo cp -Rf /root/.kube/config /vagrant/kubespray_vagrant
+
 exit 0
 
 #k delete -f /vagrant/tz-local/resource/standard-storage.yaml

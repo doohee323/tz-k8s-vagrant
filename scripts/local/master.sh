@@ -60,13 +60,6 @@ cp -Rf /vagrant/resource/kubespray/addons.yml /vagrant/kubespray/inventory/myclu
 
 exit 0
 
-echo "##################################################################"
-echo "Install other services in kube-master"
-echo "##################################################################"
-sudo bash /vagrant/scripts/local/others.sh
-
-exit 0
-
 sudo sed -i "s/\$KUBELET_EXTRA_ARGS/\$KUBELET_EXTRA_ARGS --node-ip=192.168.1.10/g" /etc/systemd/system/kubelet.service.d/10-kubeadm.conf
 systemctl daemon-reload && systemctl restart kubelet
 kubectl get nodes -o wide
