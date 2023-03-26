@@ -16,13 +16,13 @@
 ## -. ssh into nodes  
 ### checking k8s nodes status
 ``` 
-    vagrant ssh k8s-master
+    vagrant ssh kube-master
     kubectl get nodes
 ```
 
-### node-1
+### kube-node1
 ``` 
-    vagrant ssh node-1
+    vagrant ssh kube-node1
 ``` 
 
 ## -. install kubectl in macbook

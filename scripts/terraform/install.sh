@@ -11,10 +11,15 @@ fi
 
 TERRAFORM_VERSION="0.13.5"
 # create new ssh key
+#[[ ! -f /home/vagrant/.ssh/mykeypair ]] \
+#&& mkdir -p /home/vagrant/.ssh \
+#&& ssh-keygen -f /home/vagrant/.ssh/mykeypair -N '' \
+#&& chown -R vagrant:vagrant /home/vagrant/.ssh
 [[ ! -f /home/vagrant/.ssh/mykeypair ]] \
 && mkdir -p /home/vagrant/.ssh \
-&& ssh-keygen -f /home/vagrant/.ssh/mykeypair -N '' \
-&& chown -R vagrant:vagrant /home/vagrant/.ssh
+&& ssh-keygen -t rsa -C mykeypair -P "" -f /home/vagrant/.ssh/mykeypair -q \
+&& chown -R vagrant:vagrant /home/vagrant/.ssh \
+&& chmod -Rf 600 /home/vagrant/.ssh/mykeypair*
 
 # install packages
 apt-get update

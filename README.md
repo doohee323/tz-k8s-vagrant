@@ -8,6 +8,11 @@ to project root directory.
 ## -. Features 
 ```
     -. build a vagrant env
+        vagrant plugin install vagrant-hostmanager
+        vagrant plugin install vagrant-disksize
+        vagrant plugin list
+        vagrant box add ubuntu/bionic64
+        vagrant box list    
     -. install k8s master and nodes
     -. install dashboard
     -. install monitoring (Prometheus, Grafana)
@@ -15,7 +20,7 @@ to project root directory.
     -. build a test app(youtoube scrawler) in jenkins
     -. deploy the app to k8s 
     
-    -. support AWS with terraform / packer
+    -. support AWS with terraform / packer (in other branch)
 ```
 
 ## -. Run VMs with k8s 

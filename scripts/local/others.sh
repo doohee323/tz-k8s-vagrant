@@ -2,19 +2,27 @@
 
 #set -x
 
-#INC_CNT=0
-#TARGET_CNT=2
-#MAX_CNT=50
-#while true; do
-#  sleep 10
-#  INST_CNT=`k get nodes | grep Ready | wc | awk '{print $1}'`
-#  if [[ $INST_CNT == $TARGET_CNT || $INC_CNT == $MAX_CNT ]]; then
-#    break
-#  fi
-#  let "INC_CNT=INC_CNT+1"
-#done
+cd /vagrant/kubespray
+ansible all -i inventory/mycluster/inventory.ini -m ping
 
-sudo chown -Rf vagrant:vagrant /var/run/docker.sock
+declare -a IPS=(192.168.1.10 192.168.1.12 192.168.1.13)
+CONFIG_FILE=inventory/mycluster/hosts.yaml python3 contrib/inventory_builder/inventory.py ${IPS[@]}
+
+cat inventory/mycluster/group_vars/all/all.yml
+cat inventory/mycluster/group_vars/k8s-cluster/k8s-cluster.yml
+
+ansible-playbook -i inventory/mycluster/hosts.yaml  --become --become-user=root cluster.yml
+
+sudo cp -Rf /root/.kube /home/vagrant/
+sudo chown -Rf vagrant:vagrant /home/vagrant/.kube
+
+kubectl completion bash | sudo tee /etc/bash_completion.d/kubectl
+exec bash
+
+kubectl get nodes
+kubectl cluster-info
+
+exit 0
 
 #k delete -f /vagrant/tz-local/resource/standard-storage.yaml
 k apply -f /vagrant/tz-local/resource/standard-storage.yaml

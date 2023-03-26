@@ -1,60 +1,67 @@
 #!/usr/bin/env bash
 
 #set -x
-shopt -s expand_aliases
-alias k='kubectl --kubeconfig ~/.kube/config'
 
 bash /vagrant/scripts/local/base.sh
 
-##################################################################
-# k8s master
-##################################################################
+shopt -s expand_aliases
+alias k='kubectl --kubeconfig ~/.kube/config'
 
-OUTPUT_FILE=/vagrant/join.sh
-rm -rf /vagrant/join.sh
-sudo kubeadm init --apiserver-advertise-address=192.168.1.10 --pod-network-cidr=172.16.0.0/16
-sudo sysctl net.bridge.bridge-nf-call-iptables=1
-sudo kubeadm token create --print-join-command > /vagrant/join.sh
-chmod +x $OUTPUT_FILE
-mkdir -p $HOME/.kube
-sudo cp -i /etc/kubernetes/admin.conf $HOME/.kube/config
-sudo chown $(id -u):$(id -g) $HOME/.kube/config
+rm -Rf /root/.ssh
+chown -R root:root /root/.ssh
 
-sudo sed -i "s/\$KUBELET_EXTRA_ARGS/\$KUBELET_EXTRA_ARGS --node-ip=192.168.1.10/g" /etc/systemd/system/kubelet.service.d/10-kubeadm.conf
-systemctl daemon-reload && systemctl restart kubelet
-kubectl get nodes -o wide
+sudo groupadd ubuntu
+sudo useradd -g ubuntu -d /home/ubuntu -s /bin/bash -m ubuntu
+cat <<EOF > pass.txt
+ubuntu:ubuntu
+EOF
+sudo chpasswd < pass.txt
 
-sleep 30
+MYKEY=kubekey
+[[ ! -f /root/.ssh/${MYKEY} ]] \
+&& mkdir -p /root/.ssh \
+&& rm -Rf /root/.ssh/${MYKEY}* \
+&& ssh-keygen -f /root/.ssh/${MYKEY} -N '' -q \
+&& chmod -Rf 600 /root/.ssh
 
-#kubectl apply -f https://raw.githubusercontent.com/coreos/flannel/master/Documentation/kube-flannel.yml
-# raw_address for gitcontent
-kubectl --kubeconfig ~/.kube/config delete -f /vagrant/tz-local/resource/calico.yaml
-curl https://raw.githubusercontent.com/projectcalico/calico/v3.24.5/manifests/calico-policy-only.yaml -o /vagrant/tz-local/resource/calico.yaml
-sudo sed -i "s|# - name: CALICO_IPV4POOL_CIDR|- name: CALICO_IPV4POOL_CIDR|g" /vagrant/tz-local/resource/calico.yaml
-sudo sed -i "s|#   value: \"192.168.0.0|  value: \"172.16.0.0|g" /vagrant/tz-local/resource/calico.yaml
-kubectl --kubeconfig ~/.kube/config apply -f /vagrant/tz-local/resource/calico.yaml
-#yq e -i '(.spec.template.spec.containers[] | select(.name == "calico-node") | .env[] | select(.name == "CALICO_MANAGE_CNI").value) = "true"' /vagrant/tz-local/resource/calico.yaml
-#yq e '.spec.template.spec.containers[] | select(.name == "calico-node") | .env[] | select(.name == "CALICO_MANAGE_CNI").value' /vagrant/tz-local/resource/calico.yaml
+cat /root/.ssh/${MYKEY}.pub > /vagrant/authorized_keys
+cp -Rf /root/.ssh/${MYKEY}* /vagrant/ \
+  && chmod -Rf 600 /vagrant/${MYKEY}*
+cp -Rf /vagrant/authorized_keys /root/.ssh/authorized_keys
+cat /root/.ssh/${MYKEY}.pub >> /home/vagrant/.ssh/authorized_keys
 
-kubectl proxy --accept-hosts='^*' &
+cat <<EOF > /root/.ssh/config
+Host 192.168.*
+  StrictHostKeyChecking   no
+  LogLevel                ERROR
+  UserKnownHostsFile      /dev/null
+  IdentityFile /root/.ssh/kubekey
+EOF
 
-## Copy config to local
-sudo mkdir -p /home/vagrant/.kube
-sudo cp /root/.kube/config /home/vagrant/.kube/config
-sudo chown -Rf vagrant:vagrant /home/vagrant/.kube
-sudo cp /root/.kube/config /vagrant/config
+cp -Rf /root/.ssh/config /home/vagrant/.ssh/config
+chown -Rf vagrant:vagrant /home/vagrant/.ssh/config
 
-echo '
-alias ll="ls -al"
-alias k="kubectl --kubeconfig ~/.kube/config"
-complete -F __start_kubectl k
-' > ~/.bashrc
-source ~/.bashrc
-sudo cp -Rf ~/.bashrc /home/vagrant/.bashrc
-sudo chown -Rf vagrant:vagrant /home/vagrant/.bashrc
+mkdir -p /root/.ssh \
+  && cp -Rf /vagrant/authorized_keys /root/.ssh/ \
+  && cp -Rf /vagrant/kubekey* /root/.ssh/ \
+  && chown -Rf root:root /root/.ssh \
+  && chmod -Rf 600 /root/.ssh.ssh/*
+
+cd /vagrant
+sudo rm -Rf kubespray
+git clone --single-branch --branch v2.15.0 https://github.com/kubernetes-sigs/kubespray.git
+cd kubespray
+sudo pip3 install -r requirements.txt
+rm -Rf inventory/mycluster
+cp -rfp inventory/sample inventory/mycluster
+
+cp -Rf /vagrant/resource/kubespray/inventory.ini /vagrant/kubespray/inventory/mycluster/inventory.ini
+cp -Rf /vagrant/resource/kubespray/addons.yml /vagrant/kubespray/inventory/mycluster/group_vars/k8s-cluster/addons.yml
+
+exit 0
 
 echo "##################################################################"
-echo "Install other services in k8s-master"
+echo "Install other services in kube-master"
 echo "##################################################################"
 sudo bash /vagrant/scripts/local/others.sh
 

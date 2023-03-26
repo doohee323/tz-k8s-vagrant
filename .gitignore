@@ -30,3 +30,6 @@ data/result
 data/doohee323*
 data/*.json
 
+/kubespray
+/authorized_keys
+/kubekey

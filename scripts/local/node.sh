@@ -2,26 +2,20 @@
 
 #set -x
 
+mkdir -p /root/.ssh \
+  && cat /vagrant/authorized_keys >> /root/.ssh/authorized_keys \
+  && cp -Rf /vagrant/kubekey* /root/.ssh/ \
+  && chown -Rf root:root /root/.ssh \
+  && chmod -Rf 600 /root/.ssh/*
+
 bash /vagrant/scripts/local/base.sh
 
-##################################################################
-# k8s node
-##################################################################
-MY_IP=`ifconfig | grep '192.168.1.' | awk '{print $2}'`
-sudo sed -i "s/\$KUBELET_EXTRA_ARGS/\$KUBELET_EXTRA_ARGS --node-ip=${MY_IP}/g" /etc/systemd/system/kubelet.service.d/10-kubeadm.conf
-systemctl daemon-reload && systemctl restart kubelet
-
-sleep 30
-
-sudo bash /vagrant/join.sh
-
-cat /vagrant/info
-
 exit 0
+
 
 ## nfs ubuntu client
 sudo apt-get install nfs-common
 mkdir -p /data
-mount -t nfs -vvvv 192.168.1.10:/home/vagrant/data /data
-echo '192.168.1.10:/home/vagrant/data /data  nfs      defaults    0       0' >> /etc/fstab
+mount -t nfs -vvvv 192.168.1.10:/root/data /data
+echo '192.168.1.10:/root/data /data  nfs      defaults    0       0' >> /etc/fstab
 

@@ -33,7 +33,7 @@ cp -Rf Vagrantfile Vagrantfile.bak
 if [[ "${A_ENV}" == "" || "${A_ENV}" == "V" ]]; then
   cp -Rf ./scripts/local/Vagrantfile Vagrantfile
   vagrant up
-  vagrant ssh k8s-master -- -t 'bash /vagrant/scripts/local/others.sh'
+#  vagrant ssh kube-master -- -t 'bash /vagrant/scripts/local/others.sh'
 fi
 if [[ "${A_ENV}" == "A" ]]; then
   if [[ ! -f "./tz-aws-terraform/resource/aws/credentials" ]]; then
@@ -50,43 +50,43 @@ exit 0
 
 vagrant snapshot list
 
-vagrant snapshot save k8s-master k8s-master_python --force
-vagrant snapshot save node-1 node-1_python --force
-vagrant snapshot save node-2 node-2_python --force
+vagrant snapshot save kube-master k8s-master_python --force
+vagrant snapshot save kube-node1 node-1_python --force
+vagrant snapshot save kube-node2 node-2_python --force
 
-vagrant snapshot save k8s-master k8s-master_kafka --force
-vagrant snapshot save node-1 node-1_kafka --force
-vagrant snapshot save node-2 node-2_kafka --force
+vagrant snapshot save kube-master k8s-master_kafka --force
+vagrant snapshot save kube-node1 node-1_kafka --force
+vagrant snapshot save kube-node2 node-2_kafka --force
 
-vagrant snapshot save k8s-master k8s-master_nexus --force
-vagrant snapshot save node-1 node-1_nexus --force
-vagrant snapshot save node-2 node-2_nexus --force
+vagrant snapshot save kube-master k8s-master_nexus --force
+vagrant snapshot save kube-node1 node-1_nexus --force
+vagrant snapshot save kube-node2 node-2_nexus --force
 
-vagrant snapshot save k8s-master k8s-master_rancher --force
-vagrant snapshot save node-1 node-1_rancher --force
-vagrant snapshot save node-2 node-2_rancher --force
+vagrant snapshot save kube-master k8s-master_rancher --force
+vagrant snapshot save kube-node1 node-1_rancher --force
+vagrant snapshot save kube-node2 node-2_rancher --force
 
-vagrant snapshot save k8s-master k8s-master_master --force
-vagrant snapshot save node-1 node-1_master --force
-vagrant snapshot save node-2 node-2_master --force
+vagrant snapshot save kube-master k8s-master_master --force
+vagrant snapshot save kube-node1 node-1_master --force
+vagrant snapshot save kube-node2 node-2_master --force
 
-vagrant snapshot restore k8s-master k8s-master_latest
-vagrant snapshot restore node-1 node-1_latest
-vagrant snapshot restore node-2 node-2_latest
+vagrant snapshot restore kube-master k8s-master_latest
+vagrant snapshot restore kube-node1 node-1_latest
+vagrant snapshot restore kube-node2 node-2_latest
 
-vagrant snapshot restore k8s-master k8s-master_kafka
-vagrant snapshot restore node-1 node-1_kafka
-vagrant snapshot restore node-2 node-2_kafka
+vagrant snapshot restore kube-master k8s-master_kafka
+vagrant snapshot restore kube-node1 node-1_kafka
+vagrant snapshot restore kube-node2 node-2_kafka
 
-vagrant snapshot restore k8s-master k8s-master_nexus
-vagrant snapshot restore node-1 node-1_nexus
-vagrant snapshot restore node-2 node-2_nexus
+vagrant snapshot restore kube-master k8s-master_nexus
+vagrant snapshot restore kube-node1 node-1_nexus
+vagrant snapshot restore kube-node2 node-2_nexus
 
-vagrant snapshot restore k8s-master k8s-master_rancher
-vagrant snapshot restore node-1 node-1_rancher
-vagrant snapshot restore node-2 node-2_rancher
+vagrant snapshot restore kube-master k8s-master_rancher
+vagrant snapshot restore kube-node1 node-1_rancher
+vagrant snapshot restore kube-node2 node-2_rancher
 
-vagrant snapshot restore k8s-master k8s-master_master
-vagrant snapshot restore node-1 node-1_master
-vagrant snapshot restore node-2 node-2_master
+vagrant snapshot restore kube-master k8s-master_master
+vagrant snapshot restore kube-node1 node-1_master
+vagrant snapshot restore kube-node2 node-2_master
 
