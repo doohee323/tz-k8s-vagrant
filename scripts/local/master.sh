@@ -13,7 +13,7 @@ chown -R root:root /root/.ssh
 sudo groupadd ubuntu
 sudo useradd -g ubuntu -d /home/ubuntu -s /bin/bash -m ubuntu
 cat <<EOF > pass.txt
-ubuntu:ubuntu
+ubuntu:hdh971097
 EOF
 sudo chpasswd < pass.txt
 
@@ -57,6 +57,10 @@ cp -rfp inventory/sample inventory/mycluster
 
 cp -Rf /vagrant/resource/kubespray/inventory.ini /vagrant/kubespray/inventory/mycluster/inventory.ini
 cp -Rf /vagrant/resource/kubespray/addons.yml /vagrant/kubespray/inventory/mycluster/group_vars/k8s-cluster/addons.yml
+
+sudo apt-get update && sudo apt-get install -y apt-transport-https gnupg2 curl
+curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl"
+sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
 
 exit 0
 
