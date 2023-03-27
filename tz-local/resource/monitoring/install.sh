@@ -31,7 +31,7 @@ helm upgrade -f volumeF.yaml monitor stable/prometheus -n monitoring
 k get svc -n monitoring
 k patch svc monitor-prometheus-server --type='json' -p '[{"op":"replace","path":"/spec/type","value":"NodePort"},{"op":"replace","path":"/spec/ports/0/nodePort","value":32449}]' -n monitoring
 
-master_ip='192.168.1.10'
+master_ip='192.168.86.36'
 k get svc -n monitoring | grep monitor-prometheus-server
 private_ip=`k get svc -n monitoring | grep monitor-prometheus-server | awk '{print $3}'`
 #monitor-prometheus-server          NodePort    10.105.94.92    <none>        80:32449/TCP             15m
@@ -54,8 +54,8 @@ k get all -n monitoring
 
 echo '
 ##[ Monitoring ]##########################################################
-- Prometheus: http://192.168.1.10:32449
-- Grafana: http://192.168.1.10:30912
+- Prometheus: http://192.168.86.36:32449
+- Grafana: http://192.168.86.36:30912
   admin / prom-operator
   import grafana ID from https://grafana.com/grafana/dashboards into your grafana!
 #######################################################################

@@ -34,3 +34,6 @@ data/*.json
 /authorized_keys
 /kubekey*
 /kubespray_vagrant
+*.log
+/data2
+/pass.txt

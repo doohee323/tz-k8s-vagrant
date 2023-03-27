@@ -6,6 +6,10 @@
 # k8s base
 ##################################################################
 
+if [ -d /vagrant ]; then
+  cd /vagrant
+fi
+
 sudo swapoff -a
 sudo sed -i '/swap/d' /etc/fstab
 sudo apt-get update
@@ -16,7 +20,6 @@ sudo curl -fsSL -o get_helm.sh https://raw.githubusercontent.com/helm/helm/maste
 sudo bash get_helm.sh
 sudo rm -Rf get_helm.sh
 
-
 exit 0
 
-ansible all -i /vagrant/kubespray/inventory/mycluster/inventory.ini -m ping
+ansible all -i kubespray/inventory/mycluster/inventory.ini -m ping

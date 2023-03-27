@@ -16,8 +16,8 @@ k apply -f /vagrant/tz-local/dashboard/dashboard-admin.yaml
 
 echo "get dashboard url: "
 k cluster-info
-#Kubernetes control plane is running at https://192.168.1.10:6443
-#KubeDNS is running at https://192.168.1.10:6443/api/v1/namespaces/kube-system/services/kube-dns:dns/proxy
+#Kubernetes control plane is running at https://192.168.86.36:6443
+#KubeDNS is running at https://192.168.86.36:6443/api/v1/namespaces/kube-system/services/kube-dns:dns/proxy
 #echo "https://192.168.0.143:32699/"
 
 ## export crt
@@ -47,7 +47,7 @@ echo $TOKEN
 
 echo '
 ##[ Dashboard ]##########################################################
-- Url: https://192.168.1.10:32699/
+- Url: https://192.168.86.36:32699/
 - Token: TOKEN
 
 # add certificate in macOS to fix certi error,
