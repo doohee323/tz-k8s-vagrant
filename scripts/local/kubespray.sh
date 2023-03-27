@@ -24,15 +24,20 @@ kubectl cluster-info
 
 sudo cp -Rf /root/.kube/config /vagrant/kubespray_vagrant
 
-exit 0
+shopt -s expand_aliases
+alias k='kubectl --kubeconfig ~/.kube/config'
 
 #k delete -f /vagrant/tz-local/resource/standard-storage.yaml
 k apply -f /vagrant/tz-local/resource/standard-storage.yaml
 k patch storageclass local-storage -p '{"metadata": {"annotations":{"storageclass.kubernetes.io/is-default-class":"true"}}}'
 k get storageclass,pv,pvc
 
+helm repo add stable https://charts.helm.sh/stable
+helm repo update
+
 # nfs
 # 1. with helm
+#helm repo update
 #helm install my-release --set nfs.server=192.168.1.10 --set nfs.path=/srv/nfs/mydata stable/nfs-client-provisioner
 # 2. with manual
 #k apply -f /vagrant/tz-local/resource/dynamic-provisioning/nfs/static-nfs.yaml
@@ -46,9 +51,6 @@ sudo bash get_helm.sh
 sudo rm -Rf get_helm.sh
 
 sleep 10
-
-helm repo add stable https://charts.helm.sh/stable
-helm repo update
 
 #k get po -n kube-system
 
@@ -67,7 +69,7 @@ bash /vagrant/tz-local/resource/metallb/install.sh
 ##################################################################
 # call dashboard install script
 ##################################################################
-bash /vagrant/tz-local/resource/dashboard/install.sh
+#bash /vagrant/tz-local/resource/dashboard/install.sh
 
 ##################################################################
 # call monitoring install script
@@ -77,7 +79,7 @@ bash /vagrant/tz-local/resource/monitoring/install.sh
 ##################################################################
 # call jenkins install script
 ##################################################################
-bash /vagrant/tz-local/resource/jenkins/install.sh
+#bash /vagrant/tz-local/resource/jenkins/install.sh
 
 ##################################################################
 # call tz-py-crawler app in k8s

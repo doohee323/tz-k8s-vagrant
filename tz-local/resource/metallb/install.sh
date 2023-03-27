@@ -6,14 +6,21 @@ shopt -s expand_aliases
 
 alias k='kubectl --kubeconfig ~/.kube/config'
 
-k delete -f https://raw.githubusercontent.com/metallb/metallb/v0.9.5/manifests/namespace.yaml
-k delete -f https://raw.githubusercontent.com/metallb/metallb/v0.9.5/manifests/metallb.yaml
-k apply -f https://raw.githubusercontent.com/metallb/metallb/v0.9.5/manifests/namespace.yaml
-k apply -f https://raw.githubusercontent.com/metallb/metallb/v0.9.5/manifests/metallb.yaml
+kubectl get configmap kube-proxy -n kube-system -o yaml | \
+sed -e "s/strictARP: false/strictARP: true/" | \
+kubectl apply -f - -n kube-system
+
+kubectl delete ns metallb-system
+kubectl create ns metallb-system
+
+helm repo add metallb https://metallb.github.io/metallb
+helm repo update
+helm delete metallb -n metallb-system
+helm install metallb metallb/metallb -n metallb-system
+#helm install metallb metallb/metallb -n metallb-system -f values.yaml
 
 # On first install only
 k create secret generic -n metallb-system memberlist --from-literal=secretkey="$(openssl rand -base64 128)"
-
 k get pods -n metallb-system
 
 k delete -f /vagrant/tz-local/resource/metallb/layer2-config.yaml
