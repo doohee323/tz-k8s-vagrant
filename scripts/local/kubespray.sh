@@ -1,5 +1,8 @@
 #!/usr/bin/env bash
 
+# add a new node
+#https://www.techbeatly.com/adding-new-nodes-to-kubespray-managed-kubernetes-cluster/
+
 #set -x
 
 cd /vagrant/kubespray
