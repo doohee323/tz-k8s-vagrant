@@ -18,7 +18,10 @@ CONFIG_FILE=inventory/mycluster/hosts.yaml python3 contrib/inventory_builder/inv
 cat inventory/mycluster/group_vars/all/all.yml
 cat inventory/mycluster/group_vars/k8s-cluster/k8s-cluster.yml
 
-ansible-playbook -i inventory/mycluster/hosts.yaml  --become --become-user=root cluster.yml
+ansible-playbook -i inventory/mycluster/hosts.yaml --become --become-user=root cluster.yml
+
+#ansible-playbook -i inventory/mycluster/hosts.yaml --become --become-user=root cluster.yml -u devops -b -l node-3
+ansible-playbook -i inventory/mycluster/hosts.yaml --become --become-user=root cluster.yml -b -l node4 -l node5
 
 sudo cp -Rf /root/.kube /home/vagrant/
 sudo chown -Rf vagrant:vagrant /home/vagrant/.kube
@@ -29,7 +32,11 @@ exec bash
 kubectl get nodes
 kubectl cluster-info
 
-sudo cp -Rf /root/.kube/config kubespray_vagrant
+if [ -d /vagrant ]; then
+  sudo cp -Rf /root/.kube/config kubespray_vagrant
+else
+  sudo cp -Rf /etc/kubernetes/admin.conf kubespray_vagrant
+fi
 
 shopt -s expand_aliases
 alias k='kubectl --kubeconfig ~/.kube/config'

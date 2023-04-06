@@ -12,7 +12,6 @@ bash /vagrant/scripts/local/base.sh
 
 exit 0
 
-
 ## nfs ubuntu client
 sudo apt-get install nfs-common
 mkdir -p /data
