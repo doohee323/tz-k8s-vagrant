@@ -9,7 +9,7 @@ spec:
   accessModes:
     - ReadWriteMany
   nfs:
-    server: 192.168.0.36
+    server: 192.168.0.200
     path: /home/vagrant/data
 
 ---
