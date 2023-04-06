@@ -1,7 +1,7 @@
 # -*- mode: ruby -*-
 # vi: set ft=ruby :
 
-IMAGE_NAME = "ubuntu/bionic64"
+IMAGE_NAME = "hashicorp/bionic64"
 COUNTER = 2
 Vagrant.configure("2") do |config|
   config.vm.box = IMAGE_NAME
@@ -13,6 +13,9 @@ Vagrant.configure("2") do |config|
 
   config.vm.define "kube-master" do |master|
     master.vm.box = IMAGE_NAME
+    master.vm.provider "hyperv"
+    master.enable_virtualization_extensions = true
+    master.linked_clone = true
     master.vm.network "public_network", ip: "192.168.0.200"
 #     master.vm.network "private_network", ip: "192.168.0.200"
 #     master.vm.network "forwarded_port", guest: 22, host: 60010, auto_correct: true, id: "ssh"
@@ -31,6 +34,9 @@ Vagrant.configure("2") do |config|
   (1..COUNTER).each do |i|
     config.vm.define "kube-node#{i}" do |node|
         node.vm.box = IMAGE_NAME
+        node.vm.provider "hyperv"
+        node.enable_virtualization_extensions = true
+        node.linked_clone = true
         node.vm.network "public_network", ip: "192.168.0.#{i + 200}"
 #         node.vm.network "private_network", ip: "192.168.0.#{i + 200}"
 #         node.vm.network "forwarded_port", guest: 22, host: "6010#{i}", auto_correct: true, id: "ssh"
