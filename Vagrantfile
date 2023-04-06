@@ -13,7 +13,7 @@ Vagrant.configure("2") do |config|
 
 #   config.vm.define "kube-master" do |master|
 #     master.vm.box = IMAGE_NAME
-#     master.vm.network "private_network", ip: "192.168.86.36"
+#     master.vm.network "private_network", ip: "192.168.0.36"
 #     #master.vm.network "public_network"
 #     master.vm.network "forwarded_port", guest: 22, host: 60010, auto_correct: true, id: "ssh"
 #     master.vm.network "forwarded_port", guest: 6443, host: 6443
@@ -38,7 +38,7 @@ Vagrant.configure("2") do |config|
 #   (1..COUNTER).each do |i|
 #     config.vm.define "kube-node#{i}" do |node|
 #         node.vm.box = IMAGE_NAME
-#         node.vm.network "public_network", ip: "192.168.86.27"
+#         node.vm.network "public_network", ip: "192.168.0.27"
 # #         node.vm.network "private_network", ip: "192.168.1.#{i + 21}"
 #         node.vm.network "forwarded_port", guest: 22, host: "6010#{i}", auto_correct: true, id: "ssh"
 #         node.vm.hostname = "kube-node#{i}"
@@ -48,7 +48,7 @@ Vagrant.configure("2") do |config|
 
     config.vm.define "kube-node1" do |node|
         node.vm.box = IMAGE_NAME
-        node.vm.network "public_network", ip: "192.168.86.27"
+        node.vm.network "public_network", ip: "192.168.0.27"
         node.vm.network "forwarded_port", guest: 22, host: "6011", auto_correct: true, id: "ssh"
         node.vm.hostname = "kube-node1"
         node.vm.provision "shell", :path => File.join(File.dirname(__FILE__),"scripts/local/node.sh"), :args => node.vm.hostname
@@ -56,7 +56,7 @@ Vagrant.configure("2") do |config|
 
     config.vm.define "kube-node2" do |node|
         node.vm.box = IMAGE_NAME
-        node.vm.network "public_network", ip: "192.168.86.30"
+        node.vm.network "public_network", ip: "192.168.0.30"
         node.vm.network "forwarded_port", guest: 22, host: "6012", auto_correct: true, id: "ssh"
         node.vm.hostname = "kube-node2"
         node.vm.provision "shell", :path => File.join(File.dirname(__FILE__),"scripts/local/node.sh"), :args => node.vm.hostname
