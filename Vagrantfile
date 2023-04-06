@@ -6,16 +6,15 @@ COUNTER = 2
 Vagrant.configure("2") do |config|
   config.vm.box = IMAGE_NAME
   config.ssh.insert_key=false
-  config.vm.provider "virtualbox" do |v|
+  config.vm.provider "hyperv" do |v|
     v.memory = 3072
     v.cpus = 2
+    v.enable_virtualization_extensions = true
+    v.linked_clone = true
   end
 
   config.vm.define "kube-master" do |master|
     master.vm.box = IMAGE_NAME
-    master.vm.provider "hyperv"
-    master.enable_virtualization_extensions = true
-    master.linked_clone = true
     master.vm.network "public_network", ip: "192.168.0.200"
 #     master.vm.network "private_network", ip: "192.168.0.200"
 #     master.vm.network "forwarded_port", guest: 22, host: 60010, auto_correct: true, id: "ssh"
@@ -34,9 +33,6 @@ Vagrant.configure("2") do |config|
   (1..COUNTER).each do |i|
     config.vm.define "kube-node#{i}" do |node|
         node.vm.box = IMAGE_NAME
-        node.vm.provider "hyperv"
-        node.enable_virtualization_extensions = true
-        node.linked_clone = true
         node.vm.network "public_network", ip: "192.168.0.#{i + 200}"
 #         node.vm.network "private_network", ip: "192.168.0.#{i + 200}"
 #         node.vm.network "forwarded_port", guest: 22, host: "6010#{i}", auto_correct: true, id: "ssh"
