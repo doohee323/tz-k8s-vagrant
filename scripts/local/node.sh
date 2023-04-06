@@ -17,6 +17,6 @@ exit 0
 ## nfs ubuntu client
 sudo apt-get install nfs-common
 mkdir -p /data
-mount -t nfs -vvvv 192.168.0.200:/root/data /data
-echo '192.168.0.200:/root/data /data  nfs      defaults    0       0' >> /etc/fstab
+mount -t nfs -vvvv 192.168.0.127:/root/data /data
+echo '192.168.0.127:/root/data /data  nfs      defaults    0       0' >> /etc/fstab
 

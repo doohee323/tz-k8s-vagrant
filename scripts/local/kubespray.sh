@@ -3,6 +3,7 @@
 # add a new node
 #https://www.techbeatly.com/adding-new-nodes-to-kubespray-managed-kubernetes-cluster/
 
+#git clone https://github.com/kubespray/kubespray.git
 #set -x
 
 if [ -d /vagrant ]; then
@@ -12,7 +13,7 @@ fi
 cd kubespray
 ansible all -i inventory/mycluster/inventory.ini -m ping
 
-declare -a IPS=(192.168.0.200 192.168.1.12 192.168.1.13)
+declare -a IPS=(192.168.0.127 192.168.0.128 192.168.0.129)
 CONFIG_FILE=inventory/mycluster/hosts.yaml python3 contrib/inventory_builder/inventory.py ${IPS[@]}
 
 cat inventory/mycluster/group_vars/all/all.yml
@@ -52,7 +53,7 @@ helm repo update
 # nfs
 # 1. with helm
 #helm repo update
-#helm install my-release --set nfs.server=192.168.0.200 --set nfs.path=/srv/nfs/mydata stable/nfs-client-provisioner
+#helm install my-release --set nfs.server=192.168.0.127 --set nfs.path=/srv/nfs/mydata stable/nfs-client-provisioner
 # 2. with manual
 #k apply -f tz-local/resource/dynamic-provisioning/nfs/static-nfs.yaml
 #k apply -f tz-local/resource/dynamic-provisioning/nfs/serviceaccount.yaml

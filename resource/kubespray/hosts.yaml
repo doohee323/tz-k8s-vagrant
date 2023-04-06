@@ -1,17 +1,17 @@
 all:
   hosts:
     node1:
-      ansible_host: 192.168.0.200
-      ip: 192.168.0.200
-      access_ip: 192.168.0.200
+      ansible_host: 192.168.0.127
+      ip: 192.168.0.127
+      access_ip: 192.168.0.127
     node2:
-      ansible_host: 192.168.1.12
-      ip: 192.168.1.12
-      access_ip: 192.168.1.12
+      ansible_host: 192.168.0.128
+      ip: 192.168.0.128
+      access_ip: 192.168.0.128
     node3:
-      ansible_host: 192.168.1.13
-      ip: 192.168.1.13
-      access_ip: 192.168.1.13
+      ansible_host: 192.168.0.129
+      ip: 192.168.0.129
+      access_ip: 192.168.0.129
   children:
     kube-master:
       hosts:

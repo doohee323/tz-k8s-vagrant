@@ -15,8 +15,8 @@ Vagrant.configure("2") do |config|
 
   config.vm.define "kube-master" do |master|
     master.vm.box = IMAGE_NAME
-    master.vm.network "public_network", ip: "192.168.0.200"
-#     master.vm.network "private_network", ip: "192.168.0.200"
+    master.vm.network "public_network", ip: "192.168.0.127"
+#     master.vm.network "private_network", ip: "192.168.0.127"
 #     master.vm.network "forwarded_port", guest: 22, host: 60010, auto_correct: true, id: "ssh"
 #     master.vm.network "forwarded_port", guest: 6443, host: 6443
 #     master.vm.network "forwarded_port", guest: 80, host: 8080
