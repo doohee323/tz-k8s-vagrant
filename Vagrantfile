@@ -7,8 +7,8 @@ Vagrant.configure("2") do |config|
   config.vm.box = IMAGE_NAME
   config.ssh.insert_key=false
   config.vm.provider "virtualbox" do |v|
-    v.memory = 3072
-    v.cpus = 2
+    v.memory = 4096
+    v.cpus = 3
   end
 
   config.vm.define "kube-master" do |master|
