@@ -36,6 +36,7 @@ else
   cat authorized_keys >> /root/.ssh/authorized_keys
 fi
 cat /root/.ssh/${MYKEY}.pub >> /home/vagrant/.ssh/authorized_keys
+chown -Rf vagrant:vagrant /home/vagrant/.ssh
 
 cat <<EOF > /root/.ssh/config
 Host 192.168.*
@@ -55,7 +56,7 @@ mkdir -p /root/.ssh \
   && chmod -Rf 600 /root/.ssh/*
 
 sudo rm -Rf kubespray
-git clone --single-branch --branch v2.15.0 https://github.com/kubernetes-sigs/kubespray.git
+git clone --single-branch https://github.com/kubernetes-sigs/kubespray.git
 cd kubespray
 sudo pip3 install -r requirements.txt
 rm -Rf inventory/mycluster
@@ -63,7 +64,8 @@ cp -rfp inventory/sample inventory/mycluster
 
 cd ..
 cp -Rf resource/kubespray/inventory.ini kubespray/inventory/mycluster/inventory.ini
-cp -Rf resource/kubespray/addons.yml kubespray/inventory/mycluster/group_vars/k8s-cluster/addons.yml
+cp -Rf resource/kubespray/hosts.yaml kubespray/inventory/mycluster/hosts.yaml
+cp -Rf resource/kubespray/addons.yml kubespray/inventory/mycluster/group_vars/k8s_cluster/addons.yml
 
 sudo apt-get update && sudo apt-get install -y apt-transport-https gnupg2 curl
 curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl"

@@ -1,5 +1,8 @@
 #!/usr/bin/env bash
 
+#https://sangvhh.net/set-up-kubernetes-cluster-with-kubespray-on-ubuntu-22-04/
+
+
 # add a new node
 #https://www.techbeatly.com/adding-new-nodes-to-kubespray-managed-kubernetes-cluster/
 
@@ -17,12 +20,12 @@ declare -a IPS=(192.168.0.127 192.168.0.128 192.168.0.129)
 CONFIG_FILE=inventory/mycluster/hosts.yaml python3 contrib/inventory_builder/inventory.py ${IPS[@]}
 
 cat inventory/mycluster/group_vars/all/all.yml
-cat inventory/mycluster/group_vars/k8s-cluster/k8s-cluster.yml
+cat inventory/mycluster/group_vars/k8s_cluster/k8s-cluster.yml
 
 ansible-playbook -i inventory/mycluster/hosts.yaml --become --become-user=root cluster.yml
 
 #ansible-playbook -i inventory/mycluster/hosts.yaml --become --become-user=root cluster.yml -u devops -b -l node-3
-ansible-playbook -i inventory/mycluster/hosts.yaml --become --become-user=root cluster.yml -b -l node4 -l node5
+#ansible-playbook -i inventory/mycluster/hosts.yaml --become --become-user=root cluster.yml -b -l node4 -l node5
 
 sudo cp -Rf /root/.kube /home/vagrant/
 sudo chown -Rf vagrant:vagrant /home/vagrant/.kube
