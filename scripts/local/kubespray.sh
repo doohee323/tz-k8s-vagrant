@@ -23,6 +23,7 @@ cat inventory/mycluster/group_vars/all/all.yml
 cat inventory/mycluster/group_vars/k8s_cluster/k8s-cluster.yml
 
 ansible-playbook -i inventory/mycluster/hosts.yaml --become --become-user=root cluster.yml
+#ansible-playbook -vvv -i inventory/mycluster/hosts.yaml --become --become-user=root cluster.yml
 
 #ansible-playbook -i inventory/mycluster/hosts.yaml --become --become-user=root cluster.yml -u devops -b -l node-3
 #ansible-playbook -i inventory/mycluster/hosts.yaml --become --become-user=root cluster.yml -b -l node4 -l node5
