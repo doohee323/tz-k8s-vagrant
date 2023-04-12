@@ -13,20 +13,34 @@ if [ -d /vagrant ]; then
   cd /vagrant
 fi
 
+rm -Rf kubespray/inventory/test-cluster
+cp -rfp kubespray/inventory/sample kubespray/inventory/test-cluster
+cp -Rf resource/kubespray/inventory.ini kubespray/inventory/test-cluster/inventory.ini
+#cp -Rf resource/kubespray/hosts.yaml kubespray/inventory/test-cluster/hosts.yaml
+cp -Rf resource/kubespray/addons.yml kubespray/inventory/test-cluster/group_vars/k8s_cluster/addons.yml
+
 cd kubespray
-ansible all -i inventory/mycluster/inventory.ini -m ping
+
+sudo pip3 install -r requirements.txt
+rm -Rf inventory/test-cluster
+
+ansible all -i inventory/test-cluster/inventory.ini -m ping
+#ansible all -i inventory/test-cluster/inventory.ini --list-hosts
 
 declare -a IPS=(192.168.0.127 192.168.0.128 192.168.0.129)
-CONFIG_FILE=inventory/mycluster/hosts.yaml python3 contrib/inventory_builder/inventory.py ${IPS[@]}
+CONFIG_FILE=inventory/test-cluster/hosts.yaml python3 contrib/inventory_builder/inventory.py ${IPS[@]}
 
-cat inventory/mycluster/group_vars/all/all.yml
-cat inventory/mycluster/group_vars/k8s_cluster/k8s-cluster.yml
+cat inventory/test-cluster/group_vars/all/all.yml
+cat inventory/test-cluster/group_vars/k8s_cluster/k8s-cluster.yml
 
-ansible-playbook -i inventory/mycluster/hosts.yaml --become --become-user=root cluster.yml
-#ansible-playbook -vvv -i inventory/mycluster/hosts.yaml --become --become-user=root cluster.yml
+ansible-playbook -i inventory/test-cluster/inventory.ini --private-key /root/.ssh/kubekey --become --become-user=root cluster.yml
+ansible-playbook -i inventory/test-cluster/inventory.ini --become --become-user=root cluster.yml
 
-#ansible-playbook -i inventory/mycluster/hosts.yaml --become --become-user=root cluster.yml -u devops -b -l node-3
-#ansible-playbook -i inventory/mycluster/hosts.yaml --become --become-user=root cluster.yml -b -l node4 -l node5
+ansible-playbook -i inventory/test-cluster/hosts.yaml --become --become-user=root cluster.yml
+#ansible-playbook -vvv -i inventory/test-cluster/hosts.yaml --become --become-user=root cluster.yml
+
+#ansible-playbook -i inventory/test-cluster/hosts.yaml --become --become-user=root cluster.yml -u devops -b -l node-3
+#ansible-playbook -i inventory/test-cluster/hosts.yaml --become --become-user=root cluster.yml -b -l node4 -l node5
 
 sudo cp -Rf /root/.kube /home/vagrant/
 sudo chown -Rf vagrant:vagrant /home/vagrant/.kube

@@ -9,22 +9,22 @@ if [ -d /vagrant ]; then
   cd /vagrant
 fi
 
-cp -Rf resource/kubespray/inventory2.ini kubespray/inventory/mycluster/inventory.ini
-cp -Rf resource/kubespray/hosts.yaml    kubespray/inventory/mycluster/hosts.yaml
+cp -Rf resource/kubespray/inventory2.ini kubespray/inventory/test-cluster/inventory.ini
+cp -Rf resource/kubespray/hosts.yaml    kubespray/inventory/test-cluster/hosts.yaml
 
 cd kubespray
 
-ansible all -i inventory/mycluster/inventory.ini -m ping
+ansible all -i inventory/test-cluster/inventory.ini -m ping
 
 #declare -a IPS=(192.168.0.127 192.168.0.128 192.168.0.129)
-#CONFIG_FILE=inventory/mycluster/hosts.yaml python3 contrib/inventory_builder/inventory.py ${IPS[@]}
+#CONFIG_FILE=inventory/test-cluster/hosts.yaml python3 contrib/inventory_builder/inventory.py ${IPS[@]}
 
-cat inventory/mycluster/group_vars/all/all.yml
-cat inventory/mycluster/group_vars/k8s-cluster/k8s-cluster.yml
+cat inventory/test-cluster/group_vars/all/all.yml
+cat inventory/test-cluster/group_vars/k8s-cluster/k8s-cluster.yml
 
-#ansible-playbook -i inventory/mycluster/hosts.yaml  --become --become-user=root cluster.yml
-#ansible-playbook -i inventory/mycluster/hosts.yaml cluster.yml -u devops -b -l node-3
-ansible-playbook -i inventory/mycluster/hosts.yaml cluster.yml -b -become-user=root -l node4
+#ansible-playbook -i inventory/test-cluster/hosts.yaml  --become --become-user=root cluster.yml
+#ansible-playbook -i inventory/test-cluster/hosts.yaml cluster.yml -u devops -b -l node-3
+ansible-playbook -i inventory/test-cluster/hosts.yaml cluster.yml -b -become-user=root -l node4
 
 exit 0
 

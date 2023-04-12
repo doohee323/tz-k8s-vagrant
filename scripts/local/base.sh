@@ -22,4 +22,4 @@ sudo rm -Rf get_helm.sh
 
 exit 0
 
-ansible all -i kubespray/inventory/mycluster/inventory.ini -m ping
+ansible all -i kubespray/inventory/test-cluster/inventory.ini -m ping

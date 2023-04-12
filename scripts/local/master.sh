@@ -59,13 +59,13 @@ sudo rm -Rf kubespray
 git clone --single-branch https://github.com/kubernetes-sigs/kubespray.git
 cd kubespray
 sudo pip3 install -r requirements.txt
-rm -Rf inventory/mycluster
-cp -rfp inventory/sample inventory/mycluster
+rm -Rf inventory/test-cluster
+cp -rfp inventory/sample inventory/test-cluster
 
 cd ..
-cp -Rf resource/kubespray/inventory.ini kubespray/inventory/mycluster/inventory.ini
-cp -Rf resource/kubespray/hosts.yaml kubespray/inventory/mycluster/hosts.yaml
-cp -Rf resource/kubespray/addons.yml kubespray/inventory/mycluster/group_vars/k8s_cluster/addons.yml
+cp -Rf resource/kubespray/inventory.ini kubespray/inventory/test-cluster/inventory.ini
+#cp -Rf resource/kubespray/hosts.yaml kubespray/inventory/test-cluster/hosts.yaml
+cp -Rf resource/kubespray/addons.yml kubespray/inventory/test-cluster/group_vars/k8s_cluster/addons.yml
 
 sudo apt-get update && sudo apt-get install -y apt-transport-https gnupg2 curl
 curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl"
