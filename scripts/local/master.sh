@@ -58,18 +58,6 @@ sudo apt-add-repository ppa:ansible/ansible
 sudo apt update
 sudo apt install ansible -y
 
-sudo rm -Rf kubespray
-git clone --single-branch https://github.com/kubernetes-sigs/kubespray.git
-cd kubespray
-sudo pip3 install -r requirements.txt
-rm -Rf inventory/test-cluster
-cp -rfp inventory/sample inventory/test-cluster
-
-cd ..
-cp -Rf resource/kubespray/inventory.ini kubespray/inventory/test-cluster/inventory.ini
-#cp -Rf resource/kubespray/hosts.yaml kubespray/inventory/test-cluster/hosts.yaml
-cp -Rf resource/kubespray/addons.yml kubespray/inventory/test-cluster/group_vars/k8s_cluster/addons.yml
-
 bash scripts/local/kubespray.sh
 
 exit 0

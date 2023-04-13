@@ -5,7 +5,6 @@
 # add a new node
 #https://www.techbeatly.com/adding-new-nodes-to-kubespray-managed-kubernetes-cluster/
 
-#git clone https://github.com/kubespray/kubespray.git
 #set -x
 
 if [ -d /vagrant ]; then
@@ -18,17 +17,13 @@ fi
 sudo rm -Rf kubespray
 #git clone --single-branch https://github.com/kubernetes-sigs/kubespray.git
 git clone https://github.com/kubernetes-sigs/kubespray.git --branch release-2.21
-
 rm -Rf kubespray/inventory/test-cluster
 cp -rfp kubespray/inventory/sample kubespray/inventory/test-cluster
 cp -Rf resource/kubespray/inventory.ini kubespray/inventory/test-cluster/inventory.ini
-#cp -Rf resource/kubespray/hosts.yaml kubespray/inventory/test-cluster/hosts.yaml
 cp -Rf resource/kubespray/addons.yml kubespray/inventory/test-cluster/group_vars/k8s_cluster/addons.yml
 
 cd kubespray
-
 sudo pip3 install -r requirements.txt
-
 ansible all -i inventory/test-cluster/inventory.ini -m ping
 ansible all -i inventory/test-cluster/inventory.ini --list-hosts
 
