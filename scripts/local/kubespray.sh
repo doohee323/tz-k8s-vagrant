@@ -49,7 +49,7 @@ ansible all -i inventory/test-cluster/inventory.ini --list-hosts
 #cat inventory/test-cluster/group_vars/k8s_cluster/k8s-cluster.yml
 
 #export ANSIBLE_PERSISTENT_CONNECT_TIMEOUT=120
-ansible -vvvv -i /inventory/inventory.ini all -a "systemctl status sshd" -u root
+#ansible -vvvv -i /inventory/inventory.ini all -a "systemctl status sshd" -u root
 
 #ansible-playbook -vvvv -u root -i /inventory/inventory.ini -e 'ansible_python_interpreter=/usr/bin/python3' \
 #  --private-key /root/.ssh/id_rsa --become --become-user=root cluster.yml
@@ -71,6 +71,7 @@ if [ -d /vagrant ]; then
 else
   sudo cp -Rf /etc/kubernetes/admin.conf kubespray_vagrant
 fi
+sudo chown -Rf ubuntu:ubuntu kubespray_vagrant
 
 shopt -s expand_aliases
 alias k='kubectl --kubeconfig ~/.kube/config'
