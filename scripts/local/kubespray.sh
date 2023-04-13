@@ -28,10 +28,10 @@ ansible all -i inventory/test-cluster/inventory.ini -m ping
 ansible all -i inventory/test-cluster/inventory.ini --list-hosts
 
 #declare -a IPS=(192.168.0.127 192.168.0.128 192.168.0.129)
-#CONFIG_FILE=inventory/test-cluster/hosts.yaml python3 contrib/inventory_builder/inventory.py ${IPS[@]}
+#CONFIG_FILE=inventory/test-cluster/inventory.ini python3 contrib/inventory_builder/inventory.py ${IPS[@]}
 
-cat inventory/test-cluster/group_vars/all/all.yml
-cat inventory/test-cluster/group_vars/k8s_cluster/k8s-cluster.yml
+#cat inventory/test-cluster/group_vars/all/all.yml
+#cat inventory/test-cluster/group_vars/k8s_cluster/k8s-cluster.yml
 
 export ANSIBLE_PERSISTENT_CONNECT_TIMEOUT=120
 ansible -vvvv -i /inventory/inventory.ini all -a "systemctl status sshd" -u root
