@@ -32,7 +32,7 @@ data/*.json
 
 /kubespray
 /authorized_keys
-/kubekey*
+/id_rsa*
 /kubespray_vagrant
 *.log
 /data2

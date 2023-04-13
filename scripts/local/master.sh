@@ -18,7 +18,7 @@ vagrant:hdh971097
 EOF
 sudo chpasswd < pass.txt
 
-MYKEY=kubekey
+MYKEY=id_rsa
 [[ ! -f /root/.ssh/${MYKEY} ]] \
   && mkdir -p /root/.ssh \
   && rm -Rf /root/.ssh/${MYKEY}* \
@@ -43,7 +43,7 @@ Host 192.168.*
   StrictHostKeyChecking   no
   LogLevel                ERROR
   UserKnownHostsFile      /dev/null
-  IdentityFile /root/.ssh/kubekey
+  IdentityFile /root/.ssh/id_rsa
 EOF
 
 cp -Rf /root/.ssh/config /home/vagrant/.ssh/config

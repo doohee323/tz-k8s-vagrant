@@ -4,7 +4,7 @@
 
 mkdir -p /root/.ssh \
   && cat /vagrant/authorized_keys >> /root/.ssh/authorized_keys \
-  && cp -Rf /vagrant/kubekey* /root/.ssh/ \
+  && cp -Rf /vagrant/id_rsa* /root/.ssh/ \
   && chown -Rf root:root /root/.ssh \
   && chmod -Rf 600 /root/.ssh/*
 
