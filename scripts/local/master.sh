@@ -2,19 +2,27 @@
 
 #set -x
 
-if [ -d /vagrant ]; then
-  cd /vagrant
+if [ -d /ubuntu ]; then
+  cd /ubuntu
 fi
+
+exit 0
 
 bash scripts/local/base.sh
 
 shopt -s expand_aliases
 alias k='kubectl --kubeconfig ~/.kube/config'
 
-sudo groupadd vagrant
-sudo useradd -g vagrant -d /home/vagrant -s /bin/bash -m vagrant
+cat <<EOF >> /etc/hosts
+192.168.86.30    node1
+192.168.86.27    node2
+192.168.86.36    node3
+EOF
+
+sudo groupadd ubuntu
+sudo useradd -g ubuntu -d /home/ubuntu -s /bin/bash -m ubuntu
 cat <<EOF > pass.txt
-vagrant:hdh971097
+ubuntu:hdh971097
 EOF
 sudo chpasswd < pass.txt
 
@@ -22,38 +30,58 @@ MYKEY=id_rsa
 [[ ! -f /root/.ssh/${MYKEY} ]] \
   && mkdir -p /root/.ssh \
   && rm -Rf /root/.ssh/${MYKEY}* \
-  && ssh-keygen -f /root/.ssh/${MYKEY} -N '' -q \
+  && ssh-keygen -t rsa -C ${MYKEY} -P "" -f ${MYKEY} -q \
   && chown -R root:root /root/.ssh \
   && chmod -Rf 600 /root/.ssh
 
 cat /root/.ssh/${MYKEY}.pub > authorized_keys
-mkdir -p /home/vagrant/.ssh
+mkdir -p /home/ubuntu/.ssh
 cp -Rf /root/.ssh/${MYKEY}* . \
   && chmod -Rf 600 ${MYKEY}*
-if [ -d /vagrant ]; then
+if [ -d /ubuntu ]; then
   cp -Rf authorized_keys /root/.ssh/authorized_keys
 else
   cat authorized_keys >> /root/.ssh/authorized_keys
 fi
-cat /root/.ssh/${MYKEY}.pub >> /home/vagrant/.ssh/authorized_keys
-chown -Rf vagrant:vagrant /home/vagrant/.ssh
+cat /root/.ssh/${MYKEY}.pub >> /home/ubuntu/.ssh/authorized_keys
+chown -Rf ubuntu:ubuntu /home/ubuntu/.ssh
 
 cat <<EOF > /root/.ssh/config
-Host 192.168.*
+Host node1
   StrictHostKeyChecking   no
   LogLevel                ERROR
   UserKnownHostsFile      /dev/null
-  IdentityFile /root/.ssh/id_rsa
+  IdentitiesOnly yes
+  User ubuntu
+  IdentityFile ~/.ssh/id_rsa
+
+Host node2
+  StrictHostKeyChecking   no
+  LogLevel                ERROR
+  UserKnownHostsFile      /dev/null
+  User ubuntu
+  IdentityFile ~/.ssh/id_rsa
+
+Host node3
+  StrictHostKeyChecking   no
+  LogLevel                ERROR
+  UserKnownHostsFile      /dev/null
+  User ubuntu
+  IdentityFile ~/.ssh/id_rsa
 EOF
 
-cp -Rf /root/.ssh/config /home/vagrant/.ssh/config
-chown -Rf vagrant:vagrant /home/vagrant/.ssh/config
+cp -Rf /root/.ssh/config /home/ubuntu/.ssh/config
+chown -Rf ubuntu:ubuntu /home/ubuntu/.ssh/config
 
 mkdir -p /root/.ssh \
   && cp -Rf authorized_keys /root/.ssh/ \
   && cp -Rf ${MYKEY}* /root/.ssh/ \
   && chown -Rf root:root /root/.ssh \
   && chmod -Rf 600 /root/.ssh/*
+
+sudo apt-add-repository ppa:ansible/ansible
+sudo apt update
+sudo apt install ansible -y
 
 sudo rm -Rf kubespray
 git clone --single-branch https://github.com/kubernetes-sigs/kubespray.git
@@ -67,9 +95,7 @@ cp -Rf resource/kubespray/inventory.ini kubespray/inventory/test-cluster/invento
 #cp -Rf resource/kubespray/hosts.yaml kubespray/inventory/test-cluster/hosts.yaml
 cp -Rf resource/kubespray/addons.yml kubespray/inventory/test-cluster/group_vars/k8s_cluster/addons.yml
 
-sudo apt-get update && sudo apt-get install -y apt-transport-https gnupg2 curl
-curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl"
-sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
+bash scripts/local/kubespray.sh
 
 exit 0
 
@@ -78,7 +104,7 @@ systemctl daemon-reload && systemctl restart kubelet
 kubectl get nodes -o wide
 
 ## nfs server
-## !!! Warning: Authentication failure. Retrying... after nfs setting and vagrant up
+## !!! Warning: Authentication failure. Retrying... after nfs setting and ubuntu up
 sudo apt-get install nfs-common nfs-kernel-server rpcbind portmap -y
 sudo mkdir -p /homedata
 sudo chmod -Rf 777 /home

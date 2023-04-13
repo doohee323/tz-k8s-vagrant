@@ -2,7 +2,6 @@
 
 #https://sangvhh.net/set-up-kubernetes-cluster-with-kubespray-on-ubuntu-22-04/
 
-
 # add a new node
 #https://www.techbeatly.com/adding-new-nodes-to-kubespray-managed-kubernetes-cluster/
 
@@ -17,7 +16,8 @@ fi
 #kubeadm reset
 
 sudo rm -Rf kubespray
-git clone --single-branch https://github.com/kubernetes-sigs/kubespray.git
+#git clone --single-branch https://github.com/kubernetes-sigs/kubespray.git
+git clone https://github.com/kubernetes-sigs/kubespray.git --branch release-2.21
 
 rm -Rf kubespray/inventory/test-cluster
 cp -rfp kubespray/inventory/sample kubespray/inventory/test-cluster
@@ -30,10 +30,10 @@ cd kubespray
 sudo pip3 install -r requirements.txt
 
 ansible all -i inventory/test-cluster/inventory.ini -m ping
-#ansible all -i inventory/test-cluster/inventory.ini --list-hosts
+ansible all -i inventory/test-cluster/inventory.ini --list-hosts
 
-declare -a IPS=(192.168.0.127 192.168.0.128 192.168.0.129)
-CONFIG_FILE=inventory/test-cluster/hosts.yaml python3 contrib/inventory_builder/inventory.py ${IPS[@]}
+#declare -a IPS=(192.168.0.127 192.168.0.128 192.168.0.129)
+#CONFIG_FILE=inventory/test-cluster/hosts.yaml python3 contrib/inventory_builder/inventory.py ${IPS[@]}
 
 cat inventory/test-cluster/group_vars/all/all.yml
 cat inventory/test-cluster/group_vars/k8s_cluster/k8s-cluster.yml
@@ -45,13 +45,7 @@ ansible -vvvv -i /inventory/inventory.ini all -a "systemctl status sshd" -u root
 #  --private-key /root/.ssh/id_rsa --become --become-user=root cluster.yml
 
 ansible-playbook -i inventory/test-cluster/inventory.ini --private-key /root/.ssh/id_rsa --become --become-user=root cluster.yml
-ansible-playbook -i inventory/test-cluster/inventory.ini --become --become-user=root cluster.yml
-
-ansible-playbook -i inventory/test-cluster/hosts.yaml --become --become-user=root cluster.yml
-#ansible-playbook -vvv -i inventory/test-cluster/hosts.yaml --become --become-user=root cluster.yml
-
-#ansible-playbook -i inventory/test-cluster/hosts.yaml --become --become-user=root cluster.yml -u devops -b -l node-3
-#ansible-playbook -i inventory/test-cluster/hosts.yaml --become --become-user=root cluster.yml -b -l node4 -l node5
+#ansible-playbook -i inventory/test-cluster/inventory.ini --become --become-user=root cluster.yml
 
 sudo cp -Rf /root/.kube /home/vagrant/
 sudo chown -Rf vagrant:vagrant /home/vagrant/.kube
@@ -88,6 +82,11 @@ helm repo update
 #k apply -f tz-local/resource/dynamic-provisioning/nfs/serviceaccount.yaml
 #k apply -f tz-local/resource/dynamic-provisioning/nfs/nfs.yaml
 #k apply -f tz-local/resource/dynamic-provisioning/nfs/nfs-claim.yaml
+
+echo "## [ install kubectl ] ######################################################"
+sudo apt-get update && sudo apt-get install -y apt-transport-https gnupg2 curl
+curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl"
+sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
 
 echo "## [ install helm3 ] ######################################################"
 sudo curl -fsSL -o get_helm.sh https://raw.githubusercontent.com/helm/helm/master/scripts/get-helm-3
