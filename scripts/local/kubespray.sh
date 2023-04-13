@@ -13,6 +13,21 @@ fi
 
 # to reset on each node.
 #kubeadm reset
+#ipvsadm --clear
+#rm -Rf /var/lib/kubelet
+#rm -Rf /etc/kubernetes
+#rm -Rf /etc/cni/net.d
+#iptables --policy INPUT   ACCEPT
+#iptables --policy OUTPUT  ACCEPT
+#iptables --policy FORWARD ACCEPT
+#iptables -Z # zero counters
+#iptables -F # flush (delete) rules
+#iptables -X # delete all extra chains
+#iptables -t nat -F
+#iptables -t nat -X
+#iptables -t mangle -F
+#iptables -t mangle -X
+#rm -Rf $HOME/.kube
 
 sudo rm -Rf kubespray
 #git clone --single-branch https://github.com/kubernetes-sigs/kubespray.git
@@ -33,7 +48,7 @@ ansible all -i inventory/test-cluster/inventory.ini --list-hosts
 #cat inventory/test-cluster/group_vars/all/all.yml
 #cat inventory/test-cluster/group_vars/k8s_cluster/k8s-cluster.yml
 
-export ANSIBLE_PERSISTENT_CONNECT_TIMEOUT=120
+#export ANSIBLE_PERSISTENT_CONNECT_TIMEOUT=120
 ansible -vvvv -i /inventory/inventory.ini all -a "systemctl status sshd" -u root
 
 #ansible-playbook -vvvv -u root -i /inventory/inventory.ini -e 'ansible_python_interpreter=/usr/bin/python3' \

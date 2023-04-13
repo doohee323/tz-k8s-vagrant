@@ -36,9 +36,10 @@ EOF
 
 sudo sysctl --system
 
-sudo ufw enable
-sudo ufw allow 22
-sudo ufw allow 6443
+#sudo ufw enable
+#sudo ufw allow 22
+#sudo ufw allow 6443
+sudo ufw disable
 
 sudo groupadd ubuntu
 sudo useradd -g ubuntu -d /home/ubuntu -s /bin/bash -m ubuntu
