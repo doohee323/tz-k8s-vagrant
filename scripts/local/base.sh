@@ -11,7 +11,6 @@ if [ -d /vagrant ]; then
 fi
 
 sudo swapoff -a
-sudo swapoff -a
 sudo sed -i '/swap/d' /etc/fstab
 #sudo sed -i '/ swap / s/^\(.*\)$/#\1/g' /etc/fstab
 sudo apt-get update
@@ -21,8 +20,6 @@ cat <<EOF >> /etc/resolv.conf
 nameserver 1.1.1.1 #cloudflare DNS
 nameserver 8.8.8.8 #Google DNS
 EOF
-
-
 
 sudo tee /etc/modules-load.d/containerd.conf << EOF
 overlay
@@ -42,5 +39,18 @@ sudo sysctl --system
 sudo ufw enable
 sudo ufw allow 22
 sudo ufw allow 6443
+
+sudo groupadd ubuntu
+sudo useradd -g ubuntu -d /home/ubuntu -s /bin/bash -m ubuntu
+cat <<EOF > pass.txt
+ubuntu:hdh971097
+EOF
+sudo chpasswd < pass.txt
+
+cat <<EOF >> /etc/hosts
+192.168.0.127    node1
+192.168.0.128    node2
+192.168.0.129    node3
+EOF
 
 exit 0

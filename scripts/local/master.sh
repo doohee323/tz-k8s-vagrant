@@ -6,25 +6,8 @@ if [ -d /ubuntu ]; then
   cd /ubuntu
 fi
 
-exit 0
-
-bash scripts/local/base.sh
-
 shopt -s expand_aliases
 alias k='kubectl --kubeconfig ~/.kube/config'
-
-cat <<EOF >> /etc/hosts
-192.168.86.30    node1
-192.168.86.27    node2
-192.168.86.36    node3
-EOF
-
-sudo groupadd ubuntu
-sudo useradd -g ubuntu -d /home/ubuntu -s /bin/bash -m ubuntu
-cat <<EOF > pass.txt
-ubuntu:hdh971097
-EOF
-sudo chpasswd < pass.txt
 
 MYKEY=id_rsa
 [[ ! -f /root/.ssh/${MYKEY} ]] \
@@ -34,17 +17,10 @@ MYKEY=id_rsa
   && chown -R root:root /root/.ssh \
   && chmod -Rf 600 /root/.ssh
 
-cat /root/.ssh/${MYKEY}.pub > authorized_keys
+cat /root/.ssh/${MYKEY}.pub >> authorized_keys
 mkdir -p /home/ubuntu/.ssh
 cp -Rf /root/.ssh/${MYKEY}* . \
   && chmod -Rf 600 ${MYKEY}*
-if [ -d /ubuntu ]; then
-  cp -Rf authorized_keys /root/.ssh/authorized_keys
-else
-  cat authorized_keys >> /root/.ssh/authorized_keys
-fi
-cat /root/.ssh/${MYKEY}.pub >> /home/ubuntu/.ssh/authorized_keys
-chown -Rf ubuntu:ubuntu /home/ubuntu/.ssh
 
 cat <<EOF > /root/.ssh/config
 Host node1
@@ -70,14 +46,13 @@ Host node3
   IdentityFile ~/.ssh/id_rsa
 EOF
 
-cp -Rf /root/.ssh/config /home/ubuntu/.ssh/config
-chown -Rf ubuntu:ubuntu /home/ubuntu/.ssh/config
+mkdir -p /home/ubuntu/.ssh \
+  && cp -Rf authorized_keys /home/ubuntu/.ssh/ \
+  && cp -Rf ${MYKEY}* /home/ubuntu/.ssh/ \
+  && chown -Rf ubuntu:ubuntu /home/ubuntu/.ssh \
+  && chmod -Rf 600 /home/ubuntu/.ssh/*
 
-mkdir -p /root/.ssh \
-  && cp -Rf authorized_keys /root/.ssh/ \
-  && cp -Rf ${MYKEY}* /root/.ssh/ \
-  && chown -Rf root:root /root/.ssh \
-  && chmod -Rf 600 /root/.ssh/*
+bash scripts/local/base.sh
 
 sudo apt-add-repository ppa:ansible/ansible
 sudo apt update
