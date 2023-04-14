@@ -12,23 +12,31 @@ if [ -d /vagrant ]; then
 fi
 
 # to reset on each node.
-#kubeadm reset
-#ipvsadm --clear
-#rm -Rf /var/lib/kubelet
-#rm -Rf /etc/kubernetes
-#rm -Rf /etc/cni/net.d
-#iptables --policy INPUT   ACCEPT
-#iptables --policy OUTPUT  ACCEPT
-#iptables --policy FORWARD ACCEPT
-#iptables -Z # zero counters
-#iptables -F # flush (delete) rules
-#iptables -X # delete all extra chains
-#iptables -t nat -F
-#iptables -t nat -X
-#iptables -t mangle -F
-#iptables -t mangle -X
-#rm -Rf $HOME/.kube
+kubeadm reset
+ipvsadm --clear
+rm -Rf /var/lib/kubelet
+rm -Rf /etc/kubernetes
+rm -Rf /etc/cni/net.d
+iptables --policy INPUT   ACCEPT
+iptables --policy OUTPUT  ACCEPT
+iptables --policy FORWARD ACCEPT
+iptables -Z # zero counters
+iptables -F # flush (delete) rules
+iptables -X # delete all extra chains
+iptables -t nat -F
+iptables -t nat -X
+iptables -t mangle -F
+iptables -t mangle -X
+rm -Rf $HOME/.kube
+docker rm -f `docker ps -aq`
+docker volume rm `docker volume ls -q`
+sudo umount /var/lib/docker/volumes
+sudo rm -rf /var/lib/docker/
+sudo systemctl restart docker
+sudo systemctl restart kubelet
+sudo reboot
 
+#cd /home/topzone/tz-k8s-vagrant
 sudo rm -Rf kubespray
 #git clone --single-branch https://github.com/kubernetes-sigs/kubespray.git
 git clone https://github.com/kubernetes-sigs/kubespray.git --branch release-2.21
