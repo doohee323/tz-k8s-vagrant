@@ -11,31 +11,6 @@ if [ -d /vagrant ]; then
   cd /vagrant
 fi
 
-# to reset on each node.
-kubeadm reset
-ipvsadm --clear
-rm -Rf /var/lib/kubelet
-rm -Rf /etc/kubernetes
-rm -Rf /etc/cni/net.d
-iptables --policy INPUT   ACCEPT
-iptables --policy OUTPUT  ACCEPT
-iptables --policy FORWARD ACCEPT
-iptables -Z # zero counters
-iptables -F # flush (delete) rules
-iptables -X # delete all extra chains
-iptables -t nat -F
-iptables -t nat -X
-iptables -t mangle -F
-iptables -t mangle -X
-rm -Rf $HOME/.kube
-docker rm -f `docker ps -aq`
-docker volume rm `docker volume ls -q`
-sudo umount /var/lib/docker/volumes
-sudo rm -rf /var/lib/docker/
-sudo systemctl restart docker
-sudo systemctl restart kubelet
-sudo reboot
-
 #cd /home/topzone/tz-k8s-vagrant
 sudo rm -Rf kubespray
 #git clone --single-branch https://github.com/kubernetes-sigs/kubespray.git
@@ -50,6 +25,22 @@ sudo pip3 install -r requirements.txt
 ansible all -i inventory/test-cluster/inventory.ini -m ping
 ansible all -i inventory/test-cluster/inventory.ini --list-hosts
 
+# to reset on each node.
+#kubeadm reset
+ansible-playbook -i inventory/test-cluster/inventory.ini reset.yml --become --become-user=root
+iptables --policy INPUT   ACCEPT
+iptables --policy OUTPUT  ACCEPT
+iptables --policy FORWARD ACCEPT
+iptables -Z # zero counters
+iptables -F # flush (delete) rules
+iptables -X # delete all extra chains
+iptables -t nat -F
+iptables -t nat -X
+iptables -t mangle -F
+iptables -t mangle -X
+rm -Rf $HOME/.kube
+sudo reboot
+
 #declare -a IPS=(192.168.0.127 192.168.0.128 192.168.0.129)
 #CONFIG_FILE=inventory/test-cluster/inventory.ini python3 contrib/inventory_builder/inventory.py ${IPS[@]}
 
@@ -57,9 +48,9 @@ ansible all -i inventory/test-cluster/inventory.ini --list-hosts
 #cat inventory/test-cluster/group_vars/k8s_cluster/k8s-cluster.yml
 
 #export ANSIBLE_PERSISTENT_CONNECT_TIMEOUT=120
-#ansible -vvvv -i /inventory/inventory.ini all -a "systemctl status sshd" -u root
+#ansible -vvvv -i inventory/test-cluster/inventory.ini all -a "systemctl status sshd" -u root
 
-#ansible-playbook -vvvv -u root -i /inventory/inventory.ini -e 'ansible_python_interpreter=/usr/bin/python3' \
+#ansible-playbook -vvvv -u root -i inventory/test-cluster/inventory.ini -e 'ansible_python_interpreter=/usr/bin/python3' \
 #  --private-key /root/.ssh/id_rsa --become --become-user=root cluster.yml
 
 ansible-playbook -i inventory/test-cluster/inventory.ini --private-key /root/.ssh/id_rsa --become --become-user=root cluster.yml
