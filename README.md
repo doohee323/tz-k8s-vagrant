@@ -25,6 +25,7 @@ to project root directory.
 
 ## -. Run VMs with k8s 
 ``` 
+    export docker_user="doohee323"
     bash run.sh
     or
     bash run.sh down

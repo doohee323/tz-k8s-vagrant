@@ -44,7 +44,7 @@ sudo ufw disable
 sudo groupadd ubuntu
 sudo useradd -g ubuntu -d /home/ubuntu -s /bin/bash -m ubuntu
 cat <<EOF > pass.txt
-ubuntu:hdh971097
+ubuntu:ubuntu
 EOF
 sudo chpasswd < pass.txt
 

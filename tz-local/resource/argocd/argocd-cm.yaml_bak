@@ -1,0 +1,32 @@
+
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: argocd-cm
+  namespace: argocd
+  labels:
+    app.kubernetes.io/name: argocd-cm
+    app.kubernetes.io/part-of: argocd
+data:
+  admin.enabled: 'true'
+  application.instanceLabelKey: argocd.argoproj.io/instance
+  dex.config: |
+    connectors:
+    - config:
+        issuer: 'https://accounts.google.com'
+        clientID: "195449497097-a0dvcakbsjgei3njme54unkvpj8le88d.apps.googleusercontent.com"
+        clientSecret: "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"
+      type: oidc
+      id: google
+      name: Google
+      url: https://argocd.default.k8s-main-t.shoptoolstest.co.kr
+  exec.enabled: 'false'
+  server.rbac.log.enforce.enable: 'false'
+  timeout.hard.reconciliation: 0s
+  timeout.reconciliation: 180s
+  url: https://argocd.default.k8s-main-t.shoptoolstest.co.kr
+  accounts.tz-admin: apiKey, login
+  accounts.default-admin: apiKey, login
+  accounts.argocd-admin: apiKey, login
+  accounts.devops-admin: apiKey, login
+  accounts.devops-dev: apiKey, login
