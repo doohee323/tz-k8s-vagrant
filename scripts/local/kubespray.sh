@@ -51,6 +51,8 @@ sudo reboot
 #cd resource/kubespray
 #scp doohee323@node1:/Volumes/workspace/etc/tz-k8s-vagrant/kubespray/inventory/test-cluster/group_vars/k8s_cluster/k8s-cluster.yml .
 #scp k8s-cluster.yml doohee323@node1:/Volumes/workspace/etc/tz-k8s-vagrant/kubespray/inventory/test-cluster/group_vars/k8s_cluster/k8s-cluster.yml
+#scp node1:/Volumes/workspace/etc/tz-k8s-vagrant/kubespray/inventory/test-cluster/group_vars/k8s_cluster/k8s-cluster.yml k8s-cluster.yml
+#scp node1:/Volumes/workspace/etc/tz-k8s-vagrant/kubespray/inventory/test-cluster/group_vars/k8s_cluster/addons.yml addons.yml
 
 #export ANSIBLE_PERSISTENT_CONNECT_TIMEOUT=120
 #ansible -vvvv -i inventory/test-cluster/inventory.ini all -a "systemctl status sshd" -u root
