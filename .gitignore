@@ -37,3 +37,6 @@ data/*.json
 *.log
 /data2
 /pass.txt
+*_bak
+*_bake
+/resources
