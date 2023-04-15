@@ -59,8 +59,8 @@ function prop {
 }
 EOF
 
-chown -Rf vagrant:vagrant /root/.bashrc
-cp -Rf /root/.bashrc /root/.bashrc
+chown -Rf vagrant:vagrant /home/vagrant/.bashrc
+cp -Rf /root/.bashrc /home/vagrant/.bashrc
 
 echo "###############"
 if [[ "${INSTALL_INIT}" == 'true' || ! -f "/root/.aws/config" ]]; then

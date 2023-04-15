@@ -3,7 +3,7 @@
 cd tz-local/docker
 
 export k8s_project=k8s-main-t
-export k8s_domain=shoptoolstest.co.kr
+export k8s_domain=topzone.iptime.org
 export tz_project=devops-utils
 
 TAG=${docker_user}/${tz_project}:latest

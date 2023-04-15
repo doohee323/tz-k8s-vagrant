@@ -16,14 +16,14 @@ metadata:
 #    nginx.ingress.kubernetes.io/auth-realm: 'Authentication Required - admin'
 spec:
   rules:
-#  - host: argocd.shoptoolstest.co.kr
+#  - host: argocd.topzone.iptime.org
 #    http:
 #      paths:
 #      - path: /
 #        backend:
 #          serviceName: argocd-server
 #          servicePort: 443
-  - host: argocd.default.k8s-main-t.shoptoolstest.co.kr
+  - host: argocd.default.k8s-main-t.topzone.iptime.org
     http:
       paths:
       - path: /
@@ -35,6 +35,6 @@ spec:
               number: 443
   tls:
     - hosts:
-#        - argocd.shoptoolstest.co.kr
-        - argocd.default.k8s-main-t.shoptoolstest.co.kr
+#        - argocd.topzone.iptime.org
+        - argocd.default.k8s-main-t.topzone.iptime.org
       secretName: ingress-argocd-tls

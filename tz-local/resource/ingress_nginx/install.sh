@@ -20,8 +20,6 @@ fi
 shopt -s expand_aliases
 alias k="kubectl -n ${NS} --kubeconfig ~/.kube/config"
 
-sleep 30
-
 cp -Rf nginx-ingress.yaml nginx-ingress.yaml_bak
 sed -i "s|NS|${NS}|g" nginx-ingress.yaml_bak
 sed -i "s/k8s_project/${k8s_project}/g" nginx-ingress.yaml_bak
@@ -96,3 +94,26 @@ for item in "${PROJECTS[@]}"; do
 done
 
 exit 0
+
+
+calicoctl patch BGPConfig default --patch '{"spec": {"serviceLoadBalancerIPs":
+[{"cidr": "10.11.0.0/16"},{"cidr":"10.1.5.0/24"}]}}'
+
+
+apiVersion: crd.projectcalico.org/v1
+kind: BGPConfiguration
+metadata:
+  annotations:
+    projectcalico.org/metadata: '{"uid":"81fcb6c1-fcd8-4c14-87ae-8685d3cfab48","creationTimestamp":"2023-04-14T03:21:22Z"}'
+  creationTimestamp: "2023-04-14T03:21:22Z"
+  generation: 1
+  name: default
+  resourceVersion: "153808"
+  uid: 81fcb6c1-fcd8-4c14-87ae-8685d3cfab48
+spec:
+  asNumber: 64512
+  listenPort: 179
+  logSeverityScreen: Info
+  nodeToNodeMeshEnabled: false
+  serviceClusterIPs:
+  - cidr: 192.168.0.0/12

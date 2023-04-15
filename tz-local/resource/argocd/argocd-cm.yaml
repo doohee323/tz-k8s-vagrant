@@ -19,7 +19,7 @@ data:
       type: oidc
       id: google
       name: Google
-      url: https://argocd.default.k8s-main-t.shoptoolstest.co.kr
+      url: https://argocd.default.k8s-main-t.topzone.iptime.org
   exec.enabled: 'false'
   server.rbac.log.enforce.enable: 'false'
   timeout.hard.reconciliation: 0s

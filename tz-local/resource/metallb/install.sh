@@ -8,7 +8,7 @@ cd /vagrant/tz-local/resource/metallb
 shopt -s expand_aliases
 
 NS=metallb-system
-alias k="kubectl -n ${NS} --kubeconfig ~/.kube/config"
+alias k="kubectl -n ${NS} --kubeconfig ~/.kube/kubespray_vagrant"
 
 kubectl get configmap kube-proxy -n kube-system -o yaml | \
 sed -e "s/strictARP: false/strictARP: true/" | \
@@ -23,12 +23,22 @@ helm delete metallb -n ${NS}
 helm install metallb metallb/metallb -n ${NS}
 #helm install metallb metallb/metallb -n ${NS} -f values.yaml
 
+kubectl delete -f https://raw.githubusercontent.com/metallb/metallb/v0.12.1/manifests/metallb.yaml -n ${NS}
+kubectl delete -f https://raw.githubusercontent.com/metallb/metallb/v0.12.1/manifests/namespace.yaml -n ${NS}
+
+kubectl apply -f https://raw.githubusercontent.com/metallb/metallb/v0.12.1/manifests/namespace.yaml
+kubectl apply -f https://raw.githubusercontent.com/metallb/metallb/v0.12.1/manifests/metallb.yaml -n ${NS}
+
+kubectl apply -f metallb.yaml -n ${NS}
+
 # On first install only
 k create secret generic -n ${NS} memberlist --from-literal=secretkey="$(openssl rand -base64 128)"
 k get pods -n ${NS}
 
 k delete -f /vagrant/tz-local/resource/metallb/layer2-config.yaml
 k apply -f /vagrant/tz-local/resource/metallb/layer2-config.yaml
+
+k apply -f layer2-config.yaml -n ${NS}
 
 k logs -l component=speaker -n ${NS}
 

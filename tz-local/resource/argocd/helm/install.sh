@@ -208,7 +208,7 @@ kubectl get secret devops-tz-demo-app-secret -o yaml -n devops
 echo 'MTIz' | base64 -d
 kubectl rollout restart deployment devops-demo-argo-vault -n devops
 
-curl https://argo-vault.devops.k8s-main-t.shoptoolstest.co.kr/index
+curl https://argo-vault.devops.k8s-main-t.topzone.iptime.org/index
 
 exit 0
 
