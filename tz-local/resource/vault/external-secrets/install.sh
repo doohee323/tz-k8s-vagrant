@@ -4,11 +4,9 @@ source /root/.bashrc
 #bash /vagrant/tz-local/resource/vault/external-secrets/install.sh
 cd /vagrant/tz-local/resource/vault/external-secrets
 
-AWS_REGION=$(prop 'config' 'region')
 k8s_domain=$(prop 'project' 'domain')
 k8s_project=$(prop 'project' 'project')
 vault_token=$(prop 'project' 'vault')
-aws_account_id=$(aws sts get-caller-identity --query Account --output text)
 NS=external-secrets
 
 helm repo add external-secrets https://charts.external-secrets.io

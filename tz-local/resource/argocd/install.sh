@@ -9,11 +9,9 @@ shopt -s expand_aliases
 
 k8s_project=$(prop 'project' 'project')
 k8s_domain=$(prop 'project' 'domain')
-AWS_REGION=$(prop 'config' 'region')
 admin_password=$(prop 'project' 'admin_password')
 github_token=$(prop 'project' 'github_token')
 basic_password=$(prop 'project' 'basic_password')
-aws_account_id=$(aws sts get-caller-identity --query Account --output text)
 
 alias k='kubectl --kubeconfig ~/.kube/config'
 
@@ -36,7 +34,8 @@ sudo chmod +x /usr/local/bin/argocd
 #brew install argoproj/tap/argocd
 #argocd
 
-argocd login `k get service -n argocd | grep -w "argocd-server " | awk '{print $4}'` --username admin --password ${TMP_PASSWORD} --insecure
+ARGOCD_SERVER=`k get ing -n argocd | grep -w "ingress-argocd " | awk '{print $3}'`
+argocd login ${ARGOCD_SERVER} --username admin --password ${TMP_PASSWORD} --insecure
 argocd account update-password --account admin --current-password ${TMP_PASSWORD} --new-password ${admin_password}
 
 # basic auth
@@ -54,16 +53,16 @@ sed -i "s/AWS_REGION/${AWS_REGION}/g" ingress-argocd.yaml_bak
 k delete -f ingress-argocd.yaml_bak -n argocd
 k apply -f ingress-argocd.yaml_bak -n argocd
 
-k patch deploy/argocd-server -p '{"spec": {"template": {"spec": {"nodeSelector": {"team": "devops", "environment": "prod"}}}}}' -n argocd
-k patch deploy/argocd-applicationset-controller -p '{"spec": {"template": {"spec": {"nodeSelector": {"team": "devops", "environment": "prod"}}}}}' -n argocd
-k patch deploy/argocd-redis -p '{"spec": {"template": {"spec": {"nodeSelector": {"team": "devops", "environment": "prod"}}}}}' -n argocd
-k patch deploy/argocd-notifications-controller -p '{"spec": {"template": {"spec": {"nodeSelector": {"team": "devops", "environment": "prod"}}}}}' -n argocd
-k patch deploy/argocd-repo-server -p '{"spec": {"template": {"spec": {"nodeSelector": {"team": "devops", "environment": "prod"}}}}}' -n argocd
-k patch deploy/argocd-dex-server -p '{"spec": {"template": {"spec": {"nodeSelector": {"team": "devops", "environment": "prod"}}}}}' -n argocd
+#k patch deploy/argocd-server -p '{"spec": {"template": {"spec": {"nodeSelector": {"team": "devops", "environment": "prod"}}}}}' -n argocd
+#k patch deploy/argocd-applicationset-controller -p '{"spec": {"template": {"spec": {"nodeSelector": {"team": "devops", "environment": "prod"}}}}}' -n argocd
+#k patch deploy/argocd-redis -p '{"spec": {"template": {"spec": {"nodeSelector": {"team": "devops", "environment": "prod"}}}}}' -n argocd
+#k patch deploy/argocd-notifications-controller -p '{"spec": {"template": {"spec": {"nodeSelector": {"team": "devops", "environment": "prod"}}}}}' -n argocd
+#k patch deploy/argocd-repo-server -p '{"spec": {"template": {"spec": {"nodeSelector": {"team": "devops", "environment": "prod"}}}}}' -n argocd
+#k patch deploy/argocd-dex-server -p '{"spec": {"template": {"spec": {"nodeSelector": {"team": "devops", "environment": "prod"}}}}}' -n argocd
 
 k patch deploy/argocd-redis -p '{"spec": {"template": {"spec": {"imagePullSecrets": [{"name": "tz-registrykey"}]}}}}' -n argocd
 
-argocd login `k get service -n argocd | grep argocd-server | awk '{print $4}' | head -n 1` --username admin --password ${admin_password} --insecure
+argocd login ${ARGOCD_SERVER} --username admin --password ${admin_password} --insecure
 argocd repo add https://github.com/doohee323/tz-argocd-repo \
   --username doohee323 --password ${github_token}
 

@@ -64,7 +64,8 @@ sed -i "s/k8s_domain/${k8s_domain}/g" ingress-argocd.yaml_bak
 k delete -f ingress-argocd.yaml_bak -n argocd
 k apply -f ingress-argocd.yaml_bak -n argocd
 
-argocd login `k get ing -n argocd | grep -w "ingress-argocd " | awk '{print $3}'` --username admin --password ${TMP_PASSWORD} --insecure
+ARGOCD_SERVER=`k get ing -n argocd | grep -w "ingress-argocd " | awk '{print $3}'`
+argocd login ${ARGOCD_SERVER} --username admin --password ${TMP_PASSWORD} --insecure
 argocd account update-password --account admin --current-password ${TMP_PASSWORD} --new-password ${admin_password}
 
 # basic auth

@@ -15,10 +15,11 @@ argocd_google_client_secret=$(prop 'project' 'argocd_google_client_secret')
 
 alias k='kubectl --kubeconfig ~/.kube/config'
 
+ARGOCD_SERVER=`k get ing -n argocd | grep -w "ingress-argocd " | awk '{print $3}'`
 #argocd login localhost:8080
 #argocd login argocd.${k8s_domain}:443 --username admin --password ${admin_password} --insecure
 #argocd login argocd.default.${k8s_project}.${k8s_domain}:443 --username admin --password ${admin_password} --insecure
-argocd login `k get service -n argocd | grep argocd-server | awk '{print $4}' | head -n 1`:443 --username admin --password ${admin_password} --insecure
+argocd login ${ARGOCD_SERVER}:443 --username admin --password ${admin_password} --insecure
 
 cp argocd-cm.yaml argocd-cm.yaml_bak
 cp argocd-rbac-cm.yaml argocd-rbac-cm.yaml_bak

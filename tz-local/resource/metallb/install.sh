@@ -17,10 +17,10 @@ kubectl apply -f - -n kube-system
 kubectl delete ns ${NS}
 kubectl create ns ${NS}
 
-helm repo add metallb https://metallb.github.io/metallb
-helm repo update
-helm delete metallb -n ${NS}
-helm install metallb metallb/metallb -n ${NS}
+#helm repo add metallb https://metallb.github.io/metallb
+#helm repo update
+#helm delete metallb -n ${NS}
+#helm install metallb metallb/metallb -n ${NS}
 #helm install metallb metallb/metallb -n ${NS} -f values.yaml
 
 kubectl delete -f https://raw.githubusercontent.com/metallb/metallb/v0.12.1/manifests/metallb.yaml -n ${NS}
@@ -29,7 +29,7 @@ kubectl delete -f https://raw.githubusercontent.com/metallb/metallb/v0.12.1/mani
 kubectl apply -f https://raw.githubusercontent.com/metallb/metallb/v0.12.1/manifests/namespace.yaml
 kubectl apply -f https://raw.githubusercontent.com/metallb/metallb/v0.12.1/manifests/metallb.yaml -n ${NS}
 
-kubectl apply -f metallb.yaml -n ${NS}
+#kubectl apply -f metallb.yaml -n ${NS}
 
 # On first install only
 k create secret generic -n ${NS} memberlist --from-literal=secretkey="$(openssl rand -base64 128)"

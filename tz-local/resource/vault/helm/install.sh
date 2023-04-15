@@ -25,21 +25,11 @@ bash /vagrant/tz-local/resource/vault/vault-injection/cert.sh vault
 
 cp -Rf values_cert.yaml values_cert.yaml_bak
 sed -i "s/k8s_project/${k8s_project}/g" values_cert.yaml_bak
-sed -i "s/VAULT_KMS_KEY/${vault_kms_key}/g" values_cert.yaml_bak
 helm upgrade --debug --install --reuse-values vault hashicorp/vault -n vault -f values_cert.yaml_bak
 #kubectl rollout restart statefulset.apps/vault -n vault
 
 sleep 30
 k get all -n vault
-
-cp -Rf values_config.yaml values_config.yaml_bak
-sed -i "s/k8s_project/${k8s_project}/g" values_config.yaml_bak
-sed -i "s/k8s_domain/${k8s_domain}/g" values_config.yaml_bak
-sed -i "s/VAULT_KMS_KEY/${vault_kms_key}/g" values_config.yaml_bak
-k apply -f values_config.yaml_bak -n vault
-
-sleep 30
-# to NodePort
 
 #k patch svc vault-standby --type='json' -p '[{"op":"replace","path":"/spec/type","value":"NodePort"},{"op":"replace","path":"/spec/ports/0/nodePort","value":31700}]' -n vault
 cp -Rf ingress-vault.yaml ingress-vault.yaml_bak
