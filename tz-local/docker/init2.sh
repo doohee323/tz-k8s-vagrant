@@ -20,7 +20,7 @@ git config --global --add safe.directory '*'
 
 #echo "118.33.104.1     topzone.iptime.org topzone1.iptime.org topzone2.iptime.org kubernetes.default.svc.cluster.local" >> /etc/hosts
 
-#echo "192.168.86.27    test.vault.home-k8s.shoptoolstest.co.kr consul.default.home-k8s.shoptoolstest.co.kr vault.default.home-k8s.shoptoolstest.co.kr vault2.default.home-k8s.shoptoolstest.co.kr argocd.default.home-k8s.shoptoolstest.co.kr jenkins.default.home-k8s.shoptoolstest.co.kr" >> /etc/hosts
-#echo "192.168.86.36    test.vault.home-k8s.shoptoolstest.co.kr consul.default.home-k8s.shoptoolstest.co.kr vault.default.home-k8s.shoptoolstest.co.kr vault2.default.home-k8s.shoptoolstest.co.kr argocd.default.home-k8s.shoptoolstest.co.kr jenkins.default.home-k8s.shoptoolstest.co.kr" >> /etc/hosts
+#echo "192.168.86.27    test.vault.home-k8s.t1zone.com consul.default.home-k8s.t1zone.com vault.default.home-k8s.t1zone.com vault2.default.home-k8s.t1zone.com argocd.default.home-k8s.t1zone.com jenkins.default.home-k8s.t1zone.com" >> /etc/hosts
+#echo "192.168.86.36    test.vault.home-k8s.t1zone.com consul.default.home-k8s.t1zone.com vault.default.home-k8s.t1zone.com vault2.default.home-k8s.t1zone.com argocd.default.home-k8s.t1zone.com jenkins.default.home-k8s.t1zone.com" >> /etc/hosts
 
 exit 0
