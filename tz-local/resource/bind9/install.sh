@@ -65,6 +65,7 @@ mkdir /etc/bind/zones
 #sudo cp /etc/bind/db.local /etc/bind/zones/db.t1zone.com
 
 cat <<EOF | sudo tee /etc/bind/zones/db.t1zone.com
+\$TTL 86400;
 @	IN	SOA	t1zone.com. root.t1zone.com. (
 			      3		; Serial
 			 604800		; Refresh
@@ -75,6 +76,7 @@ cat <<EOF | sudo tee /etc/bind/zones/db.t1zone.com
 @	IN	NS	t1zone.com.
 @	IN	AAAA	::1
 * IN	A 192.168.86.27
+* IN	A 192.168.86.36
 ;
 ns1.t1zone.com.          IN      A       192.168.0.127
 host2.t1zone.com.          IN      A       192.168.0.128
@@ -90,6 +92,12 @@ sudo systemctl restart bind9
 dig @192.168.0.127 host2.t1zone.com
 dig host2.t1zone.com
 dig main.devops.eks-main-t.t1zone.com
+dig consul.default.home-k8s.t1zone.com
+
+dig @192.168.0.127 consul.default.home-k8s.t1zone.com
+dig @192.168.0.127 test.default.home-k8s.t1zone.com
+
+
 #dig google.com
 
 exit 0
