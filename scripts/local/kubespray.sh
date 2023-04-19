@@ -2,9 +2,6 @@
 
 #https://sangvhh.net/set-up-kubernetes-cluster-with-kubespray-on-ubuntu-22-04/
 
-# add a new node
-#https://www.techbeatly.com/adding-new-nodes-to-kubespray-managed-kubernetes-cluster/
-
 #set -x
 
 if [ -d /vagrant ]; then
