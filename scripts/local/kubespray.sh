@@ -2,9 +2,6 @@
 
 #https://sangvhh.net/set-up-kubernetes-cluster-with-kubespray-on-ubuntu-22-04/
 
-# add a new node
-#https://www.techbeatly.com/adding-new-nodes-to-kubespray-managed-kubernetes-cluster/
-
 #set -x
 
 if [ -d /vagrant ]; then
@@ -65,6 +62,7 @@ sudo reboot
 #apt install ansible -y
 
 ansible-playbook -u root -i inventory/test-cluster/inventory.ini --private-key /root/.ssh/id_rsa --become --become-user=root cluster.yml
+ansible-playbook -u root -i inventory/test-cluster/inventory.ini --private-key /root/.ssh/id_rsa -b -become-user=root cluster.yml -l node4
 #ansible-playbook -i inventory/test-cluster/inventory.ini --become --become-user=root cluster.yml
 
 sudo cp -Rf /root/.kube /home/vagrant/
