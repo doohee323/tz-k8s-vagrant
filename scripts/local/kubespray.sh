@@ -39,7 +39,7 @@ iptables -t mangle -X
 rm -Rf $HOME/.kube
 sudo reboot
 
-#declare -a IPS=(192.168.0.127 192.168.0.128 192.168.0.129)
+#declare -a IPS=(192.168.0.20 192.168.0.21 192.168.0.22)
 #CONFIG_FILE=inventory/test-cluster/inventory.ini python3 contrib/inventory_builder/inventory.py ${IPS[@]}
 
 #cat inventory/test-cluster/group_vars/all/all.yml
@@ -94,7 +94,7 @@ helm repo update
 # nfs
 # 1. with helm
 #helm repo update
-#helm install my-release --set nfs.server=192.168.0.127 --set nfs.path=/srv/nfs/mydata stable/nfs-client-provisioner
+#helm install my-release --set nfs.server=192.168.0.20 --set nfs.path=/srv/nfs/mydata stable/nfs-client-provisioner
 # 2. with manual
 #k apply -f tz-local/resource/dynamic-provisioning/nfs/static-nfs.yaml
 #k apply -f tz-local/resource/dynamic-provisioning/nfs/serviceaccount.yaml

@@ -49,9 +49,9 @@ EOF
 sudo chpasswd < pass.txt
 
 cat <<EOF >> /etc/hosts
-192.168.0.127    node1
-192.168.0.128    node2
-192.168.0.129    node3
+192.168.0.20    master
+192.168.0.21    node1
+192.168.0.22    node2
 EOF
 
 exit 0

@@ -19,11 +19,10 @@ MYKEY=id_rsa
 
 cat /root/.ssh/${MYKEY}.pub >> authorized_keys
 mkdir -p /home/ubuntu/.ssh
-cp -Rf /root/.ssh/${MYKEY}* . \
-  && chmod -Rf 600 ${MYKEY}*
+chmod -Rf 600 ${MYKEY}*
 
 cat <<EOF > /root/.ssh/config
-Host node1
+Host master
   StrictHostKeyChecking   no
   LogLevel                ERROR
   UserKnownHostsFile      /dev/null
@@ -31,14 +30,14 @@ Host node1
   User ubuntu
   IdentityFile ~/.ssh/id_rsa
 
-Host node2
+Host node1
   StrictHostKeyChecking   no
   LogLevel                ERROR
   UserKnownHostsFile      /dev/null
   User ubuntu
   IdentityFile ~/.ssh/id_rsa
 
-Host node3
+Host node2
   StrictHostKeyChecking   no
   LogLevel                ERROR
   UserKnownHostsFile      /dev/null
@@ -62,7 +61,7 @@ sudo bash scripts/local/kubespray.sh
 
 exit 0
 
-sudo sed -i "s/\$KUBELET_EXTRA_ARGS/\$KUBELET_EXTRA_ARGS --node-ip=192.168.0.127/g" /etc/systemd/system/kubelet.service.d/10-kubeadm.conf
+sudo sed -i "s/\$KUBELET_EXTRA_ARGS/\$KUBELET_EXTRA_ARGS --node-ip=192.168.0.20/g" /etc/systemd/system/kubelet.service.d/10-kubeadm.conf
 systemctl daemon-reload && systemctl restart kubelet
 kubectl get nodes -o wide
 
@@ -77,10 +76,10 @@ exportfs -a
 systemctl stop nfs-kernel-server
 systemctl start nfs-kernel-server
 #service nfs-kernel-server status
-showmount -e 192.168.0.127
+showmount -e 192.168.0.20
 #sudo mkdir /data
-#mount -t nfs -vvvv 192.168.0.127:/homedata /data
-#echo '192.168.0.127:/homedata /data  nfs      defaults    0       0' >> /etc/fstab
+#mount -t nfs -vvvv 192.168.0.20:/homedata /data
+#echo '192.168.0.20:/homedata /data  nfs      defaults    0       0' >> /etc/fstab
 #sudo mount -t nfs -o resvport,rw 192.168.3.1:/Volumes/workspace/etc /Volumes/sambashare
 
 k patch storageclass nfs-storageclass -p '{"metadata": {"annotations":{"storageclass.kubernetes.io/is-default-class":"true"}}}'

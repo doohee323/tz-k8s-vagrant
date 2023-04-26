@@ -31,9 +31,9 @@ docker push doohee323/tz-py-crawler:latest
 #sudo chown -Rf vagrant:vagrant /var/run/docker.sock
 #export USERNAME=admin
 #export PASSWD=passwordg
-#docker login 192.168.0.127:5000 -u="$USERNAME" -p="$PASSWD"
-#docker tag tz-py-crawler 192.168.0.127:5000/doohee323/tz-py-crawler
-#docker push 192.168.0.127:5000/doohee323/tz-py-crawler
+#docker login 192.168.0.20:5000 -u="$USERNAME" -p="$PASSWD"
+#docker tag tz-py-crawler 192.168.0.20:5000/doohee323/tz-py-crawler
+#docker push 192.168.0.20:5000/doohee323/tz-py-crawler
 
 exit 0
 
