@@ -64,6 +64,10 @@ sed -i "s/k8s_domain/${k8s_domain}/g" ingress-argocd.yaml_bak
 k delete -f ingress-argocd.yaml_bak -n argocd
 k apply -f ingress-argocd.yaml_bak -n argocd
 
+VERSION=$(curl --silent "https://api.github.com/repos/argoproj/argo-cd/releases/latest" | grep '"tag_name"' | sed -E 's/.*"([^"]+)".*/\1/')
+sudo curl -sSL -o /usr/local/bin/argocd https://github.com/argoproj/argo-cd/releases/download/$VERSION/argocd-linux-amd64
+sudo chmod +x /usr/local/bin/argocd
+
 ARGOCD_SERVER=`k get ing -n argocd | grep -w "ingress-argocd " | awk '{print $3}'`
 argocd login ${ARGOCD_SERVER} --username admin --password ${TMP_PASSWORD} --insecure
 argocd account update-password --account admin --current-password ${TMP_PASSWORD} --new-password ${admin_password}
@@ -88,10 +92,9 @@ argocd repo add https://github.com/doohee323/tz-argocd-repo \
   --username doohee323 --password ${github_token}
 
 kubectl config get-contexts
-#CURRENT   NAME             CLUSTER          AUTHINFO         NAMESPACE
-#          k8s_k8s-main-t   k8s_k8s-main-t   k8s_k8s-main-t
-#*         k8s_k8s-main-t   k8s_k8s-main-t   k8s_k8s-main-t
-argocd cluster add --yes k8s_k8s-main-t
+#CURRENT   NAME                             CLUSTER         AUTHINFO           NAMESPACE
+#*         kubernetes-admin@cluster.local   cluster.local   kubernetes-admin
+argocd cluster add --yes kubernetes-admin@cluster.local
 
 bash /vagrant/tz-local/resource/argocd/update.sh
 bash /vagrant/tz-local/resource/argocd/update.sh
