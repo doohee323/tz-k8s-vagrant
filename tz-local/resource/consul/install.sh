@@ -1,4 +1,4 @@
-#!/usr/bin/env bash
+#!/bin/bash -i
 
 shopt -s expand_aliases
 source /root/.bashrc
