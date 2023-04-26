@@ -23,7 +23,7 @@ prometheus:
           resources:
             requests:
               storage: 50Gi
-          storageClassName: gp2
+          storageClassName: local-storage
 
     additionalScrapeConfigs:
       - job_name: 'linkerd-controller'

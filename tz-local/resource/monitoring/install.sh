@@ -55,8 +55,8 @@ helm repo update
 helm upgrade --debug --install prometheus prometheus-community/kube-prometheus-stack \
     -n ${NS} \
     --version ${STACK_VERSION} \
-    --set alertmanager.persistentVolume.storageClass="gp2" \
-    --set server.persistentVolume.storageClass="gp2"
+    --set alertmanager.persistentVolume.storageClass="local-storage" \
+    --set server.persistentVolume.storageClass="local-storage"
 
 helm upgrade --debug --reuse-values --install prometheus prometheus-community/kube-prometheus-stack \
     -n ${NS} \
