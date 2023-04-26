@@ -54,7 +54,7 @@ spec:
   - metadata:
       name: nfs-test-storage
       annotations:
-        volume.beta.kubernetes.io/storage-class: "nfs-csi"
+        volume.beta.kubernetes.io/storage-class: "nfs-client"
     spec:
       accessModes: [ "ReadWriteOnce" ]
       resources:
