@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 source /root/.bashrc
-cd /vagrant/sl-local/resource/monitoring/rules
+cd /vagrant/tz-local/resource/monitoring/rules
 
 #set -x
 shopt -s expand_aliases

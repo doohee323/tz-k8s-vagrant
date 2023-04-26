@@ -1,8 +1,8 @@
 #!/usr/bin/env bash
 
 source /root/.bashrc
-#bash /vagrant/sl-local/resource/monitoring/backup.sh
-cd /vagrant/sl-local/resource/monitoring
+#bash /vagrant/tz-local/resource/monitoring/backup.sh
+cd /vagrant/tz-local/resource/monitoring
 
 eks_project=$(prop 'project' 'project')
 eks_domain=$(prop 'project' 'domain')

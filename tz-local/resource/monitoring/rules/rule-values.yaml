@@ -106,7 +106,7 @@ prometheus:
         - action: labelmap
           regex: __tmp_pod_label_(.+)
 
-#      - job_name: 'sl-kubernetes-pod-job'
+#      - job_name: 'tz-kubernetes-pod-job'
 #        scrape_interval: 15s
 #        kubernetes_sd_configs:
 #        - role: pod
@@ -134,7 +134,7 @@ prometheus:
 #          target_label: kubernetes_pod_name
 
 
-#      - job_name: 'sl-kubernetes-pod-job'
+#      - job_name: 'tz-kubernetes-pod-job'
 #        scrape_interval: 15s
 #        kubernetes_sd_configs:
 #        - role: pod
@@ -160,7 +160,7 @@ prometheus:
 #        - source_labels: [__meta_kubernetes_pod_name]
 #          action: replace
 #          target_label: kubernetes_pod_name
-#      - job_name: 'sl-kubernetes-service-endpoints'
+#      - job_name: 'tz-kubernetes-service-endpoints'
 #        kubernetes_sd_configs:
 #        - role: endpoints
 #        relabel_configs:
@@ -203,7 +203,7 @@ prometheus:
 #        basic_auth:
 #          username: 'devops'
 #          password: 'admin_password'
-#      - job_name: 'sl-blackbox-exporter'
+#      - job_name: 'tz-blackbox-exporter'
 #        metrics_path: /probe
 #        params:
 #          module: [http_2xx]
@@ -246,7 +246,7 @@ prometheus:
 #          - source_labels: [__param_target]
 #            target_label: instance
 #          - target_label: __address__
-#            replacement: sl-blackbox-exporter-prometheus-blackbox-exporter:9115
+#            replacement: tz-blackbox-exporter-prometheus-blackbox-exporter:9115
 #      - job_name: 'prometheus'
 #        metrics_path: /metrics
 #        static_configs:

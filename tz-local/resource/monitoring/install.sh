@@ -7,8 +7,8 @@
 #https://prometheus.io/docs/instrumenting/exporters/#http
 
 source /root/.bashrc
-#bash /vagrant/sl-local/resource/monitoring/install.sh
-cd /vagrant/sl-local/resource/monitoring
+#bash /vagrant/tz-local/resource/monitoring/install.sh
+cd /vagrant/tz-local/resource/monitoring
 
 #set -x
 shopt -s expand_aliases
@@ -65,10 +65,10 @@ helm upgrade --debug --reuse-values --install prometheus prometheus-community/ku
 
 k patch deployment/prometheus-kube-state-metrics -p '{"spec": {"template": {"spec": {"nodeSelector": {"team": "devops"}}}}}' -n ${NS}
 k patch deployment/prometheus-kube-state-metrics -p '{"spec": {"template": {"spec": {"nodeSelector": {"environment": "monitoring"}}}}}' -n ${NS}
-k patch deployment/prometheus-kube-state-metrics -p '{"spec": {"template": {"spec": {"imagePullSecrets": [{"name": "sl-registrykey"}]}}}}' -n ${NS}
+k patch deployment/prometheus-kube-state-metrics -p '{"spec": {"template": {"spec": {"imagePullSecrets": [{"name": "tz-registrykey"}]}}}}' -n ${NS}
 
-helm uninstall sl-blackbox-exporter -n ${NS}
-helm upgrade --debug --install --reuse-values -n ${NS} sl-blackbox-exporter prometheus-community/prometheus-blackbox-exporter \
+helm uninstall tz-blackbox-exporter -n ${NS}
+helm upgrade --debug --install --reuse-values -n ${NS} tz-blackbox-exporter prometheus-community/prometheus-blackbox-exporter \
   --set nodeSelector.team=devops \
   --set nodeSelector.environment=${NS}
 
@@ -81,9 +81,9 @@ helm upgrade --install --reuse-values loki grafana/loki-stack --version 2.9.9 \
   --set persistence.enabled=true,persistence.type=pvc,persistence.size=10Gi
 k patch statefulset/loki -p '{"spec": {"template": {"spec": {"nodeSelector": {"team": "devops"}}}}}' -n ${NS}
 k patch statefulset/loki -p '{"spec": {"template": {"spec": {"nodeSelector": {"environment": "monitoring"}}}}}' -n ${NS}
-k patch statefulset/loki -p '{"spec": {"template": {"spec": {"imagePullSecrets": [{"name": "sl-registrykey"}]}}}}' -n ${NS}
+k patch statefulset/loki -p '{"spec": {"template": {"spec": {"imagePullSecrets": [{"name": "tz-registrykey"}]}}}}' -n ${NS}
 
-k patch daemonset/loki-promtail -p '{"spec": {"template": {"spec": {"imagePullSecrets": [{"name": "sl-registrykey"}]}}}}' -n ${NS}
+k patch daemonset/loki-promtail -p '{"spec": {"template": {"spec": {"imagePullSecrets": [{"name": "tz-registrykey"}]}}}}' -n ${NS}
 # loki datasource: http://loki.monitoring.svc.cluster.local:3100/
 
 cp -Rf configmap.yaml configmap.yaml_bak
@@ -174,31 +174,31 @@ kubectl exec -it ${grafana_pod} -n ${NS} \
 #helm install influxdb influxdata/influxdb -n ${NS}
 #k patch statefulset/influxdb -p '{"spec": {"template": {"spec": {"nodeSelector": {"team": "devops"}}}}}' -n ${NS}
 #k patch statefulset/influxdb -p '{"spec": {"template": {"spec": {"nodeSelector": {"environment": "monitoring"}}}}}' -n ${NS}
-#k patch statefulset/influxdb -p '{"spec": {"template": {"spec": {"imagePullSecrets": [{"name": "sl-registrykey"}]}}}}' -n ${NS}
+#k patch statefulset/influxdb -p '{"spec": {"template": {"spec": {"imagePullSecrets": [{"name": "tz-registrykey"}]}}}}' -n ${NS}
 
-kubectl patch statefulset/alertmanager-prometheus-kube-prometheus-alertmanager -p '{"spec": {"template": {"spec": {"imagePullSecrets": [{"name": "sl-registrykey"}]}}}}' -n ${NS}
+kubectl patch statefulset/alertmanager-prometheus-kube-prometheus-alertmanager -p '{"spec": {"template": {"spec": {"imagePullSecrets": [{"name": "tz-registrykey"}]}}}}' -n ${NS}
 
-cp -Rf /vagrant/sl-local/resource/monitoring/backup/grafanaSettings.json /vagrant/sl-local/resource/monitoring/backup/grafanaSettings.json_bak
-sed -i "s/eks_project/${eks_project}/g" /vagrant/sl-local/resource/monitoring/backup/grafanaSettings.json_bak
-sed -i "s/eks_domain/${eks_domain}/g" /vagrant/sl-local/resource/monitoring/backup/grafanaSettings.json_bak
-sed -i "s/admin_password_var/${admin_password}/g" /vagrant/sl-local/resource/monitoring/backup/grafanaSettings.json_bak
-sed -i "s/s3_bucket_name_var/devops-grafana-${eks_project}/g" /vagrant/sl-local/resource/monitoring/backup/grafanaSettings.json_bak
+cp -Rf /vagrant/tz-local/resource/monitoring/backup/grafanaSettings.json /vagrant/tz-local/resource/monitoring/backup/grafanaSettings.json_bak
+sed -i "s/eks_project/${eks_project}/g" /vagrant/tz-local/resource/monitoring/backup/grafanaSettings.json_bak
+sed -i "s/eks_domain/${eks_domain}/g" /vagrant/tz-local/resource/monitoring/backup/grafanaSettings.json_bak
+sed -i "s/admin_password_var/${admin_password}/g" /vagrant/tz-local/resource/monitoring/backup/grafanaSettings.json_bak
+sed -i "s/s3_bucket_name_var/devops-grafana-${eks_project}/g" /vagrant/tz-local/resource/monitoring/backup/grafanaSettings.json_bak
 
 grafana_token_var=$(curl -X POST -H "Content-Type: application/json" -d '{"name":"admin-key", "role": "Admin"}' "http://admin:${admin_password}@grafana.default.${eks_project}.${eks_domain}/api/auth/keys" | jq -r '.key')
 echo ${grafana_token_var}
 sleep 5
 if [[ "${grafana_token_var}" != "" ]]; then
-  sed -i "s/grafana_token_var/${grafana_token_var}/g" /vagrant/sl-local/resource/monitoring/backup/grafanaSettings.json_bak
+  sed -i "s/grafana_token_var/${grafana_token_var}/g" /vagrant/tz-local/resource/monitoring/backup/grafanaSettings.json_bak
 fi
 
 aws_region=$(prop 'config' 'region' ${eks_project})
 aws_access_key_id=$(prop 'credentials' 'aws_access_key_id' ${eks_project})
 aws_secret_access_key=$(prop 'credentials' 'aws_secret_access_key' ${eks_project})
-sed -i "s/aws_region/${aws_region}/g" /vagrant/sl-local/resource/monitoring/backup/grafanaSettings.json_bak
-sed -i "s/aws_access_key_id/${aws_access_key_id}/g" /vagrant/sl-local/resource/monitoring/backup/grafanaSettings.json_bak
-sed -i "s|aws_secret_access_key|${aws_secret_access_key}|g" /vagrant/sl-local/resource/monitoring/backup/grafanaSettings.json_bak
+sed -i "s/aws_region/${aws_region}/g" /vagrant/tz-local/resource/monitoring/backup/grafanaSettings.json_bak
+sed -i "s/aws_access_key_id/${aws_access_key_id}/g" /vagrant/tz-local/resource/monitoring/backup/grafanaSettings.json_bak
+sed -i "s|aws_secret_access_key|${aws_secret_access_key}|g" /vagrant/tz-local/resource/monitoring/backup/grafanaSettings.json_bak
 
-cat /vagrant/sl-local/resource/monitoring/backup/grafanaSettings.json_bak
+cat /vagrant/tz-local/resource/monitoring/backup/grafanaSettings.json_bak
 
 
 #helm repo add fluent https://fluent.github.io/helm-charts

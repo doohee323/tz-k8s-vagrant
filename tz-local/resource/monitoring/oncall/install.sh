@@ -4,8 +4,8 @@
 #https://github.com/grafana/oncall/tree/main/helm/oncall
 
 source /root/.bashrc
-#bash /vagrant/sl-local/resource/monitoring/oncall/install.sh
-cd /vagrant/sl-local/resource/monitoring/oncall
+#bash /vagrant/tz-local/resource/monitoring/oncall/install.sh
+cd /vagrant/tz-local/resource/monitoring/oncall
 
 #set -x
 shopt -s expand_aliases
