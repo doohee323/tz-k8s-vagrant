@@ -66,12 +66,12 @@ receivers:
   email_configs:
   - send_resolved: true
     to: doogee323@gmail.com
-- name: devops-admin
-  email_configs:
-  - send_resolved: true
-    to: doogee323@gmail.com
-    headers:
-      subject: '{{ if eq .Status "firing" }} devops-admin 장애.. {{ else if eq .Status "resolved" }} devops-admin 정상.. {{end}}'
+#- name: devops-admin
+#  email_configs:
+#  - send_resolved: true
+#    to: doogee323@gmail.com
+#    headers:
+#      subject: '{{ if eq .Status "firing" }} devops-admin 장애.. {{ else if eq .Status "resolved" }} devops-admin 정상.. {{end}}'
 - name: devops-demo
   email_configs:
   - send_resolved: true
