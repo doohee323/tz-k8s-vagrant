@@ -75,8 +75,8 @@ cat <<EOF | sudo tee /etc/bind/zones/db.t1zone.com
 ;
 @	IN	NS	t1zone.com.
 @	IN	AAAA	::1
-* IN	A 192.168.86.27
-* IN	A 192.168.86.36
+* IN	A 192.168.0.27
+* IN	A 192.168.0.36
 ;
 ns1.t1zone.com.          IN      A       192.168.0.20
 host2.t1zone.com.          IN      A       192.168.0.21
