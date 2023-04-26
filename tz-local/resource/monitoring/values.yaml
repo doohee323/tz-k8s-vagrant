@@ -147,7 +147,7 @@ grafana:
   persistence:
     enabled: true
     type: pvc
-    storageClassName: local-storage
+    storageClassName: nfs-client
     accessModes:
     - ReadWriteOnce
     size: 5Gi
@@ -214,7 +214,7 @@ prometheus:
           resources:
             requests:
               storage: 10Gi
-          storageClassName: local-storage
+          storageClassName: nfs-client
 
     serviceMonitorSelectorNilUsesHelmValues: false
     serviceMonitorSelector: {}

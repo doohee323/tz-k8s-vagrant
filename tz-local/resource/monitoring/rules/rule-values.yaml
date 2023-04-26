@@ -20,7 +20,7 @@ prometheus:
           resources:
             requests:
               storage: 50Gi
-          storageClassName: local-storage
+          storageClassName: nfs-client
 
     additionalScrapeConfigs:
       - job_name: 'linkerd-controller'
