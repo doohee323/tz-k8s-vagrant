@@ -8,7 +8,7 @@ cd /vagrant/tz-local/resource/vault/helm
 shopt -s expand_aliases
 alias k='kubectl --kubeconfig ~/.kube/config'
 
-k8s_project=$(prop 'project' 'project')
+k8s_project=k8s_project=hyper-k8s  #$(prop 'project' 'project')
 k8s_domain=$(prop 'project' 'domain')
 vault_token=$(prop 'project' 'vault')
 NS=vault
@@ -42,7 +42,7 @@ k apply -f ingress-vault.yaml_bak -n vault
 #k port-forward vault-0 8200:8200 -n vault &
 k get pods -l app.kubernetes.io/name=vault -n vault
 
-sleep 30
+sleep 60
 # vault operator init
 # vault operator init -key-shares=3 -key-threshold=2
 #export VAULT_ADDR='http://127.0.0.1:8200'
@@ -57,6 +57,7 @@ echo "#######################################################"
 echo "vault_token_new: ${vault_token_new}"
 echo "#######################################################"
 if [[ "${vault_token_new}" != "" ]]; then
+  touch /vagrant/resources/project
   awk '!/vault=/' /vagrant/resources/project > tmpfile && mv tmpfile /vagrant/resources/project
   echo "vault=${vault_token_new}" >> /vagrant/resources/project
   cp -Rf /vagrant/resources/project ~/.aws/project

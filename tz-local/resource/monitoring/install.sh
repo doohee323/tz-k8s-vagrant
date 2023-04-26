@@ -33,7 +33,7 @@ function prop {
 
 alias k='kubectl --kubeconfig ~/.kube/config'
 
-eks_project=$(prop 'project' 'project')
+eks_project=k8s_project=hyper-k8s  #$(prop 'project' 'project')
 eks_domain=$(prop 'project' 'domain')
 admin_password=$(prop 'project' 'admin_password')
 basic_password=$(prop 'project' 'basic_password')

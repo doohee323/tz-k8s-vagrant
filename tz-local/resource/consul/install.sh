@@ -8,7 +8,7 @@ cd /vagrant/tz-local/resource/consul
 #set -x
 alias k='kubectl -n consul'
 
-k8s_project=$(prop 'project' 'project')
+k8s_project=k8s_project=hyper-k8s  #$(prop 'project' 'project')
 k8s_domain=$(prop 'project' 'domain')
 basic_password=$(prop 'project' 'basic_password')
 NS=consul

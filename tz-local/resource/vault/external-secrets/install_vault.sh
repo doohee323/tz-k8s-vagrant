@@ -6,7 +6,7 @@ cd /vagrant/tz-local/resource/vault/external-secrets
 
 AWS_REGION=$(prop 'config' 'region')
 k8s_domain=$(prop 'project' 'domain')
-k8s_project=$(prop 'project' 'project')
+k8s_project=k8s_project=hyper-k8s  #$(prop 'project' 'project')
 vault_token=$(prop 'project' 'vault')
 NS=external-secrets
 

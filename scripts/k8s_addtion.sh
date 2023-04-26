@@ -3,7 +3,7 @@
 function prop {
 	grep "${2}" "/home/ubuntu/.aws/${1}" | head -n 1 | cut -d '=' -f2 | sed 's/ //g'
 }
-k8s_project=$(prop 'project' 'project')
+k8s_project=k8s_project=hyper-k8s  #$(prop 'project' 'project')
 
 bash /vagrant/tz-local/resource/docker-repo/install.sh
 bash /vagrant/tz-local/resource/ingress_nginx/install.sh
