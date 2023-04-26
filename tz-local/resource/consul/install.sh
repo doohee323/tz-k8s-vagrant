@@ -44,11 +44,11 @@ k apply -f consul-ingress.yaml_bak -n consul
 #k create -f /vagrant/tz-local/resource/consul/counting.yaml -n consul
 #k create -f /vagrant/tz-local/resource/consul/dashboard.yaml -n consul
 
-sleep 60
+#sleep 60
 
-export CONSUL_HTTP_ADDR="consul.default.${k8s_project}.${k8s_domain}"
-echo http://$CONSUL_HTTP_ADDR
-consul members
+#export CONSUL_HTTP_ADDR="consul.default.${k8s_project}.${k8s_domain}"
+#echo http://$CONSUL_HTTP_ADDR
+#consul members
 
 exit 0
 

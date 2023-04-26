@@ -39,8 +39,6 @@ sed -i "s|NS|${NS}|g" ingress-vault.yaml_bak
 k delete -f ingress-vault.yaml_bak -n vault
 k apply -f ingress-vault.yaml_bak -n vault
 
-sleep 30
-
 #k port-forward vault-0 8200:8200 -n vault &
 k get pods -l app.kubernetes.io/name=vault -n vault
 
@@ -51,6 +49,7 @@ sleep 30
 export VAULT_ADDR="http://vault2.default.${k8s_project}.${k8s_domain}"
 echo $VAULT_ADDR
 
+mkdir -p /vagrant/resources
 k -n vault exec -ti vault-0 -- vault operator init -key-shares=3 -key-threshold=2 | sed 's/\x1b\[[0-9;]*m//g' > /vagrant/resources/unseal.txt
 sleep 20
 vault_token_new=$(cat /vagrant/resources/unseal.txt | grep "Initial Root Token:" | tail -n 1 | awk '{print $4}')
