@@ -6,12 +6,12 @@
 #https://grafana.com/docs/grafana/latest/datasources/cloudwatch/
 #https://prometheus.io/docs/instrumenting/exporters/#http
 
+#set -x
+shopt -s expand_aliases
 source /root/.bashrc
 #bash /vagrant/tz-local/resource/monitoring/install.sh
 cd /vagrant/tz-local/resource/monitoring
 
-#set -x
-shopt -s expand_aliases
 alias k='kubectl --kubeconfig ~/.kube/config'
 
 eks_project=$(prop 'project' 'project')
