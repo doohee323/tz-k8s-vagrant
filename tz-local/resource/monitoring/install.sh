@@ -71,11 +71,11 @@ helm repo update
 #helm uninstall prometheus -n ${NS}
 #helm fetch --untar prometheus-community/kube-prometheus-stack
 #--reuse-values
-#helm upgrade --debug --install prometheus prometheus-community/kube-prometheus-stack \
-#    -n ${NS} \
-#    --version ${STACK_VERSION} \
-#    --set alertmanager.persistentVolume.storageClass="nfs-client" \
-#    --set server.persistentVolume.storageClass="nfs-client"
+helm upgrade --debug --install prometheus prometheus-community/kube-prometheus-stack \
+    -n ${NS} \
+    --version ${STACK_VERSION} \
+    --set alertmanager.persistentVolume.storageClass="nfs-client" \
+    --set server.persistentVolume.storageClass="nfs-client"
 #--reuse-values
 #helm show values prometheus-community/kube-prometheus-stack > values2.yaml
 helm upgrade --debug --reuse-values --install prometheus prometheus-community/kube-prometheus-stack \
