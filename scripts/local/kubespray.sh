@@ -8,7 +8,7 @@ if [ -d /vagrant ]; then
   cd /vagrant
 fi
 
-#cd /home/topzone/tz-k8s-vagrant
+#cd /home/ubuntu/tz-k8s-vagrant
 sudo rm -Rf kubespray
 #git clone --single-branch https://github.com/kubernetes-sigs/kubespray.git
 git clone https://github.com/kubernetes-sigs/kubespray.git --branch release-2.21
@@ -46,10 +46,10 @@ sudo reboot
 #cat inventory/test-cluster/group_vars/k8s_cluster/k8s-cluster.yml
 
 #cd resource/kubespray
-#scp doohee323@node1:/Volumes/workspace/etc/tz-k8s-vagrant/kubespray/inventory/test-cluster/group_vars/k8s_cluster/k8s-cluster.yml .
-#scp k8s-cluster.yml doohee323@node1:/Volumes/workspace/etc/tz-k8s-vagrant/kubespray/inventory/test-cluster/group_vars/k8s_cluster/k8s-cluster.yml
-#scp node1:/Volumes/workspace/etc/tz-k8s-vagrant/kubespray/inventory/test-cluster/group_vars/k8s_cluster/k8s-cluster.yml k8s-cluster.yml
-#scp node1:/Volumes/workspace/etc/tz-k8s-vagrant/kubespray/inventory/test-cluster/group_vars/k8s_cluster/addons.yml addons.yml
+#scp doohee323@master:/Volumes/workspace/etc/tz-k8s-vagrant/kubespray/inventory/test-cluster/group_vars/k8s_cluster/k8s-cluster.yml .
+#scp k8s-cluster.yml doohee323@master:/Volumes/workspace/etc/tz-k8s-vagrant/kubespray/inventory/test-cluster/group_vars/k8s_cluster/k8s-cluster.yml
+#scp master:/Volumes/workspace/etc/tz-k8s-vagrant/kubespray/inventory/test-cluster/group_vars/k8s_cluster/k8s-cluster.yml k8s-cluster.yml
+#scp master:/Volumes/workspace/etc/tz-k8s-vagrant/kubespray/inventory/test-cluster/group_vars/k8s_cluster/addons.yml addons.yml
 
 #export ANSIBLE_PERSISTENT_CONNECT_TIMEOUT=120
 #ansible -vvvv -i inventory/test-cluster/inventory.ini all -a "systemctl status sshd" -u root
