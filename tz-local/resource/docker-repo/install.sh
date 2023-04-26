@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 source /root/.bashrc
-cd /vagrant/tz-local/resource/docker-repo
+cd /ubuntu/tz-local/resource/docker-repo
 
 #set -x
 shopt -s expand_aliases
@@ -14,8 +14,8 @@ dockerhub_password=$(prop 'project' 'dockerhub_password')
 
 apt-get update -y
 apt-get -y install docker.io jq
-usermod -G docker vagrant
-chown -Rf vagrant:vagrant /var/run/docker.sock
+usermod -G docker ubuntu
+chown -Rf ubuntu:ubuntu /var/run/docker.sock
 
 mkdir -p ~/.docker
 docker login -u="${dockerhub_id}" -p="${dockerhub_password}"
@@ -23,13 +23,13 @@ docker login -u="${dockerhub_id}" -p="${dockerhub_password}"
 sleep 2
 
 cat ~/.docker/config.json
-mkdir -p /home/vagrant/.docker
-cp -Rf ~/.docker/config.json /home/vagrant/.docker/config.json
-chown -Rf vagrant:vagrant /home/vagrant/.docker
+mkdir -p /home/ubuntu/.docker
+cp -Rf ~/.docker/config.json /home/ubuntu/.docker/config.json
+chown -Rf ubuntu:ubuntu /home/ubuntu/.docker
 
 kubectl delete secret tz-registrykey
 kubectl create secret generic tz-registrykey \
-    --from-file=.dockerconfigjson=/home/vagrant/.docker/config.json \
+    --from-file=.dockerconfigjson=/home/ubuntu/.docker/config.json \
     --type=kubernetes.io/dockerconfigjson
 
 kubectl create ns argocd
@@ -47,7 +47,7 @@ for item in "${PROJECTS[@]}"; do
     kubectl delete secret tz-registrykey -n ${item}
     kubectl create secret generic tz-registrykey \
       -n ${item} \
-      --from-file=.dockerconfigjson=/home/vagrant/.docker/config.json \
+      --from-file=.dockerconfigjson=/home/ubuntu/.docker/config.json \
       --type=kubernetes.io/dockerconfigjson
   fi
 done
@@ -62,7 +62,7 @@ done
 #type: kubernetes.io/dockerconfigjson
 #" > docker-config.yaml
 #
-#DOCKER_CONFIG=$(cat /home/vagrant/.docker/config.json | base64 | tr -d '\r')
+#DOCKER_CONFIG=$(cat /home/ubuntu/.docker/config.json | base64 | tr -d '\r')
 #DOCKER_CONFIG=$(echo $DOCKER_CONFIG | sed 's/ //g')
 #echo "${DOCKER_CONFIG}"
 #cp docker-config.yaml docker-config.yaml_bak

@@ -4,10 +4,6 @@
 
 #set -x
 
-if [ -d /vagrant ]; then
-  cd /vagrant
-fi
-
 #cd /home/ubuntu/tz-k8s-vagrant
 sudo rm -Rf kubespray
 #git clone --single-branch https://github.com/kubernetes-sigs/kubespray.git
@@ -64,8 +60,8 @@ sudo reboot
 ansible-playbook -u root -i inventory/test-cluster/inventory.ini --private-key /root/.ssh/id_rsa --become --become-user=root cluster.yml
 #ansible-playbook -i inventory/test-cluster/inventory.ini --become --become-user=root cluster.yml
 
-sudo cp -Rf /root/.kube /home/vagrant/
-sudo chown -Rf vagrant:vagrant /home/vagrant/.kube
+sudo cp -Rf /root/.kube /home/ubuntu/
+sudo chown -Rf ubuntu:ubuntu /home/ubuntu/.kube
 
 kubectl completion bash | sudo tee /etc/bash_completion.d/kubectl
 exec bash
@@ -73,11 +69,7 @@ exec bash
 kubectl get nodes
 kubectl cluster-info
 
-if [ -d /vagrant ]; then
-  sudo cp -Rf /root/.kube/config kubespray_vagrant
-else
-  sudo cp -Rf /etc/kubernetes/admin.conf kubespray_vagrant
-fi
+sudo cp -Rf /root/.kube/config kubespray_vagrant
 sudo chown -Rf ubuntu:ubuntu kubespray_vagrant
 
 shopt -s expand_aliases
@@ -121,11 +113,6 @@ sudo rm -Rf info
 # call nfs dynamic-provisioning
 ##################################################################
 bash tz-local/resource/dynamic-provisioning/nfs/install.sh
-
-##################################################################
-# call metallb
-##################################################################
-bash tz-local/resource/metallb/install.sh
 
 ##################################################################
 # call dashboard install script

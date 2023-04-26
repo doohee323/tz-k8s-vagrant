@@ -22,8 +22,8 @@ spec:
   persistentVolumeReclaimPolicy: Retain
   storageClassName: postgres-pv-0
   local:
-#    path: /vagrant/data/postgres     # can't use shared folder
-    path: /home/vagrant/data/postgres
+#    path: /ubuntu/data/postgres     # can't use shared folder
+    path: /home/ubuntu/data/postgres
   nodeAffinity:
     required:
       nodeSelectorTerms:

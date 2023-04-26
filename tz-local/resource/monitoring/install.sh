@@ -4,7 +4,7 @@
 shopt -s expand_aliases
 alias k='kubectl --kubeconfig ~/.kube/config'
 
-cd /home/vagrant
+cd /home/ubuntu
 
 echo "## [ install prometheus ] #############################"
 k create namespace monitoring
@@ -59,7 +59,7 @@ echo '
   admin / prom-operator
   import grafana ID from https://grafana.com/grafana/dashboards into your grafana!
 #######################################################################
-' >> /vagrant/info
-cat /vagrant/info
+' >> /home/ubuntu/info
+cat /home/ubuntu/info
 
 exit 0

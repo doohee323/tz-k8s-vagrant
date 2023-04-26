@@ -10,7 +10,7 @@ spec:
     - ReadWriteMany
   nfs:
     server: 192.168.0.20
-    path: /home/vagrant/data
+    path: /home/ubuntu/data
 
 ---
 apiVersion: v1

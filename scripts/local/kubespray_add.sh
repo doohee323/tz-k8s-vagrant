@@ -5,10 +5,6 @@
 
 #set -x
 
-if [ -d /vagrant ]; then
-  cd /vagrant
-fi
-
 cp -Rf resource/kubespray/inventory2.ini kubespray/inventory/test-cluster/inventory.ini
 
 cd kubespray
