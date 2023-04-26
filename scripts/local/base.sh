@@ -6,6 +6,10 @@
 # k8s base
 ##################################################################
 
+if [ -d /vagrant ]; then
+  cd /vagrant
+fi
+
 sudo swapoff -a
 sudo sed -i '/swap/d' /etc/fstab
 #sudo sed -i '/ swap / s/^\(.*\)$/#\1/g' /etc/fstab

@@ -1,0 +1,278 @@
+prometheus:
+  prometheusSpec:
+    externalUrl: https://prometheus.default.eks_project.eks_domain
+    nodeSelector:
+      environment: monitoring
+      team: devops
+#    podAntiAffinity: ""
+#    podAntiAffinityTopologyKey: kubernetes.io/hostname
+#    affinity:
+#     nodeAffinity:
+#       requiredDuringSchedulingIgnoredDuringExecution:
+#         nodeSelectorTerms:
+#         - matchExpressions:
+#           - key: kubernetes.io/e2e-az-name
+#             operator: In
+#             values:
+#             - e2e-az1
+#             - e2e-az2
+    storageSpec:
+      volumeClaimTemplate:
+        spec:
+          accessModes: [ "ReadWriteOnce" ]
+          resources:
+            requests:
+              storage: 50Gi
+          storageClassName: gp2
+
+    additionalScrapeConfigs:
+      - job_name: 'linkerd-controller'
+        kubernetes_sd_configs:
+        - role: pod
+          namespaces:
+            names:
+            - 'linkerd'
+            - 'linkerd-viz'
+        relabel_configs:
+        - source_labels:
+          - __meta_kubernetes_pod_container_port_name
+          action: keep
+          regex: admin-http
+        - source_labels: [__meta_kubernetes_pod_container_name]
+          action: replace
+          target_label: component
+      - job_name: 'linkerd-service-mirror'
+        kubernetes_sd_configs:
+        - role: pod
+        relabel_configs:
+        - source_labels:
+          - __meta_kubernetes_pod_label_component
+          - __meta_kubernetes_pod_container_port_name
+          action: keep
+          regex: linkerd-service-mirror;admin-http$
+        - source_labels: [__meta_kubernetes_pod_container_name]
+          action: replace
+          target_label: component
+
+      - job_name: 'linkerd-proxy'
+        kubernetes_sd_configs:
+        - role: pod
+        relabel_configs:
+        - source_labels:
+          - __meta_kubernetes_pod_container_name
+          - __meta_kubernetes_pod_container_port_name
+          - __meta_kubernetes_pod_label_linkerd_io_control_plane_ns
+          action: keep
+          regex: ^linkerd-proxy;linkerd-admin;linkerd$
+        - source_labels: [__meta_kubernetes_namespace]
+          action: replace
+          target_label: namespace
+        - source_labels: [__meta_kubernetes_pod_name]
+          action: replace
+          target_label: pod
+        # special case k8s' "job" label, to not interfere with prometheus' "job"
+        # label
+        # __meta_kubernetes_pod_label_linkerd_io_proxy_job=foo =>
+        # k8s_job=foo
+        - source_labels: [__meta_kubernetes_pod_label_linkerd_io_proxy_job]
+          action: replace
+          target_label: k8s_job
+        # drop __meta_kubernetes_pod_label_linkerd_io_proxy_job
+        - action: labeldrop
+          regex: __meta_kubernetes_pod_label_linkerd_io_proxy_job
+        # __meta_kubernetes_pod_label_linkerd_io_proxy_deployment=foo =>
+        # deployment=foo
+        - action: labelmap
+          regex: __meta_kubernetes_pod_label_linkerd_io_proxy_(.+)
+        # drop all labels that we just made copies of in the previous labelmap
+        - action: labeldrop
+          regex: __meta_kubernetes_pod_label_linkerd_io_proxy_(.+)
+        # __meta_kubernetes_pod_label_linkerd_io_foo=bar =>
+        # foo=bar
+        - action: labelmap
+          regex: __meta_kubernetes_pod_label_linkerd_io_(.+)
+        # Copy all pod labels to tmp labels
+        - action: labelmap
+          regex: __meta_kubernetes_pod_label_(.+)
+          replacement: __tmp_pod_label_$1
+        # Take `linkerd_io_` prefixed labels and copy them without the prefix
+        - action: labelmap
+          regex: __tmp_pod_label_linkerd_io_(.+)
+          replacement:  __tmp_pod_label_$1
+        # Drop the `linkerd_io_` originals
+        - action: labeldrop
+          regex: __tmp_pod_label_linkerd_io_(.+)
+        # Copy tmp labels into real labels
+        - action: labelmap
+          regex: __tmp_pod_label_(.+)
+
+#      - job_name: 'sl-kubernetes-pod-job'
+#        scrape_interval: 15s
+#        kubernetes_sd_configs:
+#        - role: pod
+#        relabel_configs:
+#        # only scrape when annotation prometheus.io/scrape: 'true' is set
+#        - source_labels: [__meta_kubernetes_pod_annotation_prometheus_io_scrape]
+#          action: keep
+#          regex: true
+#        - source_labels: [__meta_kubernetes_pod_annotation_prometheus_io_path]
+#          action: replace
+#          target_label: __metrics_path__
+#          regex: (.+)
+#        - source_labels: [__address__, __meta_kubernetes_pod_annotation_prometheus_io_port]
+#          action: replace
+#          regex: ([^:]+)(?::\d+)?;(\d+)
+#          replacement: $1:$2
+#          target_label: __address__
+#        - action: labelmap
+#          regex: __meta_kubernetes_pod_label_(.+)
+#        - source_labels: [__meta_kubernetes_namespace]
+#          action: replace
+#          target_label: kubernetes_namespace
+#        - source_labels: [__meta_kubernetes_pod_name]
+#          action: replace
+#          target_label: kubernetes_pod_name
+
+
+#      - job_name: 'sl-kubernetes-pod-job'
+#        scrape_interval: 15s
+#        kubernetes_sd_configs:
+#        - role: pod
+#        relabel_configs:
+#        # only scrape when annotation prometheus.io/scrape: 'true' is set
+#        - source_labels: [__meta_kubernetes_pod_annotation_prometheus_io_scrape]
+#          action: keep
+#          regex: true
+#        - source_labels: [__meta_kubernetes_pod_annotation_prometheus_io_path]
+#          action: replace
+#          target_label: __metrics_path__
+#          regex: (.+)
+#        - source_labels: [__address__, __meta_kubernetes_pod_annotation_prometheus_io_port]
+#          action: replace
+#          regex: ([^:]+)(?::\d+)?;(\d+)
+#          replacement: $1:$2
+#          target_label: __address__
+#        - action: labelmap
+#          regex: __meta_kubernetes_pod_label_(.+)
+#        - source_labels: [__meta_kubernetes_namespace]
+#          action: replace
+#          target_label: kubernetes_namespace
+#        - source_labels: [__meta_kubernetes_pod_name]
+#          action: replace
+#          target_label: kubernetes_pod_name
+#      - job_name: 'sl-kubernetes-service-endpoints'
+#        kubernetes_sd_configs:
+#        - role: endpoints
+#        relabel_configs:
+##          annotation:
+##            prometheus.io/scrape: 'true'
+##            prometheus.io/path: /metrics
+##            prometheus.io/port: '9900'
+##            prometheus.io/scheme: http
+#        - source_labels: [__meta_kubernetes_service_annotation_prometheus_io_scrape]
+#          action: keep
+#          regex: true
+#        - source_labels: [__meta_kubernetes_service_annotation_prometheus_io_path]
+#          action: replace
+#          target_label: __metrics_path__
+#          regex: (.+)
+#        - source_labels: [__address__, __meta_kubernetes_service_annotation_prometheus_io_port]
+#          action: replace
+#          regex: ([^:]+)(?::\d+)?;(\d+)
+#          replacement: $1:$2
+#          target_label: __address__
+#        - source_labels: [__meta_kubernetes_service_annotation_prometheus_io_scheme]
+#          action: replace
+#          target_label: __scheme__
+#          regex: (https?)
+#        - action: labelmap
+#          regex: __meta_kubernetes_service_label_(.+)
+#        - source_labels: [__meta_kubernetes_namespace]
+#          action: replace
+#          target_label: kubernetes_namespace
+#        - source_labels: [__meta_kubernetes_service_name]
+#          action: replace
+#          target_label: kubernetes_name
+#      - job_name: 'jenkins'
+#        metrics_path: /prometheus/
+#        static_configs:
+#          - targets: ['jenkins.slcorp.com:80']
+#        scheme: http
+#        tls_config:
+#          insecure_skip_verify: true
+#        basic_auth:
+#          username: 'devops'
+#          password: 'admin_password'
+#      - job_name: 'sl-blackbox-exporter'
+#        metrics_path: /probe
+#        params:
+#          module: [http_2xx]
+#        static_configs:
+#          - targets:
+#            - https://ext-ea.b9.to/admin
+#            - https://pubgct.btd.gg
+#            - https://api.gocre.jp/api/health
+#            - https://gocre.jp
+#            - http://sl.gg
+#            - https://sl.gg
+#            - http://sl.kr
+#            - https://sl.kr
+#            - http://www.sl.kr
+#            - https://www.sl.kr
+#            - http://slcorp.com
+#            - https://slcorp.com
+#            - http://sl.jp
+#            - https://sl.jp
+#            - http://www.sl.jp
+#            - https://www.sl.jp
+#            - http://sl.team
+#            - https://sl.team
+#            - http://sl.biz
+#            - https://sl.biz
+#            - https://aljs.btd.gg
+#            - http://jenkins.slcorp.com/login
+#            - https://argocd.slcorp.com
+#            - https://grafana.slcorp.com
+#            - https://prometheus.slcorp.com
+#            - https://alertmanager.default.eks_project.slcorp.com
+#            - https://vault.slcorp.com
+#            - https://consul.slcorp.com
+#            - https://api.twip.kr
+#            - https://tgd.kr
+#            - https://ranking.tgd.kr
+#        relabel_configs:
+#          - source_labels: [__address__]
+#            target_label: __param_target
+#          - source_labels: [__param_target]
+#            target_label: instance
+#          - target_label: __address__
+#            replacement: sl-blackbox-exporter-prometheus-blackbox-exporter:9115
+#      - job_name: 'prometheus'
+#        metrics_path: /metrics
+#        static_configs:
+#          - targets:
+#            # jenkins
+#            - 20.10.11.28:9090
+#            # tgdre-job
+#            - 10.0.1.138:9090
+#            # tgdre-prod
+#            - 10.0.2.184:9090
+#            - 10.0.1.212:9090
+#            - 10.0.1.221:9090
+#            # tgdkr-mrd
+#            - 54.180.146.14:9090
+#        scheme: http
+#      - job_name: 'node-exporter'
+#        scrape_interval: 5s
+#        static_configs:
+#          - targets:
+#            # jenkins
+#            - 20.10.11.28:9100
+#            # tgdre-job
+#            - 10.0.1.138:9100
+#            # tgdre-prod
+#            - 10.0.2.184:9100
+#            - 10.0.1.212:9100
+#            - 10.0.1.221:9100
+#            # tgdkr-mrd
+#            - 54.180.146.14:9100

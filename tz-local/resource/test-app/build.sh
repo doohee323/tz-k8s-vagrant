@@ -6,7 +6,7 @@ TZ_PROJECT=tz-local
 
 alias k='kubectl --kubeconfig ~/.kube/config'
 
-if [[ -f "/ubuntu/${TZ_PROJECT}/resource/dockerhub" ]]; then
+if [[ -f "/root/${TZ_PROJECT}/resource/dockerhub" ]]; then
   echo "## [ Make a slave env ] #############################"
   JENKINS_SLAVE_IMG=jenkins-slave
   BRANCH=latest

@@ -1,8 +1,8 @@
 #!/usr/bin/env bash
 
 source /root/.bashrc
-#bash /home/ubuntu/tz-local/resource/vault/helm/install.sh
-cd /home/ubuntu/tz-local/resource/vault/helm
+#bash /root/tz-local/resource/vault/helm/install.sh
+cd /root/tz-local/resource/vault/helm
 
 #set -x
 shopt -s expand_aliases
@@ -21,7 +21,7 @@ helm uninstall vault -n vault
 k delete namespace vault
 k create namespace vault
 
-bash /home/ubuntu/tz-local/resource/vault/vault-injection/cert.sh vault
+bash /root/tz-local/resource/vault/vault-injection/cert.sh vault
 
 cp -Rf values_cert.yaml values_cert.yaml_bak
 sed -i "s/k8s_project/${k8s_project}/g" values_cert.yaml_bak
@@ -51,18 +51,18 @@ sleep 30
 export VAULT_ADDR="http://vault2.default.${k8s_project}.${k8s_domain}"
 echo $VAULT_ADDR
 
-k -n vault exec -ti vault-0 -- vault operator init -key-shares=3 -key-threshold=2 | sed 's/\x1b\[[0-9;]*m//g' > /home/ubuntu/resources/unseal.txt
+k -n vault exec -ti vault-0 -- vault operator init -key-shares=3 -key-threshold=2 | sed 's/\x1b\[[0-9;]*m//g' > /root/resources/unseal.txt
 sleep 20
-vault_token_new=$(cat /home/ubuntu/resources/unseal.txt | grep "Initial Root Token:" | tail -n 1 | awk '{print $4}')
+vault_token_new=$(cat /root/resources/unseal.txt | grep "Initial Root Token:" | tail -n 1 | awk '{print $4}')
 echo "#######################################################"
 echo "vault_token_new: ${vault_token_new}"
 echo "#######################################################"
 if [[ "${vault_token_new}" != "" ]]; then
-  awk '!/vault=/' /home/ubuntu/resources/project > tmpfile && mv tmpfile /home/ubuntu/resources/project
-  echo "vault=${vault_token_new}" >> /home/ubuntu/resources/project
-  cp -Rf /home/ubuntu/resources/project ~/.aws/project
-  mkdir -p /home/home/ubuntu/.aws
-  cp -Rf /home/ubuntu/resources/project /home/home/ubuntu/.aws/project
+  awk '!/vault=/' /vagrant/resources/project > tmpfile && mv tmpfile /vagrant/resources/project
+  echo "vault=${vault_token_new}" >> /vagrant/resources/project
+  cp -Rf /vagrant/resources/project ~/.aws/project
+  mkdir -p /home/ubuntu/.aws
+  cp -Rf /vagrant/resources/project /home/ubuntu/.aws/project
 fi
 
 # vault operator unseal
@@ -158,8 +158,8 @@ vault operator raft snapshot save backup.snap
 vault operator raft snapshot restore -force backup.snap
 
 #######################################################################
-" >> /home/ubuntu/info
-cat /home/ubuntu/info
+" >> /vagrant/info
+cat /vagrant/info
 
 exit 0
 

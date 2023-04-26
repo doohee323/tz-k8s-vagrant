@@ -5,19 +5,19 @@ function prop {
 }
 k8s_project=$(prop 'project' 'project')
 
-bash /home/ubuntu/tz-local/resource/docker-repo/install.sh
-bash /home/ubuntu/tz-local/resource/ingress_nginx/install.sh
+bash /vagrant/tz-local/resource/docker-repo/install.sh
+bash /vagrant/tz-local/resource/ingress_nginx/install.sh
 
-bash /home/ubuntu/tz-local/resource/consul/install.sh
-bash /home/ubuntu/tz-local/resource/vault/helm/install.sh
-bash /home/ubuntu/tz-local/resource/vault/data/vault_user.sh
-#bash /home/ubuntu/tz-local/resource/vault/vault-injection/install.sh
-#bash /home/ubuntu/tz-local/resource/vault/vault-injection/update.sh
-bash /home/ubuntu/tz-local/resource/vault/external-secrets/install.sh
+bash /vagrant/tz-local/resource/consul/install.sh
+bash /vagrant/tz-local/resource/vault/helm/install.sh
+bash /vagrant/tz-local/resource/vault/data/vault_user.sh
+#bash /vagrant/tz-local/resource/vault/vault-injection/install.sh
+#bash /vagrant/tz-local/resource/vault/vault-injection/update.sh
+bash /vagrant/tz-local/resource/vault/external-secrets/install.sh
 
-bash /home/ubuntu/tz-local/resource/argocd/helm/install.sh
-bash /home/ubuntu/tz-local/resource/jenkins/helm/install.sh
+bash /vagrant/tz-local/resource/argocd/helm/install.sh
+bash /vagrant/tz-local/resource/jenkins/helm/install.sh
 
 exit 0
 
-bash /home/ubuntu/tz-local/resource/vault/external-secrets/install.sh
+bash /vagrant/tz-local/resource/vault/external-secrets/install.sh

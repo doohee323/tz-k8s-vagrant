@@ -4,7 +4,40 @@
 
 #set -x
 
-#cd /home/ubuntu/tz-k8s-vagrant
+echo "
+alias k='kubectl'
+alias KUBECONFIG='~/.kube/config'
+alias base='cd /vagrant'
+alias ll='ls -al'
+" >> /root/.bashrc
+
+cat >> /root/.bashrc <<EOF
+function prop {
+  key="\${2}="
+  rslt=""
+  if [[ "\${3}" == "" ]]; then
+    rslt=\$(grep "\${key}" "/root/.aws/\${1}" | head -n 1 | cut -d '=' -f2 | sed 's/ //g')
+    if [[ "\${rslt}" == "" ]]; then
+      key="\${2} = "
+      rslt=\$(grep "\${key}" "/root/.aws/\${1}" | head -n 1 | cut -d '=' -f2 | sed 's/ //g')
+    fi
+  else
+    rslt=\$(grep "\${3}" "/root/.aws/\${1}" -A 10 | grep "\${key}" | head -n 1 | tail -n 1 | cut -d '=' -f2 | sed 's/ //g')
+    if [[ "\${rslt}" == "" ]]; then
+      key="\${2} = "
+      rslt=\$(grep "\${3}" "/root/.aws/\${1}" -A 10 | grep "\${key}" | head -n 1 | tail -n 1 | cut -d '=' -f2 | sed 's/ //g')
+    fi
+  fi
+  echo \${rslt}
+}
+EOF
+
+ln -s /home/ubuntu/tz-k8s-vagrant /vagrant
+
+if [ -d /vagrant ]; then
+  cd /vagrant
+fi
+
 sudo rm -Rf kubespray
 #git clone --single-branch https://github.com/kubernetes-sigs/kubespray.git
 git clone https://github.com/kubernetes-sigs/kubespray.git --branch release-2.21
