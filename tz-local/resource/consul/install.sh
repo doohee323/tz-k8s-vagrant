@@ -1,6 +1,5 @@
 #!/usr/bin/env bash
 
-set -i
 shopt -s expand_aliases
 source /root/.bashrc
 #bash /vagrant/tz-local/resource/consul/install.sh
