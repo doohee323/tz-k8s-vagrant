@@ -31,6 +31,7 @@ cd /vagrant/tz-local/resource/dynamic-provisioning/nfs
 ###############################################################
 # !!! Storage Class Usage (Dynamic Provisioning)
 ###############################################################
+k delete -f dynamic-provisioning-nfs.yaml
 k apply -f dynamic-provisioning-nfs.yaml
 k apply -f dynamic-provisioning-nfs-test.yaml
 k get pv,pvc
@@ -39,6 +40,7 @@ k delete -f dynamic-provisioning-nfs-test.yaml
 ###############################################################
 # !!! PV/PVC Usage (Static Provisioning)
 ###############################################################
+k delete -f static-provisioning-nfs.yaml
 k apply -f static-provisioning-nfs.yaml
 k apply -f static-provisioning-nfs-test.yaml
 k get pv,pvc

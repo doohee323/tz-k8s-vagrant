@@ -77,7 +77,7 @@ helm repo update
 #    --set alertmanager.persistentVolume.storageClass="local-storage" \
 #    --set server.persistentVolume.storageClass="local-storage"
 #--reuse-values
-helm show values prometheus-community/kube-prometheus-stack > values2.yaml
+#helm show values prometheus-community/kube-prometheus-stack > values2.yaml
 helm upgrade --debug --reuse-values --install prometheus prometheus-community/kube-prometheus-stack \
     -n ${NS} \
     --version ${STACK_VERSION} \
