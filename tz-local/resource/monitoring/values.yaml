@@ -34,9 +34,9 @@ alertmanager:
   config:
     global:
       resolve_timeout: 5m
-      smtp_from: doohee@seerslab.com
+      smtp_from: doohee323@gmail.com
       smtp_smarthost: smtp.gmail.com:587
-      smtp_auth_username: doohee@seerslab.com
+      smtp_auth_username: doohee323@gmail.com
       smtp_auth_password: hdh971097
       smtp_require_tls: true
       slack_api_url: https://hooks.slack.com/services/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

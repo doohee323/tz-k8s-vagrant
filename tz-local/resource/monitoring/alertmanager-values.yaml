@@ -1,8 +1,8 @@
 global:
   resolve_timeout: 20s
-  smtp_from: doohee@seerslab.com
+  smtp_from: doohee323@gmail.com
   smtp_smarthost: smtp.gmail.com:587
-  smtp_auth_username: doohee@seerslab.com
+  smtp_auth_username: doohee323@gmail.com
 #  smtp_smarthost: "email-smtp.ap-northeast-2.amazonaws.com:587"
 #  smtp_auth_username: "AKIATEMCRY56E5455PXW"
   smtp_auth_password: "hdh971097"
@@ -61,7 +61,7 @@ receivers:
     text: '{{ template "slack.default.text" . }}'
   email_configs:
   - send_resolved: true
-    to: doohee@seerslab.com
+    to: doohee323@gmail.com
 - name: devops-dev
   email_configs:
   - send_resolved: true
