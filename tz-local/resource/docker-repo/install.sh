@@ -23,8 +23,8 @@ docker login -u="${dockerhub_id}" -p="${dockerhub_password}"
 sleep 2
 
 cat ~/.docker/config.json
-mkdir -p /root/.docker
-cp -Rf ~/.docker/config.json /root/.docker/config.json
+#mkdir -p /root/.docker
+#cp -Rf ~/.docker/config.json /root/.docker/config.json
 #chown -Rf ubuntu:ubuntu /root/.docker
 
 kubectl delete secret tz-registrykey

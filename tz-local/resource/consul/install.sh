@@ -1,11 +1,11 @@
 #!/usr/bin/env bash
 
+shopt -s expand_aliases
 source /root/.bashrc
 #bash /vagrant/tz-local/resource/consul/install.sh
 cd /vagrant/tz-local/resource/consul
 
 #set -x
-shopt -s expand_aliases
 alias k='kubectl -n consul'
 
 k8s_project=$(prop 'project' 'project')

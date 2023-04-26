@@ -38,7 +38,7 @@ alias ll='ls -al'
 export PATH=\"/root/.krew/bin:$PATH\"
 " > /root/.bashrc
 
-cat >> /root/.bashrc <<EOF
+cat >> /root/.profile <<EOF
 function prop {
   key="\${2}="
   rslt=""

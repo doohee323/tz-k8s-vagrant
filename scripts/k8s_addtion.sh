@@ -18,6 +18,8 @@ bash /vagrant/tz-local/resource/vault/external-secrets/install.sh
 bash /vagrant/tz-local/resource/argocd/helm/install.sh
 bash /vagrant/tz-local/resource/jenkins/helm/install.sh
 
+bash /vagrant/tz-local/resource/monitoring/install.sh
+
 exit 0
 
 bash /vagrant/tz-local/resource/vault/external-secrets/install.sh

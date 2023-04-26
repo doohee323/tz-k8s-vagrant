@@ -1,8 +1,8 @@
 #!/usr/bin/env bash
 
 source /root/.bashrc
-#bash /root/tz-local/resource/vault/helm/install.sh
-cd /root/tz-local/resource/vault/helm
+#bash /vagrant/tz-local/resource/vault/helm/install.sh
+cd /vagrant/tz-local/resource/vault/helm
 
 #set -x
 shopt -s expand_aliases
@@ -21,7 +21,7 @@ helm uninstall vault -n vault
 k delete namespace vault
 k create namespace vault
 
-bash /root/tz-local/resource/vault/vault-injection/cert.sh vault
+bash /vagrant/tz-local/resource/vault/vault-injection/cert.sh vault
 
 cp -Rf values_cert.yaml values_cert.yaml_bak
 sed -i "s/k8s_project/${k8s_project}/g" values_cert.yaml_bak
@@ -51,9 +51,9 @@ sleep 30
 export VAULT_ADDR="http://vault2.default.${k8s_project}.${k8s_domain}"
 echo $VAULT_ADDR
 
-k -n vault exec -ti vault-0 -- vault operator init -key-shares=3 -key-threshold=2 | sed 's/\x1b\[[0-9;]*m//g' > /root/resources/unseal.txt
+k -n vault exec -ti vault-0 -- vault operator init -key-shares=3 -key-threshold=2 | sed 's/\x1b\[[0-9;]*m//g' > /vagrant/resources/unseal.txt
 sleep 20
-vault_token_new=$(cat /root/resources/unseal.txt | grep "Initial Root Token:" | tail -n 1 | awk '{print $4}')
+vault_token_new=$(cat /vagrant/resources/unseal.txt | grep "Initial Root Token:" | tail -n 1 | awk '{print $4}')
 echo "#######################################################"
 echo "vault_token_new: ${vault_token_new}"
 echo "#######################################################"
