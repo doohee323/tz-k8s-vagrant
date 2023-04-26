@@ -57,20 +57,15 @@ helm upgrade --debug --install prometheus prometheus-community/kube-prometheus-s
     --version ${STACK_VERSION} \
     --set alertmanager.persistentVolume.storageClass="local-storage" \
     --set server.persistentVolume.storageClass="local-storage"
-
-helm upgrade --debug --reuse-values --install prometheus prometheus-community/kube-prometheus-stack \
+#--reuse-values
+helm upgrade --debug --install prometheus prometheus-community/kube-prometheus-stack \
     -n ${NS} \
     --version ${STACK_VERSION} \
     -f values.yaml_bak
 
-k patch deployment/prometheus-kube-state-metrics -p '{"spec": {"template": {"spec": {"nodeSelector": {"team": "devops"}}}}}' -n ${NS}
-k patch deployment/prometheus-kube-state-metrics -p '{"spec": {"template": {"spec": {"nodeSelector": {"environment": "monitoring"}}}}}' -n ${NS}
-k patch deployment/prometheus-kube-state-metrics -p '{"spec": {"template": {"spec": {"imagePullSecrets": [{"name": "tz-registrykey"}]}}}}' -n ${NS}
-
 helm uninstall tz-blackbox-exporter -n ${NS}
-helm upgrade --debug --install --reuse-values -n ${NS} tz-blackbox-exporter prometheus-community/prometheus-blackbox-exporter \
-  --set nodeSelector.team=devops \
-  --set nodeSelector.environment=${NS}
+#--reuse-values
+helm upgrade --debug --install -n ${NS} tz-blackbox-exporter prometheus-community/prometheus-blackbox-exporter
 
 helm repo add grafana https://grafana.github.io/helm-charts
 helm repo update
@@ -79,10 +74,7 @@ helm uninstall loki -n ${NS}
 helm upgrade --install --reuse-values loki grafana/loki-stack --version 2.9.9 \
   -n ${NS} \
   --set persistence.enabled=true,persistence.type=pvc,persistence.size=10Gi
-k patch statefulset/loki -p '{"spec": {"template": {"spec": {"nodeSelector": {"team": "devops"}}}}}' -n ${NS}
-k patch statefulset/loki -p '{"spec": {"template": {"spec": {"nodeSelector": {"environment": "monitoring"}}}}}' -n ${NS}
 k patch statefulset/loki -p '{"spec": {"template": {"spec": {"imagePullSecrets": [{"name": "tz-registrykey"}]}}}}' -n ${NS}
-
 k patch daemonset/loki-promtail -p '{"spec": {"template": {"spec": {"imagePullSecrets": [{"name": "tz-registrykey"}]}}}}' -n ${NS}
 # loki datasource: http://loki.monitoring.svc.cluster.local:3100/
 
@@ -190,16 +182,6 @@ sleep 5
 if [[ "${grafana_token_var}" != "" ]]; then
   sed -i "s/grafana_token_var/${grafana_token_var}/g" /vagrant/tz-local/resource/monitoring/backup/grafanaSettings.json_bak
 fi
-
-aws_region=$(prop 'config' 'region' ${eks_project})
-aws_access_key_id=$(prop 'credentials' 'aws_access_key_id' ${eks_project})
-aws_secret_access_key=$(prop 'credentials' 'aws_secret_access_key' ${eks_project})
-sed -i "s/aws_region/${aws_region}/g" /vagrant/tz-local/resource/monitoring/backup/grafanaSettings.json_bak
-sed -i "s/aws_access_key_id/${aws_access_key_id}/g" /vagrant/tz-local/resource/monitoring/backup/grafanaSettings.json_bak
-sed -i "s|aws_secret_access_key|${aws_secret_access_key}|g" /vagrant/tz-local/resource/monitoring/backup/grafanaSettings.json_bak
-
-cat /vagrant/tz-local/resource/monitoring/backup/grafanaSettings.json_bak
-
 
 #helm repo add fluent https://fluent.github.io/helm-charts
 #helm repo update

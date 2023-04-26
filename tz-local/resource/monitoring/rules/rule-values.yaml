@@ -1,9 +1,6 @@
 prometheus:
   prometheusSpec:
     externalUrl: https://prometheus.default.eks_project.eks_domain
-    nodeSelector:
-      environment: monitoring
-      team: devops
 #    podAntiAffinity: ""
 #    podAntiAffinityTopologyKey: kubernetes.io/hostname
 #    affinity:

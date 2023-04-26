@@ -131,18 +131,15 @@ alertmanager:
 
     externalUrl: https://alertmanager.default.eks_project.eks_domain
     replicas: 1
-    nodeSelector:
-      environment: monitoring
-      team: devops
 
 ## Using default values from https://github.com/grafana/helm-charts/blob/main/charts/grafana/values.yaml
 ##
 grafana:
   enabled: true
   adminPassword: admin_password
-  nodeSelector:
-    environment: monitoring
-    team: devops
+#  nodeSelector:
+#    environment: monitoring
+#    team: devops
   additionalDataSources:
   - name: Loki
     type: loki
@@ -168,9 +165,9 @@ prometheusOperator:
    requests:
      cpu: 100m
      memory: 100Mi
-  nodeSelector:
-    environment: monitoring
-    team: devops
+#  nodeSelector:
+#    environment: monitoring
+#    team: devops
 #  affinity:
 #    nodeAffinity:
 #     requiredDuringSchedulingIgnoredDuringExecution:
@@ -195,9 +192,9 @@ prometheus:
   enabled: true
   prometheusSpec:
     externalUrl: https://prometheus.default.eks_project.eks_domain
-    nodeSelector:
-      environment: monitoring
-      team: devops
+#    nodeSelector:
+#      environment: monitoring
+#      team: devops
 #    podAntiAffinity: ""
 #    podAntiAffinityTopologyKey: kubernetes.io/hostname
 #    affinity:
