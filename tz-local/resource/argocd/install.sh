@@ -7,7 +7,7 @@ cd /vagrant/tz-local/resource/argocd
 #set -x
 shopt -s expand_aliases
 
-k8s_project=k8s_project=hyper-k8s  #$(prop 'project' 'project')
+k8s_project=hyper-k8s  #$(prop 'project' 'project')
 k8s_domain=$(prop 'project' 'domain')
 admin_password=$(prop 'project' 'admin_password')
 github_token=$(prop 'project' 'github_token')

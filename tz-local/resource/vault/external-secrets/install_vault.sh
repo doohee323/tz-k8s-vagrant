@@ -4,9 +4,8 @@ source /root/.bashrc
 #bash /vagrant/tz-local/resource/vault/external-secrets/install.sh
 cd /vagrant/tz-local/resource/vault/external-secrets
 
-AWS_REGION=$(prop 'config' 'region')
 k8s_domain=$(prop 'project' 'domain')
-k8s_project=k8s_project=hyper-k8s  #$(prop 'project' 'project')
+k8s_project=hyper-k8s  #$(prop 'project' 'project')
 vault_token=$(prop 'project' 'vault')
 NS=external-secrets
 
@@ -19,18 +18,6 @@ helm upgrade --debug --install external-secrets \
     -n ${NS} \
     --create-namespace \
     --set installCRDs=true
-
-#aws_access_key_id=$(prop 'credentials' 'aws_access_key_id' ${k8s_project})
-#aws_secret_access_key=$(prop 'credentials' 'aws_secret_access_key' ${k8s_project})
-aws_access_key_id=$(prop 'credentials' 'aws_access_key_id')
-aws_secret_access_key=$(prop 'credentials' 'aws_secret_access_key')
-
-echo -n ${aws_access_key_id} > ./access-key
-echo -n ${aws_secret_access_key} > ./secret-access-key
-kubectl -n ${NS} delete secret awssm-secret
-kubectl -n ${NS} create secret generic awssm-secret --from-file=./access-key  --from-file=./secret-access-key
-
-rm -Rf ./access-key ./secret-access-key
 
 #export VAULT_ADDR=http://vault.default.${k8s_project}.${k8s_domain}
 #vault login ${vault_token}

@@ -7,7 +7,7 @@ cd /vagrant/tz-local/resource/docker-repo
 shopt -s expand_aliases
 alias k='kubectl'
 
-k8s_project=k8s_project=hyper-k8s  #$(prop 'project' 'project')
+k8s_project=hyper-k8s  #$(prop 'project' 'project')
 k8s_domain=$(prop 'project' 'domain')
 dockerhub_id=$(prop 'project' 'dockerhub_id')
 dockerhub_password=$(prop 'project' 'dockerhub_password')

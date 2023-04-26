@@ -10,7 +10,7 @@ k8s_project=hyper-k8s  #k8s_project=hyper-k8s  #$(prop 'project' 'project')
 k8s_domain=$(prop 'project' 'domain')
 vault_token=$(prop 'project' 'vault')
 
-export VAULT_ADDR="http://vault.default.${k8s_project}.${k8s_domain}"
+export VAULT_ADDR="http://vault2.default.${k8s_project}.${k8s_domain}"
 echo ${VAULT_ADDR}
 vault login ${vault_token}
 
@@ -32,6 +32,13 @@ userpass_accessor="$(vault auth list | awk '/^userpass/ {print $3}')"
 cp userpass.hcl userpass.hcl_bak
 sed -i "s/userpass_accessor/${userpass_accessor}/g" userpass.hcl_bak
 vault policy write tz-vault-userpass /vagrant/tz-local/resource/vault/data/userpass.hcl_bak
+
+PROJECTS=(argocd consul default devops devops-dev monitoring vault)
+for item in "${PROJECTS[@]}"; do
+  if [[ "${item}" != "NAME" ]]; then
+    kubectl create ns ${item}
+  fi
+done
 
 PROJECTS=(argocd consul default devops devops-dev monitoring vault)
 for item in "${PROJECTS[@]}"; do

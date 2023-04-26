@@ -8,7 +8,7 @@ cd /vagrant/tz-local/resource/vault/helm
 shopt -s expand_aliases
 alias k='kubectl --kubeconfig ~/.kube/config'
 
-k8s_project=k8s_project=hyper-k8s  #$(prop 'project' 'project')
+k8s_project=hyper-k8s  #$(prop 'project' 'project')
 k8s_domain=$(prop 'project' 'domain')
 vault_token=$(prop 'project' 'vault')
 NS=vault

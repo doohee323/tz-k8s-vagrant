@@ -7,7 +7,7 @@ cd /vagrant/tz-local/resource/jenkins/helm
 shopt -s expand_aliases
 alias k='kubectl --kubeconfig ~/.kube/config'
 
-k8s_project=k8s_project=hyper-k8s  #$(prop 'project' 'project')
+k8s_project=hyper-k8s  #$(prop 'project' 'project')
 k8s_domain=$(prop 'project' 'domain')
 
 helm repo add jenkins https://charts.jenkins.io
