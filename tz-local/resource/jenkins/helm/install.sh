@@ -45,6 +45,10 @@ mkdir -p /root/.docker
 kubectl -n jenkins delete configmap docker-config
 kubectl -n jenkins create configmap docker-config --from-file=/root/.docker/config.json
 
+kubectl -n jenkins delete secret aws-secret
+kubectl -n jenkins create secret generic aws-secret \
+  --from-file=/root/.aws/credentials
+
 echo "
 ##[ Jenkins ]##########################################################
 #  - URL: http://jenkins.default.${k8s_project}.${k8s_domain}

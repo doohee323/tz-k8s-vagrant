@@ -94,7 +94,7 @@ argocd repo add https://github.com/doohee323/tz-argocd-repo \
 kubectl config get-contexts
 #CURRENT   NAME                             CLUSTER         AUTHINFO           NAMESPACE
 #*         kubernetes-admin@cluster.local   cluster.local   kubernetes-admin
-argocd cluster add --yes kubernetes-admin@cluster.local
+argocd cluster add --yes eks_eks-main-t
 
 bash /vagrant/tz-local/resource/argocd/update.sh
 bash /vagrant/tz-local/resource/argocd/update.sh
@@ -212,7 +212,7 @@ kubectl get secret devops-tz-demo-app-secret -o yaml -n devops
 echo 'MTIz' | base64 -d
 kubectl rollout restart deployment devops-demo-argo-vault -n devops
 
-curl https://argo-vault.devops.k8s-main-t.topzone.iptime.org/index
+curl https://argo-vault.devops.k8s-main-t.shoptoolstest.co.kr/index
 
 exit 0
 

@@ -84,7 +84,8 @@ kubectl describe certificate nginx-test-tls -n ${NS}
 kubectl get secrets --all-namespaces | grep nginx-test-tls
 kubectl get certificates --all-namespaces | grep nginx-test-tls
 
-PROJECTS=(default devops devops-dev argocd consul vault)
+PROJECTS=(default argocd consul vault)
+#PROJECTS=(default devops devops-dev argocd consul vault)
 for item in "${PROJECTS[@]}"; do
   if [[ "${item}" != "NAME" ]]; then
     echo "====================="
