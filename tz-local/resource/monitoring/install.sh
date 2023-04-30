@@ -12,25 +12,6 @@ source /root/.bashrc
 #bash /vagrant/tz-local/resource/monitoring/install.sh
 cd /vagrant/tz-local/resource/monitoring
 
-function prop {
-  key="${2}="
-  rslt=""
-  if [[ "${3}" == "" ]]; then
-    rslt=$(grep "${key}" "/root/.aws/${1}" | head -n 1 | cut -d '=' -f2 | sed 's/ //g')
-    if [[ "${rslt}" == "" ]]; then
-      key="${2} = "
-      rslt=$(grep "${key}" "/root/.aws/${1}" | head -n 1 | cut -d '=' -f2 | sed 's/ //g')
-    fi
-  else
-    rslt=$(grep "${3}" "/root/.aws/${1}" -A 10 | grep "${key}" | head -n 1 | tail -n 1 | cut -d '=' -f2 | sed 's/ //g')
-    if [[ "${rslt}" == "" ]]; then
-      key="${2} = "
-      rslt=$(grep "${3}" "/root/.aws/${1}" -A 10 | grep "${key}" | head -n 1 | tail -n 1 | cut -d '=' -f2 | sed 's/ //g')
-    fi
-  fi
-  echo ${rslt}
-}
-
 alias k='kubectl --kubeconfig ~/.kube/config'
 
 eks_project=k8s_project=hyper-k8s  #$(prop 'project' 'project')
@@ -40,7 +21,6 @@ basic_password=$(prop 'project' 'basic_password')
 grafana_goauth2_client_id=$(prop 'project' 'grafana_goauth2_client_id')
 grafana_goauth2_client_secret=$(prop 'project' 'grafana_goauth2_client_secret')
 STACK_VERSION=44.3.0
-
 NS=monitoring
 
 #helm repo add grafana https://grafana.github.io/helm-charts

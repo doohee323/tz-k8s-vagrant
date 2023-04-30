@@ -43,7 +43,7 @@ sleep 60
 mkdir -p /root/.docker
 #echo "{\"credHelpers\":{\"$ECR_REGISTRY\":\"ecr-login\"}}" > /root/.docker/config2.json
 kubectl -n jenkins delete configmap docker-config
-kubectl -n jenkins create configmap docker-config --from-file=/root/.docker/config2.json
+kubectl -n jenkins create configmap docker-config --from-file=/root/.docker/config.json
 
 echo "
 ##[ Jenkins ]##########################################################

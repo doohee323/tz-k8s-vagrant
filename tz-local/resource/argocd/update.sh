@@ -11,7 +11,11 @@ k8s_project=hyper-k8s  #$(prop 'project' 'project')
 k8s_domain=$(prop 'project' 'domain')
 admin_password=$(prop 'project' 'admin_password')
 argocd_google_client_id=$(prop 'project' 'argocd_google_client_id')
-argocd_google_client_secret=$(prop 'project' 'argocd_google_client_secret')
+argocd_google_client_secret="'"$(prop 'project' 'argocd_google_client_secret')"'"
+
+argocd_google_client_id='195449497097-a0dvcakbsjgei3njme54unkvpj8le88d.apps.googleusercontent.com'
+argocd_google_client_secret='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'
+
 
 alias k='kubectl --kubeconfig ~/.kube/config'
 
@@ -55,7 +59,7 @@ for item in "${PROJECTS[@]}"; do
       echo "  accounts.${project}: apiKey, login" >> argocd-cm.yaml_bak
       echo "    p, role:${project}, applications, sync, ${project}/*, allow" >> argocd-rbac-cm.yaml_bak
       echo "    g, ${project}, role:${project}" >> argocd-rbac-cm.yaml_bak
-      argocd account update-password --account ${project} --current-password ${admin_password} --new-password 'imsi!323'
+      argocd account update-password --account ${project} --current-password 'T1zone!323' --new-password 'imsi!323'
     else
       argocd proj create ${project} \
         -d https://kubernetes.default.svc,${project} \
@@ -67,7 +71,7 @@ for item in "${PROJECTS[@]}"; do
       echo "  accounts.${project}-admin: apiKey, login" >> argocd-cm.yaml_bak
       echo "    p, role:${project}-admin, *, *, ${project}/*, allow" >> argocd-rbac-cm.yaml_bak
       echo "    g, ${project}-admin, role:${project}-admin" >> argocd-rbac-cm.yaml_bak
-      argocd account update-password --account ${project}-admin --current-password ${admin_password} --new-password 'imsi!323'
+      argocd account update-password --account ${project}-admin --current-password 'T1zone!323' --new-password 'imsi!323'
     fi
   fi
 done
