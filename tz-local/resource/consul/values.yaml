@@ -15,7 +15,7 @@ global:
 server:
   replicas: 1
   bootstrapExpect: 1
-  storageClass: local-path
+  storageClass: nfs-client
   storage: 1Gi
 #  securityContext:
 #    runAsNonRoot: false

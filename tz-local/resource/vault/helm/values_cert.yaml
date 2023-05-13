@@ -54,12 +54,12 @@ server:
 
   auditStorage:
     enabled: true
-    storageClass: local-path
+    storageClass: nfs-client
     size: 1Gi
 
   dataStorage:
     enabled: true
-    storageClass: local-path
+    storageClass: nfs-client
     size: 1Gi
 
   standalone:

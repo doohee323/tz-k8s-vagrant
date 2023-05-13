@@ -17,9 +17,8 @@ docker-compose -f docker-compose.yml_bak build
 docker-compose -f docker-compose.yml_bak up -d
 #docker-compose -f docker-compose.yml_bak down
 
-#export k8s_project=hyper-k8s
-#docker exec -it `docker ps | grep docker-${tz_project} | awk '{print $1}'` bash
-export k8s_project=home-k8s
+docker exec -it `docker ps | grep docker-${tz_project} | awk '{print $1}'` bash
+export k8s_project=hyper-k8s
 bash /vagrant/tz-local/docker/init2.sh
 
 exit 0

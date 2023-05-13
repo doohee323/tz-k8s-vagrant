@@ -4,6 +4,39 @@
 
 ## https://medium.com/@HoussemDellai/rbac-with-kubernetes-in-minikube-4deed658ea7b
 
+PROJECTS=(devops-dev)
+#PROJECTS=(devops devops-dev default argocd consul monitoring vault)
+for item in "${PROJECTS[@]}"; do
+  if [[ "${item}" != "NAME" ]]; then
+    kubectl create ns ${item}
+
+    staging="dev"
+    if [[ "${item/*-dev/}" != "" ]]; then
+      staging="prod"
+    fi
+cat <<EOF > sa.yaml
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: ${item}-svcaccount
+  namespace: ${item}
+EOF
+    kubectl -n ${item} apply -f sa.yaml
+
+    if [ "${staging}" == "prod" ]; then
+cat <<EOF > sa.yaml
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: ${item}-stg-svcaccount
+  namespace: ${item}
+EOF
+      kubectl -n ${item} apply -f sa.yaml
+    fi
+  fi
+done
+rm -Rf sa.yaml
+
 echo "1. Create a client certificate"
 mkdir cert && cd cert
 # Generate a key 

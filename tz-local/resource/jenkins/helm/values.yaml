@@ -858,10 +858,10 @@ persistence:
   ## If defined, storageClassName: <storageClass>
   ## If set to "-", storageClassName: "", which disables dynamic provisioning
   ## If undefined (the default) or set to null, no storageClassName spec is
-  ##   set, choosing the default provisioner.  (local-path on AWS, standard on
+  ##   set, choosing the default provisioner.  (nfs-client on AWS, standard on
   ##   GKE, AWS & OpenStack)
   ##
-  storageClass: local-path
+  storageClass: nfs-client
   annotations: {}
   labels: {}
   accessMode: "ReadWriteOnce"

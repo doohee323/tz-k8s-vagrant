@@ -4,11 +4,12 @@ source /root/.bashrc
 #bash /vagrant/tz-local/resource/vault/vault-injection/install.sh
 cd /vagrant/tz-local/resource/vault/vault-injection
 
-k8s_project=hyper-k8s  #$(prop 'project' 'project')
+k8s_project=$(prop 'project' 'project')
 k8s_domain=$(prop 'project' 'domain')
 VAULT_TOKEN=$(prop 'project' 'vault')
 
 export VAULT_ADDR="http://vault.default.${k8s_project}.${k8s_domain}"
+#export VAULT_ADDR="https://vault.default.hyper-k8s.shoptoolstest.co.kr:14444"
 vault login ${VAULT_TOKEN}
 
 curl -s ${VAULT_ADDR}/v1/sys/seal-status | jq
