@@ -8,7 +8,7 @@ cd /vagrant/tz-local/resource/vault/helm
 shopt -s expand_aliases
 alias k='kubectl --kubeconfig ~/.kube/config'
 
-k8s_project=hyper-k8s  #$(prop 'project' 'project')
+k8s_project=$(prop 'project' 'project')
 k8s_domain=$(prop 'project' 'domain')
 vault_token=$(prop 'project' 'vault')
 NS=vault
@@ -21,15 +21,28 @@ helm uninstall vault -n vault
 k delete namespace vault
 k create namespace vault
 
+#kubectl -n vault delete secret generic eks-creds
+#kubectl -n vault create secret generic eks-creds \
+#    --from-literal=AWS_ACCESS_KEY_ID="${aws_access_key_id}" \
+#    --from-literal=AWS_SECRET_ACCESS_KEY="${aws_secret_access_key}"
+
 bash /vagrant/tz-local/resource/vault/vault-injection/cert.sh vault
 
 cp -Rf values_cert.yaml values_cert.yaml_bak
 sed -i "s/k8s_project/${k8s_project}/g" values_cert.yaml_bak
-helm upgrade --debug --install --reuse-values vault hashicorp/vault -n vault -f values_cert.yaml_bak
+helm upgrade --debug --install --reuse-values vault hashicorp/vault -n vault -f values_cert.yaml_bak --version 0.19.0
 #kubectl rollout restart statefulset.apps/vault -n vault
 
 sleep 30
 k get all -n vault
+
+cp -Rf values_config.yaml values_config.yaml_bak
+sed -i "s/k8s_project/${k8s_project}/g" values_config.yaml_bak
+sed -i "s/k8s_domain/${k8s_domain}/g" values_config.yaml_bak
+k apply -f values_config.yaml_bak -n vault
+
+sleep 30
+# to NodePort
 
 #k patch svc vault-standby --type='json' -p '[{"op":"replace","path":"/spec/type","value":"NodePort"},{"op":"replace","path":"/spec/ports/0/nodePort","value":31700}]' -n vault
 cp -Rf ingress-vault.yaml ingress-vault.yaml_bak
@@ -46,7 +59,7 @@ sleep 60
 # vault operator init
 # vault operator init -key-shares=3 -key-threshold=2
 #export VAULT_ADDR='http://127.0.0.1:8200'
-export VAULT_ADDR="http://vault2.default.${k8s_project}.${k8s_domain}"
+export VAULT_ADDR="http://vault.default.${k8s_project}.${k8s_domain}"
 echo $VAULT_ADDR
 
 mkdir -p /vagrant/resources

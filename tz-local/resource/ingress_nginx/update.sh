@@ -9,7 +9,7 @@ if [[ "${NS}" == "" ]]; then
 fi
 k8s_project=$2
 if [[ "${k8s_project}" == "" ]]; then
-  k8s_project=hyper-k8s  #$(prop 'project' 'project')
+  k8s_project=$(prop 'project' 'project')
 fi
 k8s_domain=$3
 if [[ "${k8s_domain}" == "" ]]; then

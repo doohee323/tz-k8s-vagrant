@@ -9,7 +9,7 @@ if [[ "${NS}" == "" ]]; then
 fi
 k8s_project=$2
 if [[ "${k8s_project}" == "" ]]; then
-  k8s_project=hyper-k8s  #$(prop 'project' 'project')
+  k8s_project=$(prop 'project' 'project')
 fi
 k8s_domain=$3
 if [[ "${k8s_domain}" == "" ]]; then
@@ -33,25 +33,19 @@ sleep 30
 curl -v http://test.${NS}.${k8s_project}.${k8s_domain}
 #k delete -f nginx-ingress.yaml_bak
 
-##### https ####
-#helm repo add jetstack https://charts.jetstack.io
-#helm repo update
-#
-### Install using helm v3+
-#helm uninstall cert-manager -n cert-manager
-#k delete -f https://github.com/jetstack/cert-manager/releases/download/v1.6.1/cert-manager.crds.yaml
-#kubectl get customresourcedefinition | grep cert-manager | awk '{print $1}' | xargs -I {} kubectl delete customresourcedefinition {}
-#k delete namespace cert-manager
-#k create namespace cert-manager
-## Install needed CRDs
-#k apply --validate=false -f https://github.com/cert-manager/cert-manager/releases/download/v1.10.0/cert-manager.crds.yaml
-## --reuse-values
-#helm upgrade --debug --install --reuse-values \
-#  cert-manager jetstack/cert-manager \
-#  --namespace cert-manager \
-#  --create-namespace \
-#  --set installCRDs=false \
-#  --version v1.10.0
+#### https ####
+helm repo add jetstack https://charts.jetstack.io
+helm repo update
+
+## Install using helm v3+
+helm uninstall cert-manager -n cert-manager
+k delete -f https://github.com/jetstack/cert-manager/releases/download/v1.6.1/cert-manager.crds.yaml
+kubectl get customresourcedefinition | grep cert-manager | awk '{print $1}' | xargs -I {} kubectl delete customresourcedefinition {}
+k delete namespace cert-manager
+k create namespace cert-manager
+# Install needed CRDs
+k apply --validate=false -f https://github.com/cert-manager/cert-manager/releases/download/v1.10.0/cert-manager.crds.yaml
+helm template cert-manager jetstack/cert-manager --namespace cert-manager | kubectl apply -f -
 
 sleep 30
 
@@ -68,8 +62,8 @@ cp -Rf nginx-ingress-https.yaml nginx-ingress-https.yaml_bak
 sed -i "s/NS/${NS}/g" nginx-ingress-https.yaml_bak
 sed -i "s/k8s_project/${k8s_project}/g" nginx-ingress-https.yaml_bak
 sed -i "s/k8s_domain/${k8s_domain}/g" nginx-ingress-https.yaml_bak
-k delete -f nginx-ingress-https.yaml_bak -n ${NS}
-k delete ingress nginx-test-tls -n ${NS}
+#k delete -f nginx-ingress-https.yaml_bak -n ${NS}
+#k delete ingress nginx-test-tls -n ${NS}
 k apply -f nginx-ingress-https.yaml_bak -n ${NS}
 kubectl get csr -o name | xargs kubectl certificate approve
 echo curl http://test.${NS}.${k8s_project}.${k8s_domain}
