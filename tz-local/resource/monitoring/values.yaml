@@ -150,7 +150,7 @@ grafana:
   persistence:
     enabled: true
     type: pvc
-    storageClassName: gp2
+    storageClassName: nfs-client
     accessModes:
     - ReadWriteOnce
     size: 5Gi
@@ -172,9 +172,9 @@ prometheusOperator:
     enabled: false
   admissionWebhooks:
     enabled: false
-  nodeSelector:
-    environment: monitoring
-    team: devops
+#  nodeSelector:
+#    environment: monitoring
+#    team: devops
 #  affinity:
 #    nodeAffinity:
 #     requiredDuringSchedulingIgnoredDuringExecution:

@@ -39,10 +39,10 @@ k create ns ${NS}
 #kubectl -n ${NS} delete -f https://raw.githubusercontent.com/prometheus-operator/prometheus-operator/v0.45.0/example/prometheus-operator-crd/monitoring.coreos.com_thanosrulers.yaml
 
 cp -Rf values.yaml values.yaml_bak
-sed -i "s/admin_password/${admin_password}/g" values.yaml_bak
-sed -i "s/eks_project/${eks_project}/g" values.yaml_bak
-sed -i "s/eks_domain/${eks_domain}/g" values.yaml_bak
-sed -i "s/smtp_password/${smtp_password}/g" values.yaml_bak
+sed -ie "s/admin_password/${admin_password}/g" values.yaml_bak
+sed -ie "s/eks_project/${eks_project}/g" values.yaml_bak
+sed -ie "s/eks_domain/${eks_domain}/g" values.yaml_bak
+sed -ie "s/smtp_password/${smtp_password}/g" values.yaml_bak
 helm repo add prometheus-community https://prometheus-community.github.io/helm-charts
 #helm repo add kube-state-metrics https://kubernetes.github.io/kube-state-metrics
 #helm repo add grafana https://grafana.github.io/helm-charts
@@ -55,8 +55,8 @@ helm repo update
 helm upgrade --debug --install prometheus prometheus-community/kube-prometheus-stack \
     -n ${NS} \
     --version ${STACK_VERSION} \
-    --set alertmanager.persistentVolume.storageClass="gp2" \
-    --set server.persistentVolume.storageClass="gp2"
+    --set alertmanager.persistentVolume.storageClass="nfs-client" \
+    --set server.persistentVolume.storageClass="nfs-client"
 
 helm upgrade --debug --reuse-values --install prometheus prometheus-community/kube-prometheus-stack \
     -n ${NS} \
@@ -64,14 +64,10 @@ helm upgrade --debug --reuse-values --install prometheus prometheus-community/ku
     -f values.yaml_bak \
     --set alertmanager.baseURL=https://alertmanager.default.${eks_project}.${eks_domain}
 
-k patch deployment/prometheus-kube-state-metrics -p '{"spec": {"template": {"spec": {"nodeSelector": {"team": "devops"}}}}}' -n ${NS}
-k patch deployment/prometheus-kube-state-metrics -p '{"spec": {"template": {"spec": {"nodeSelector": {"environment": "monitoring"}}}}}' -n ${NS}
 k patch deployment/prometheus-kube-state-metrics -p '{"spec": {"template": {"spec": {"imagePullSecrets": [{"name": "tz-registrykey"}]}}}}' -n ${NS}
 
 helm uninstall tz-blackbox-exporter -n ${NS}
-helm upgrade --debug --install --reuse-values -n ${NS} tz-blackbox-exporter prometheus-community/prometheus-blackbox-exporter \
-  --set nodeSelector.team=devops \
-  --set nodeSelector.environment=${NS}
+helm upgrade --debug --install --reuse-values -n ${NS} tz-blackbox-exporter prometheus-community/prometheus-blackbox-exporter
 
 helm repo add grafana https://grafana.github.io/helm-charts
 helm repo update
@@ -80,20 +76,18 @@ helm uninstall loki -n ${NS}
 helm upgrade --install --reuse-values loki grafana/loki-stack --version 2.9.9 \
   -n ${NS} \
   --set persistence.enabled=true,persistence.type=pvc,persistence.size=10Gi
-k patch statefulset/loki -p '{"spec": {"template": {"spec": {"nodeSelector": {"team": "devops"}}}}}' -n ${NS}
-k patch statefulset/loki -p '{"spec": {"template": {"spec": {"nodeSelector": {"environment": "monitoring"}}}}}' -n ${NS}
 k patch statefulset/loki -p '{"spec": {"template": {"spec": {"imagePullSecrets": [{"name": "tz-registrykey"}]}}}}' -n ${NS}
 
 k patch daemonset/loki-promtail -p '{"spec": {"template": {"spec": {"imagePullSecrets": [{"name": "tz-registrykey"}]}}}}' -n ${NS}
 # loki datasource: http://loki.monitoring.svc.cluster.local:3100/
 
 cp -Rf configmap.yaml configmap.yaml_bak
-sed -i "s/admin_password/${admin_password}/g" configmap.yaml_bak
-sed -i "s/eks_domain/${eks_domain}/g" configmap.yaml_bak
-sed -i "s/eks_project/${eks_project}/g" configmap.yaml_bak
-sed -i "s/grafana_goauth2_client_id/${grafana_goauth2_client_id}/g" configmap.yaml_bak
-sed -i "s/grafana_goauth2_client_secret/${grafana_goauth2_client_secret}/g" configmap.yaml_bak
-sed -i "s/smtp_password/${smtp_password}/g" configmap.yaml_bak
+sed -ie "s/admin_password/${admin_password}/g" configmap.yaml_bak
+sed -ie "s/eks_domain/${eks_domain}/g" configmap.yaml_bak
+sed -ie "s/eks_project/${eks_project}/g" configmap.yaml_bak
+sed -ie "s/grafana_goauth2_client_id/${grafana_goauth2_client_id}/g" configmap.yaml_bak
+sed -ie "s/grafana_goauth2_client_secret/${grafana_goauth2_client_secret}/g" configmap.yaml_bak
+sed -ie "s/smtp_password/${smtp_password}/g" configmap.yaml_bak
 k -n ${NS} apply -f configmap.yaml_bak
 #curl -X POST http://prometheus.default.${eks_project}.${eks_domain}/-/reload
 
@@ -112,8 +106,8 @@ k -n ${NS} apply -f configmap.yaml_bak
 #k create secret generic basic-auth-grafana --from-file=auth -n ${NS}
 #k get secret basic-auth-grafana -o yaml -n ${NS}
 cp -Rf grafana-ingress.yaml grafana-ingress.yaml_bak
-sed -i "s/eks_project/${eks_project}/g" grafana-ingress.yaml_bak
-sed -i "s/eks_domain/${eks_domain}/g" grafana-ingress.yaml_bak
+sed -ie "s/eks_project/${eks_project}/g" grafana-ingress.yaml_bak
+sed -ie "s/eks_domain/${eks_domain}/g" grafana-ingress.yaml_bak
 k delete -f grafana-ingress.yaml_bak -n ${NS}
 k apply -f grafana-ingress.yaml_bak -n ${NS}
 
@@ -123,14 +117,14 @@ kubectl rollout restart deployment/prometheus-kube-state-metrics -n ${NS}
 kubectl rollout restart statefulset.apps/loki -n ${NS}
 
 cp alertmanager-values.yaml alertmanager-values.yaml_bak
-sed -i "s/eks_project/${eks_project}/g" alertmanager-values.yaml_bak
-sed -i "s/eks_domain/${eks_domain}/g" alertmanager-values.yaml_bak
-sed -i "s/admin_password/${admin_password}/g" alertmanager-values.yaml_bak
-sed -i "s/smtp_password/${smtp_password}/g" alertmanager-values.yaml_bak
+sed -ie "s/eks_project/${eks_project}/g" alertmanager-values.yaml_bak
+sed -ie "s/eks_domain/${eks_domain}/g" alertmanager-values.yaml_bak
+sed -ie "s/admin_password/${admin_password}/g" alertmanager-values.yaml_bak
+sed -ie "s/smtp_password/${smtp_password}/g" alertmanager-values.yaml_bak
 
-alertmanager=$(cat alertmanager-values.yaml_bak | base64 -w0)
+alertmanager=$(base64 -i alertmanager-values.yaml_bak)
 cp alertmanager-secret-k8s.yaml alertmanager-secret-k8s.yaml_bak
-sed -i "s|ALERTMANAGER_ENCODE|${alertmanager}|g" alertmanager-secret-k8s.yaml_bak
+sed -ie "s|ALERTMANAGER_ENCODE|${alertmanager}|g" alertmanager-secret-k8s.yaml_bak
 kubectl -n ${NS} apply -f alertmanager-secret-k8s.yaml_bak
 kubectl rollout restart statefulset.apps/alertmanager-prometheus-kube-prometheus-alertmanager -n ${NS}
 
@@ -148,8 +142,8 @@ k get pv | grep prometheus
 #k create secret generic basic-auth-prometheus --from-file=auth -n ${NS}
 #k get secret basic-auth-prometheus -o yaml -n ${NS}
 cp -Rf prometheus-ingress.yaml prometheus-ingress.yaml_bak
-sed -i "s/eks_project/${eks_project}/g" prometheus-ingress.yaml_bak
-sed -i "s/eks_domain/${eks_domain}/g" prometheus-ingress.yaml_bak
+sed -ie "s/eks_project/${eks_project}/g" prometheus-ingress.yaml_bak
+sed -ie "s/eks_domain/${eks_domain}/g" prometheus-ingress.yaml_bak
 k delete -f prometheus-ingress.yaml_bak -n ${NS}
 k apply -f prometheus-ingress.yaml_bak -n ${NS}
 
@@ -158,8 +152,8 @@ k apply -f prometheus-ingress.yaml_bak -n ${NS}
 #k create secret generic basic-auth-alertmanager --from-file=auth -n ${NS}
 #k get secret basic-auth-alertmanager -o yaml -n ${NS}
 cp -Rf alertmanager-ingress.yaml alertmanager-ingress.yaml_bak
-sed -i "s/eks_project/${eks_project}/g" alertmanager-ingress.yaml_bak
-sed -i "s/eks_domain/${eks_domain}/g" alertmanager-ingress.yaml_bak
+sed -ie "s/eks_project/${eks_project}/g" alertmanager-ingress.yaml_bak
+sed -ie "s/eks_domain/${eks_domain}/g" alertmanager-ingress.yaml_bak
 k delete -f alertmanager-ingress.yaml_bak -n ${NS}
 k apply -f alertmanager-ingress.yaml_bak -n ${NS}
 
@@ -183,16 +177,16 @@ kubectl exec -it ${grafana_pod} -n ${NS} \
 kubectl patch statefulset/alertmanager-prometheus-kube-prometheus-alertmanager -p '{"spec": {"template": {"spec": {"imagePullSecrets": [{"name": "tz-registrykey"}]}}}}' -n ${NS}
 
 cp -Rf /vagrant/tz-local/resource/monitoring/backup/grafanaSettings.json /vagrant/tz-local/resource/monitoring/backup/grafanaSettings.json_bak
-sed -i "s/eks_project/${eks_project}/g" /vagrant/tz-local/resource/monitoring/backup/grafanaSettings.json_bak
-sed -i "s/eks_domain/${eks_domain}/g" /vagrant/tz-local/resource/monitoring/backup/grafanaSettings.json_bak
-sed -i "s/admin_password_var/${admin_password}/g" /vagrant/tz-local/resource/monitoring/backup/grafanaSettings.json_bak
-sed -i "s/s3_bucket_name_var/devops-grafana-${eks_project}/g" /vagrant/tz-local/resource/monitoring/backup/grafanaSettings.json_bak
+sed -ie "s/eks_project/${eks_project}/g" /vagrant/tz-local/resource/monitoring/backup/grafanaSettings.json_bak
+sed -ie "s/eks_domain/${eks_domain}/g" /vagrant/tz-local/resource/monitoring/backup/grafanaSettings.json_bak
+sed -ie "s/admin_password_var/${admin_password}/g" /vagrant/tz-local/resource/monitoring/backup/grafanaSettings.json_bak
+sed -ie "s/s3_bucket_name_var/devops-grafana-${eks_project}/g" /vagrant/tz-local/resource/monitoring/backup/grafanaSettings.json_bak
 
 grafana_token_var=$(curl -X POST -H "Content-Type: application/json" -d '{"name":"admin-key", "role": "Admin"}' "http://admin:${admin_password}@grafana.default.${eks_project}.${eks_domain}/api/auth/keys" | jq -r '.key')
 echo ${grafana_token_var}
 sleep 5
 if [[ "${grafana_token_var}" != "" ]]; then
-  sed -i "s/grafana_token_var/${grafana_token_var}/g" /vagrant/tz-local/resource/monitoring/backup/grafanaSettings.json_bak
+  sed -ie "s/grafana_token_var/${grafana_token_var}/g" /vagrant/tz-local/resource/monitoring/backup/grafanaSettings.json_bak
 fi
 
 #helm repo add fluent https://fluent.github.io/helm-charts
@@ -205,7 +199,7 @@ fi
 PROJECTS=(KubeSchedulerDown KubeletTooManyPods TargetDown Watchdog InfoInhibitor KubePodNotReady AlertmanagerClusterFailedToSendAlerts AlertmanagerFailedToSendAlerts KubeDaemonSetRolloutStuck)
 for item in "${PROJECTS[@]}"; do
   if [[ "${item}" != "NAME" ]]; then
-curl https://alertmanager.default.eks-main-t.shoptoolstest.co.kr/api/v1/silences -d '{
+curl -k https://alertmanager.default.hyper-k8s.shoptoolstest.co.kr:14444/api/v1/silences -d '{
       "matchers": [
         {
           "name": "alertname",
