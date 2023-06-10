@@ -32,14 +32,15 @@ data:
     viewers_can_edit = true
     [auth.google]
     enabled: true
+    auto_login = false
     client_id = grafana_goauth2_client_id
     client_secret = grafana_goauth2_client_secret
     scopes = https://www.googleapis.com/auth/userinfo.profile https://www.googleapis.com/auth/userinfo.email
     auth_url = https://accounts.google.com/o/oauth2/auth
     token_url = https://oauth2.googleapis.com/token
-    allowed_domains = sl.gg
+    allowed_domains = shoptoolstest.co.kr
     allow_sigh_up = true
-    hosted_domain = sl.gg    
+    hosted_domain = shoptoolstest.co.kr
 
 ---
 

@@ -6,15 +6,15 @@
 #https://grafana.com/docs/grafana/latest/datasources/cloudwatch/
 #https://prometheus.io/docs/instrumenting/exporters/#http
 
-#set -x
-shopt -s expand_aliases
 source /root/.bashrc
 #bash /vagrant/tz-local/resource/monitoring/install.sh
 cd /vagrant/tz-local/resource/monitoring
 
+#set -x
+shopt -s expand_aliases
 alias k='kubectl --kubeconfig ~/.kube/config'
 
-eks_project=k8s_project=hyper-k8s  #$(prop 'project' 'project')
+eks_project=$(prop 'project' 'project')
 eks_domain=$(prop 'project' 'domain')
 admin_password=$(prop 'project' 'admin_password')
 basic_password=$(prop 'project' 'basic_password')
@@ -42,6 +42,7 @@ cp -Rf values.yaml values.yaml_bak
 sed -i "s/admin_password/${admin_password}/g" values.yaml_bak
 sed -i "s/eks_project/${eks_project}/g" values.yaml_bak
 sed -i "s/eks_domain/${eks_domain}/g" values.yaml_bak
+sed -i "s/smtp_password/${smtp_password}/g" values.yaml_bak
 helm repo add prometheus-community https://prometheus-community.github.io/helm-charts
 #helm repo add kube-state-metrics https://kubernetes.github.io/kube-state-metrics
 #helm repo add grafana https://grafana.github.io/helm-charts
@@ -54,18 +55,23 @@ helm repo update
 helm upgrade --debug --install prometheus prometheus-community/kube-prometheus-stack \
     -n ${NS} \
     --version ${STACK_VERSION} \
-    --set alertmanager.persistentVolume.storageClass="nfs-client" \
-    --set server.persistentVolume.storageClass="nfs-client"
-#--reuse-values
-#helm show values prometheus-community/kube-prometheus-stack > values2.yaml
+    --set alertmanager.persistentVolume.storageClass="gp2" \
+    --set server.persistentVolume.storageClass="gp2"
+
 helm upgrade --debug --reuse-values --install prometheus prometheus-community/kube-prometheus-stack \
     -n ${NS} \
     --version ${STACK_VERSION} \
-    -f values.yaml_bak
+    -f values.yaml_bak \
+    --set alertmanager.baseURL=https://alertmanager.default.${eks_project}.${eks_domain}
+
+k patch deployment/prometheus-kube-state-metrics -p '{"spec": {"template": {"spec": {"nodeSelector": {"team": "devops"}}}}}' -n ${NS}
+k patch deployment/prometheus-kube-state-metrics -p '{"spec": {"template": {"spec": {"nodeSelector": {"environment": "monitoring"}}}}}' -n ${NS}
+k patch deployment/prometheus-kube-state-metrics -p '{"spec": {"template": {"spec": {"imagePullSecrets": [{"name": "tz-registrykey"}]}}}}' -n ${NS}
 
 helm uninstall tz-blackbox-exporter -n ${NS}
-#--reuse-values
-helm upgrade --debug --install -n ${NS} tz-blackbox-exporter prometheus-community/prometheus-blackbox-exporter
+helm upgrade --debug --install --reuse-values -n ${NS} tz-blackbox-exporter prometheus-community/prometheus-blackbox-exporter \
+  --set nodeSelector.team=devops \
+  --set nodeSelector.environment=${NS}
 
 helm repo add grafana https://grafana.github.io/helm-charts
 helm repo update
@@ -74,16 +80,20 @@ helm uninstall loki -n ${NS}
 helm upgrade --install --reuse-values loki grafana/loki-stack --version 2.9.9 \
   -n ${NS} \
   --set persistence.enabled=true,persistence.type=pvc,persistence.size=10Gi
+k patch statefulset/loki -p '{"spec": {"template": {"spec": {"nodeSelector": {"team": "devops"}}}}}' -n ${NS}
+k patch statefulset/loki -p '{"spec": {"template": {"spec": {"nodeSelector": {"environment": "monitoring"}}}}}' -n ${NS}
 k patch statefulset/loki -p '{"spec": {"template": {"spec": {"imagePullSecrets": [{"name": "tz-registrykey"}]}}}}' -n ${NS}
+
 k patch daemonset/loki-promtail -p '{"spec": {"template": {"spec": {"imagePullSecrets": [{"name": "tz-registrykey"}]}}}}' -n ${NS}
 # loki datasource: http://loki.monitoring.svc.cluster.local:3100/
 
 cp -Rf configmap.yaml configmap.yaml_bak
-sed -i "s/admin_password/${admin_password_d}/g" configmap.yaml_bak
+sed -i "s/admin_password/${admin_password}/g" configmap.yaml_bak
 sed -i "s/eks_domain/${eks_domain}/g" configmap.yaml_bak
 sed -i "s/eks_project/${eks_project}/g" configmap.yaml_bak
 sed -i "s/grafana_goauth2_client_id/${grafana_goauth2_client_id}/g" configmap.yaml_bak
 sed -i "s/grafana_goauth2_client_secret/${grafana_goauth2_client_secret}/g" configmap.yaml_bak
+sed -i "s/smtp_password/${smtp_password}/g" configmap.yaml_bak
 k -n ${NS} apply -f configmap.yaml_bak
 #curl -X POST http://prometheus.default.${eks_project}.${eks_domain}/-/reload
 
@@ -116,6 +126,8 @@ cp alertmanager-values.yaml alertmanager-values.yaml_bak
 sed -i "s/eks_project/${eks_project}/g" alertmanager-values.yaml_bak
 sed -i "s/eks_domain/${eks_domain}/g" alertmanager-values.yaml_bak
 sed -i "s/admin_password/${admin_password}/g" alertmanager-values.yaml_bak
+sed -i "s/smtp_password/${smtp_password}/g" alertmanager-values.yaml_bak
+
 alertmanager=$(cat alertmanager-values.yaml_bak | base64 -w0)
 cp alertmanager-secret-k8s.yaml alertmanager-secret-k8s.yaml_bak
 sed -i "s|ALERTMANAGER_ENCODE|${alertmanager}|g" alertmanager-secret-k8s.yaml_bak
@@ -190,7 +202,26 @@ fi
 #
 #fluentd_vaules.yaml
 
-
+PROJECTS=(KubeSchedulerDown KubeletTooManyPods TargetDown Watchdog InfoInhibitor KubePodNotReady AlertmanagerClusterFailedToSendAlerts AlertmanagerFailedToSendAlerts KubeDaemonSetRolloutStuck)
+for item in "${PROJECTS[@]}"; do
+  if [[ "${item}" != "NAME" ]]; then
+curl https://alertmanager.default.eks-main-t.shoptoolstest.co.kr/api/v1/silences -d '{
+      "matchers": [
+        {
+          "name": "alertname",
+          "value": "'${item}'"
+        }
+      ],
+      "startsAt": "2023-05-05T22:12:33.533330795Z",
+      "endsAt": "2053-10-25T23:11:44.603Z",
+      "createdBy": "api",
+      "comment": "Silence",
+      "status": {
+        "state": "active"
+      }
+}'
+  fi
+done
 
 exit 0
 
@@ -209,7 +240,11 @@ k8s-storage-volumes-cluster: 11454
 k8s: 13770
 loki app/log: 13639
 
-#custom prometheus alert
+
+################################################################################
+# custom prometheus alert
+# https://lapee79.github.io/article/monitoring-http-using-blackbox-exporter/
+################################################################################
 #kubectl -n monitoring get prometheusrules prometheus-kube-prometheus-alertmanager.rules -o yaml > prometheus-kube-prometheus-alertmanager.rules.yaml
 kubectl -n monitoring apply -f prometheus-kube-prometheus-alertmanager.rules.yaml
 
@@ -226,4 +261,9 @@ prometheus-kube-prometheus-prometheus
 binding
 prometheus-kube-prometheus-prometheus
 
+
+https://alertmanager.default.eks-main-t.shoptoolstest.co.kr/#/alerts
+
+#          "value": "Watchdog",
+#          "isRegex": true
 

@@ -2,7 +2,7 @@ defaultRules:
   create: true
   rules:
     alertmanager: true
-    etcd: true
+    etcd: false
     configReloaders: true
     general: true
     k8s: true
@@ -10,7 +10,7 @@ defaultRules:
     kubeApiserverBurnrate: true
     kubeApiserverHistogram: true
     kubeApiserverSlos: true
-    kubeControllerManager: true
+    kubeControllerManager: false
     kubelet: true
     kubeProxy: true
     kubePrometheusGeneral: true
@@ -80,7 +80,7 @@ alertmanager:
     - name: devops-admin
       slack_configs:
       - send_resolved: true
-        channel: eks-alert
+        channel: devops-alert
         title: |-
           {{ range .Alerts }}{{ .Annotations.summary }}
           {{ end }}
@@ -91,18 +91,18 @@ alertmanager:
 #    - name: devops-dev
 #      slack_configs:
 #      - send_resolved: true
-#        channel: eks-alert
+#        channel: devops-alert
 #        title: |-
 #          {{ range .Alerts }}{{ .Annotations.summary }}
 #          {{ end }}
 #        text: '{{ template "slack.default.text" . }}'
 #      email_configs:
 #      - send_resolved: true
-#        to: doohee.hong@sl.kr
+#        to: doohee.hong@tz.kr
 #    - name: devops-prod
 #      slack_configs:
 #      - send_resolved: true
-#        channel: eks-alert
+#        channel: devops-alert
 #        title: |-
 #          {{ range .Alerts }}{{ .Annotations.summary }}
 #          {{ end }}
@@ -130,6 +130,9 @@ alertmanager:
       tag: v0.25.0
 
     externalUrl: https://alertmanager.default.eks_project.eks_domain
+    extraArgs:
+      web.external-url: https://alertmanager.default.eks_project.eks_domain
+      web.route-prefix: "/"
     replicas: 1
 
 ## Using default values from https://github.com/grafana/helm-charts/blob/main/charts/grafana/values.yaml
@@ -147,7 +150,7 @@ grafana:
   persistence:
     enabled: true
     type: pvc
-    storageClassName: nfs-client
+    storageClassName: gp2
     accessModes:
     - ReadWriteOnce
     size: 5Gi
@@ -165,9 +168,13 @@ prometheusOperator:
    requests:
      cpu: 100m
      memory: 100Mi
-#  nodeSelector:
-#    environment: monitoring
-#    team: devops
+  tls:
+    enabled: false
+  admissionWebhooks:
+    enabled: false
+  nodeSelector:
+    environment: monitoring
+    team: devops
 #  affinity:
 #    nodeAffinity:
 #     requiredDuringSchedulingIgnoredDuringExecution:
@@ -221,11 +228,32 @@ prometheus:
     serviceMonitorNamespaceSelector: {}
 
     additionalScrapeConfigs:
-      - job_name: 'tz-kubernetes-pod-job'
-        scrape_interval: 15s
-        kubernetes_sd_configs:
-        - role: pod
-#        relabel_configs:
+      - job_name: 'tz-blackbox-exporter'
+        metrics_path: /probe
+        params:
+          module: [http_2xx]
+        static_configs:
+          - targets:
+            - https://jenkins.default.eks-main-t.shoptoolstest.co.kr
+            - https://argocd.default.eks-main-t.shoptoolstest.co.kr
+            - https://grafana.default.eks-main-t.shoptoolstest.co.kr
+            - https://prometheus.default.eks-main-t.shoptoolstest.co.kr
+            - https://alertmanager.default.eks-main-t.shoptoolstest.co.kr
+            - https://vault.default.eks-main-t.shoptoolstest.co.kr
+            - https://consul.default.eks-main-t.shoptoolstest.co.kr
+            - https://devops-demo.devops-dev.eks-main-t.shoptoolstest.co.kr
+        relabel_configs:
+          - source_labels: [__address__]
+            target_label: __param_target
+          - source_labels: [__param_target]
+            target_label: instance
+          - target_label: __address__
+            replacement: tz-blackbox-exporter-prometheus-blackbox-exporter:9115
+
+#      - job_name: 'tz-kubernetes-pod-job'
+#        scrape_interval: 15s
+#        kubernetes_sd_configs:
+#        - role: pod
 #        # only scrape when annotation prometheus.io/scrape: 'true' is set
 #        - source_labels: [__meta_kubernetes_pod_annotation_prometheus_io_scrape]
 #          action: keep
@@ -283,33 +311,13 @@ prometheus:
 #      - job_name: 'jenkins'
 #        metrics_path: /prometheus/
 #        static_configs:
-#          - targets: ['jenkins.slcorp.com:80']
+#          - targets: ['jenkins.shoptoolstest.co.kr:80']
 #        scheme: http
 #        tls_config:
 #          insecure_skip_verify: true
 #        basic_auth:
 #          username: 'devops'
 #          password: 'admin_password'
-#      - job_name: 'tz-blackbox-exporter'
-#        metrics_path: /probe
-#        params:
-#          module: [http_2xx]
-#        static_configs:
-#          - targets:
-#            - http://jenkins.slcorp.com/login
-#            - https://argocd.slcorp.com
-#            - https://grafana.slcorp.com
-#            - https://prometheus.slcorp.com
-#            - https://alertmanager.default.eks_project.slcorp.com
-#            - https://vault.slcorp.com
-#            - https://consul.slcorp.com
-#        relabel_configs:
-#          - source_labels: [__address__]
-#            target_label: __param_target
-#          - source_labels: [__param_target]
-#            target_label: instance
-#          - target_label: __address__
-#            replacement: tz-blackbox-exporter-prometheus-blackbox-exporter:9115
 #      - job_name: 'prometheus'
 #        metrics_path: /metrics
 #        static_configs:

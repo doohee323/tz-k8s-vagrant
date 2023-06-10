@@ -97,7 +97,7 @@ metadata:
     kubernetes.io/ingress.class: nginx
 spec:
   rules:
-    - host: prom.devops-dev.eks-main-t.slcorp.com
+    - host: prom.devops-dev.eks-main-t.shoptoolstest.co.kr
       http:
         paths:
           - path: /

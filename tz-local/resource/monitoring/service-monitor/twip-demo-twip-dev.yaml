@@ -35,7 +35,7 @@ spec:
       annotations:
         description: |
           `{{ $labels.namespace }}/twip-demo` 서비스가 다운되었습니다!!!!!
-        runbook_url: https://prometheus.default.eks-main-t.slcorp.com/alerts?search=twip-demo
+        runbook_url: https://prometheus.default.eks-main-t.shoptoolstest.co.kr/alerts?search=twip-demo
         summary: twip-demo 서비스 다운
       labels:
         severity: critical
@@ -102,7 +102,7 @@ metadata:
     kubernetes.io/ingress.class: nginx
 spec:
   rules:
-    - host: prom.twip-dev.eks-main-t.slcorp.com
+    - host: prom.twip-dev.eks-main-t.shoptoolstest.co.kr
       http:
         paths:
           - path: /

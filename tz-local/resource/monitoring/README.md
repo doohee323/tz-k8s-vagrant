@@ -56,7 +56,7 @@ tz-eks-main/tz-local/resource/monitoring/prometheus/alertmanager.values
     - to: doohee323@gmail.com
   - name: 'dev_mail'
     email_configs:
-    - to: doohee.hong@sl.kr
+    - to: doohee323@gmail.com
   - name: 'prod_mail'
     email_configs:
     - to: doohee323@gmail.com

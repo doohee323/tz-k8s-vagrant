@@ -4,7 +4,7 @@ source /root/.bashrc
 #bash /vagrant/tz-local/resource/monitoring/backup.sh
 cd /vagrant/tz-local/resource/monitoring
 
-eks_project=k8s_project=hyper-k8s  #$(prop 'project' 'project')
+eks_project=$(prop 'project' 'project')
 eks_domain=$(prop 'project' 'domain')
 admin_password=$(prop 'project' 'admin_password')
 

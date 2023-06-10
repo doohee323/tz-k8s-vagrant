@@ -2,7 +2,7 @@
 
 # Set the domain name Grafana OnCall will be installed on.
 # If you want to install grafana as a part of this release make sure to configure grafana.grafana.ini.server.domain too
-base_url: default.eks-main-t.slcorp.com
+base_url: default.eks-main-t.shoptoolstest.co.kr
 
 image:
   # Grafana OnCall docker image repository
@@ -128,7 +128,7 @@ grafana:
   enabled: true
   grafana.ini:
     server:
-      domain: oncall.default.eks-main-t.slcorp.com
+      domain: oncall.default.eks-main-t.shoptoolstest.co.kr
       root_url: "%(protocol)s://%(domain)s/grafana"
       serve_from_sub_path: true
   persistence:

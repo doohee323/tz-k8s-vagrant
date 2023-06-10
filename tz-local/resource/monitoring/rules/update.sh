@@ -2,12 +2,13 @@
 
 source /root/.bashrc
 cd /vagrant/tz-local/resource/monitoring/rules
+#bash /vagrant/tz-local/resource/monitoring/rules/update.sh
 
 #set -x
 shopt -s expand_aliases
 alias k='kubectl --kubeconfig ~/.kube/config'
 
-eks_project=k8s_project=hyper-k8s  #$(prop 'project' 'project')
+eks_project=$(prop 'project' 'project')
 eks_domain=$(prop 'project' 'domain')
 admin_password=$(prop 'project' 'admin_password')
 basic_password=$(prop 'project' 'basic_password')

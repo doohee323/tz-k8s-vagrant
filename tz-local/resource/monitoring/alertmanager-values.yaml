@@ -41,20 +41,21 @@ route:
       alertname: "InfoInhibitor|Watchdog"
   - receiver: devops-dev
     match:
-      namespace: devops-dev
+      namespace: devops
   - receiver: devops-admin
     match_re:
       namespace: "devops|devops-dev"
   - receiver: devops-demo
-    match_re:
-      namespace: "devops-dev"
+    match:
+      namespace: devops-dev
       severity: "critical"
 receivers:
 - name: "null"
 - name: devops-admin
   slack_configs:
-  - send_resolved: true
-    channel: eks-alert
+  - api_url: 'https://hooks.slack.com/services/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'
+    send_resolved: true
+    channel: devops-alert
     title: |-
       {{ range .Alerts }}{{ .Annotations.summary }}
       {{ end }}
@@ -66,12 +67,6 @@ receivers:
   email_configs:
   - send_resolved: true
     to: doogee323@gmail.com
-#- name: devops-admin
-#  email_configs:
-#  - send_resolved: true
-#    to: doogee323@gmail.com
-#    headers:
-#      subject: '{{ if eq .Status "firing" }} devops-admin 장애.. {{ else if eq .Status "resolved" }} devops-admin 정상.. {{end}}'
 - name: devops-demo
   email_configs:
   - send_resolved: true
