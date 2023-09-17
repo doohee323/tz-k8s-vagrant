@@ -30,7 +30,9 @@ bash /vagrant/tz-local/resource/vault/vault-injection/cert.sh vault
 
 cp -Rf values_cert.yaml values_cert.yaml_bak
 sed -i "s/k8s_project/${k8s_project}/g" values_cert.yaml_bak
-helm upgrade --debug --install --reuse-values vault hashicorp/vault -n vault -f values_cert.yaml_bak --version 0.19.0
+# --version 0.19.0
+helm upgrade --debug --install --reuse-values vault hashicorp/vault -n vault -f values_cert.yaml_bak
+kubectl taint nodes --all node-role.kubernetes.io/master-
 #kubectl rollout restart statefulset.apps/vault -n vault
 
 sleep 30

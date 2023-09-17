@@ -9,7 +9,7 @@ k8s_domain=$(prop 'project' 'domain')
 VAULT_TOKEN=$(prop 'project' 'vault')
 
 export VAULT_ADDR="http://vault.default.${k8s_project}.${k8s_domain}"
-#export VAULT_ADDR="https://vault.default.hyper-k8s.shoptoolstest.co.kr:14444"
+#export VAULT_ADDR="https://vault.shoptools.co.kr"
 vault login ${VAULT_TOKEN}
 
 curl -s ${VAULT_ADDR}/v1/sys/seal-status | jq
