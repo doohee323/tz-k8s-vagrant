@@ -47,6 +47,7 @@ sudo certbot --nginx -d prometheus.shoptools.co.kr
 sudo certbot --nginx -d argocd.shoptools.co.kr
 sudo certbot --nginx -d consul-server.shoptools.co.kr
 sudo certbot --nginx -d vault.shoptools.co.kr
+sudo certbot --nginx -d longhorn.shoptools.co.kr
 sudo certbot --nginx -d nexus.topzone.co.kr
 
 ln -s /etc/nginx/sites-available/alertmanager alertmanager
@@ -57,6 +58,7 @@ ln -s /etc/nginx/sites-available/consul consul
 ln -s /etc/nginx/sites-available/vault vault
 ln -s /etc/nginx/sites-available/nexus nexus
 ln -s /etc/nginx/sites-available/argocd argocd
+ln -s /etc/nginx/sites-available/longhorn longhorn
 ln -s /etc/nginx/sites-available/aicreator aicreator
 
 rm -Rf alertmanager grafana jenkins prometheus consul argocd aicreator
