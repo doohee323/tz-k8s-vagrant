@@ -31,7 +31,7 @@ sudo mv velero-v1.10.3-linux-amd64/velero /usr/local/bin/velero
 
 #aws iam create-access-key --user-name ${eks_project}-velero
 
-credentials_velero="~/.aws/credentials"
+credentials_velero="/root/.aws/credentials"
 #[default]
 #aws_access_key_id=<AWS_ACCESS_KEY_ID>
 #aws_secret_access_key=<AWS_SECRET_ACCESS_KEY>
@@ -57,7 +57,6 @@ helm upgrade --debug --install velero vmware-tanzu/velero -f values.yamll_bak -n
 helm upgrade --debug --install velero \
     --namespace=velero \
     --create-namespace \
-    --set-file credentials.secretContents.cloud=/vagrant/src/credentials-velero \
     --set configuration.provider=aws \
     --set configuration.backupStorageLocation.name=default \
     --set configuration.backupStorageLocation.bucket=velero \
