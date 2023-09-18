@@ -61,7 +61,8 @@ sleep 60
 # vault operator init
 # vault operator init -key-shares=3 -key-threshold=2
 #export VAULT_ADDR='http://127.0.0.1:8200'
-export VAULT_ADDR="http://vault.default.${k8s_project}.${k8s_domain}"
+#export VAULT_ADDR="http://vault.default.${k8s_project}.${k8s_domain}"
+export VAULT_ADDR="https://vault.shoptools.co.kr"
 echo $VAULT_ADDR
 
 mkdir -p /vagrant/resources
@@ -140,8 +141,6 @@ vault kv metadata delete kv/tz-vault
 vault secrets enable aws
 
 vault write aws/config/root \
-access_key=AKIAW354R7YB6TQ7LZVA \
-secret_key=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 \
 region=ap-southeast-1
 
 
@@ -151,7 +150,7 @@ region=ap-southeast-1
 brew tap hashicorp/tap
 brew install hashicorp/tap/vault
 export VAULT_ADDR=http://vault.default.${k8s_project}.${k8s_domain}
-vault login s.qBPblA0U9Bzmhgr8eRnukSqR
+vault login xxxx
 vault secrets list -detailed
 
 vault audit enable file file_path=/home/ubuntu/tmp/a.log

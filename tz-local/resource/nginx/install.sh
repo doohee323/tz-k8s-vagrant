@@ -46,13 +46,15 @@ sudo certbot --nginx -d jenkins.shoptools.co.kr
 sudo certbot --nginx -d prometheus.shoptools.co.kr
 sudo certbot --nginx -d argocd.shoptools.co.kr
 sudo certbot --nginx -d consul-server.shoptools.co.kr
+sudo certbot --nginx -d vault.shoptools.co.kr
 sudo certbot --nginx -d nexus.topzone.co.kr
 
 ln -s /etc/nginx/sites-available/alertmanager alertmanager
 ln -s /etc/nginx/sites-available/grafana grafana
 ln -s /etc/nginx/sites-available/jenkins jenkins
 ln -s /etc/nginx/sites-available/prometheus prometheus
-ln -s /etc/nginx/sites-available/consul consul-server
+ln -s /etc/nginx/sites-available/consul consul
+ln -s /etc/nginx/sites-available/vault vault
 ln -s /etc/nginx/sites-available/nexus nexus
 ln -s /etc/nginx/sites-available/argocd argocd
 ln -s /etc/nginx/sites-available/aicreator aicreator

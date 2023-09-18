@@ -4,12 +4,13 @@ source /root/.bashrc
 #bash /vagrant/tz-local/resource/vault/vault-injection/update.sh
 cd /vagrant/tz-local/resource/vault/vault-injection
 
-k8s_project=hyper-k8s  #$(prop 'project' 'project')
+k8s_project=$(prop 'project' 'project')
 k8s_domain=$(prop 'project' 'domain')
 VAULT_TOKEN=$(prop 'project' 'vault')
 AWS_REGION=$(prop 'config' 'region')
 
-export VAULT_ADDR="http://vault.default.${k8s_project}.${k8s_domain}"
+#export VAULT_ADDR="http://vault.default.${k8s_project}.${k8s_domain}"
+export VAULT_ADDR="https://vault.shoptools.co.kr"
 vault login ${VAULT_TOKEN}
 
 vault list auth/kubernetes/role

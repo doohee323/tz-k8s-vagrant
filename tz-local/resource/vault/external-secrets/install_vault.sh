@@ -20,12 +20,13 @@ helm upgrade --debug --install external-secrets \
     --set installCRDs=true
 
 #export VAULT_ADDR=http://vault.default.${k8s_project}.${k8s_domain}
-#vault login ${vault_token}
+export VAULT_ADDR=https://vault.shoptools.co.kr
+vault login ${vault_token}
 #vault kv get secret/devops-prod/dbinfo
-vault_token=`echo -n ${vault_token} | openssl base64 -A`
+vault_tokend=`echo -n ${vault_token} | openssl base64 -A`
 
-#PROJECTS=(devops-dev)
-PROJECTS=(default argocd devops devops-dev)
+#PROJECTS=(default argocd devops-dev)
+PROJECTS=(devops devops-dev)
 for item in "${PROJECTS[@]}"; do
   if [[ "${item}" != "NAME" ]]; then
     STAGING="dev"
@@ -56,7 +57,7 @@ metadata:
 spec:
   provider:
     vault:
-      server: "http://vault.default.k8s_project.k8s_domain"
+      server: "https://vault.shoptools.co.kr"
       path: "secret"
       version: "v2"
       auth:
@@ -78,7 +79,7 @@ data:
     cp secret.yaml secret.yaml_bak
     sed -i "s|PROJECT|${project}|g" secret.yaml_bak
     sed -i "s|NAMESPACE|${namespace}|g" secret.yaml_bak
-    sed -i "s|VAULT_TOKEN|${vault_token}|g" secret.yaml_bak
+    sed -i "s|VAULT_TOKEN|${vault_tokend}|g" secret.yaml_bak
     sed -i "s|k8s_project|${k8s_project}|g" secret.yaml_bak
     sed -i "s|k8s_domain|${k8s_domain}|g" secret.yaml_bak
 
@@ -88,7 +89,7 @@ data:
       cp secret.yaml secret.yaml_bak
       sed -i "s|PROJECT|${project_qa}|g" secret.yaml_bak
       sed -i "s|NAMESPACE|${namespace}|g" secret.yaml_bak
-      sed -i "s|VAULT_TOKEN|${vault_token}|g" secret.yaml_bak
+      sed -i "s|VAULT_TOKEN|${vault_tokend}|g" secret.yaml_bak
       sed -i "s|k8s_project|${k8s_project}|g" secret.yaml_bak
       sed -i "s|k8s_domain|${k8s_domain}|g" secret.yaml_bak
       kubectl apply -f secret.yaml_bak

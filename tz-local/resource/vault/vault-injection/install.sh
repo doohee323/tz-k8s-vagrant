@@ -8,18 +8,20 @@ k8s_project=$(prop 'project' 'project')
 k8s_domain=$(prop 'project' 'domain')
 VAULT_TOKEN=$(prop 'project' 'vault')
 
-export VAULT_ADDR="http://vault.default.${k8s_project}.${k8s_domain}"
-#export VAULT_ADDR="https://vault.shoptools.co.kr"
+#export VAULT_ADDR="http://vault.default.${k8s_project}.${k8s_domain}"
+export VAULT_ADDR="https://vault.shoptools.co.kr"
 vault login ${VAULT_TOKEN}
 
 curl -s ${VAULT_ADDR}/v1/sys/seal-status | jq
-EXTERNAL_VAULT_ADDR="http://vault.default.${k8s_project}.${k8s_domain}"
-echo $EXTERNAL_VAULT_ADDR
+#EXTERNAL_VAULT_ADDR="http://vault.default.${k8s_project}.${k8s_domain}"
+#EXTERNAL_VAULT_ADDR="https://vault.shoptools.co.kr"
+#echo $EXTERNAL_VAULT_ADDR
 
 bash /vagrant/tz-local/resource/vault/vault-injection/cert.sh
 kubectl get csr -o name | xargs kubectl certificate approve
 
 vault secrets enable -path=secret/ kv
+vault auth disable kubernetes
 vault auth enable kubernetes
 
 #kubectl -n vault create serviceaccount vault-auth
@@ -58,8 +60,8 @@ vault write auth/kubernetes/config \
         issuer="https://kubernetes.default.svc.cluster.local"
 #        disable_iss_validation=true
 
-export VAULT_ADDR="http://vault.default.${k8s_project}.${k8s_domain}"
-#export VAULT_ADDR=http://vault.vault.svc.cluster.local:8200
+#export VAULT_ADDR="http://vault.default.${k8s_project}.${k8s_domain}"
+export VAULT_ADDR=https://vault.shoptools.co.kr
 vault write auth/userpass/users/doogee323 password=1111111 policies=tz-vault-devops
 vault login -method=userpass username=doogee323 password=1111111
 
@@ -86,4 +88,3 @@ vault read auth/kubernetes/role/devops-prod
 
 exit 0
 
-vault kv put secret/devops-prod/tz-demo-app OPENAI_API_KEY='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'
