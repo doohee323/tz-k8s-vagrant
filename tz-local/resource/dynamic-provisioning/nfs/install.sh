@@ -1,5 +1,8 @@
 #!/usr/bin/env bash
 
+source /root/.bashrc
+cd /vagrant/tz-local/resource/dynamic-provisioning/nfs
+
 shopt -s expand_aliases
 alias k='kubectl --kubeconfig ~/.kube/config'
 
