@@ -79,7 +79,7 @@ cat <<EOF | sudo tee /etc/bind/zones/db.t1zone.com
 * IN	A 192.168.0.36
 ;
 ns1.t1zone.com.          IN      A       192.168.1.10
-host2.t1zone.com.          IN      A       192.168.1.12
+host2.t1zone.com.          IN      A       192.168.1.11
 www           IN      CNAME   t1zone.com.
 EOF
 

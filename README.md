@@ -14,15 +14,15 @@ to project root directory.
     -. install jenkins
     -. build a test app(youtoube scrawler) in jenkins
     -. deploy the app to k8s 
-    
-    -. support AWS with terraform / packer
 ```
 
 ## -. Run VMs with k8s 
 ``` 
-    bash run.sh
+    bash bootstrap.sh
     or
-    bash run.sh down
+    bash bootstrap.sh S    # slave machine
+    or
+    bash bootstrap.sh remove
 ``` 
 
 ## -. Refer to README.md for each version.
@@ -32,9 +32,6 @@ to project root directory.
     - build a K8S in local vagrant VMs
         vagrant -> VMs -> k8s -> monitoring -> jenkins -> teat-app build
         scripts/local/README.md
-    - build a K8S in aws
-        vagrant -> terraform -> aws -> k8s -> monitoring -> jenkins -> teat-app build / packer
-        scripts/terraform/README.md
 ```
 
 ## * install kubectl in macbook 

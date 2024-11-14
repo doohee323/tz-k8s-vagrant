@@ -69,7 +69,7 @@ iptables -t mangle -X
 rm -Rf $HOME/.kube
 #sudo reboot
 
-#declare -a IPS=(192.168.1.10 192.168.1.12 192.168.1.13)
+#declare -a IPS=(192.168.1.10 192.168.1.11 192.168.1.12)
 #CONFIG_FILE=inventory/test-cluster/inventory.ini python3 contrib/inventory_builder/inventory.py ${IPS[@]}
 
 #cat inventory/test-cluster/group_vars/all/all.yml

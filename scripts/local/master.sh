@@ -53,14 +53,14 @@ Host 192.168.1.10
   User vagrant
   IdentityFile ~/.ssh/tz_rsa
 
-Host 192.168.1.12
+Host 192.168.1.11
   StrictHostKeyChecking   no
   LogLevel                ERROR
   UserKnownHostsFile      /dev/null
   User vagrant
   IdentityFile ~/.ssh/tz_rsa
 
-Host 192.168.1.13
+Host 192.168.1.12
   StrictHostKeyChecking   no
   LogLevel                ERROR
   UserKnownHostsFile      /dev/null
