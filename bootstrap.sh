@@ -13,7 +13,7 @@ elif [[ "$1" == "halt" ]]; then
   echo "Vagrant halt!"
   vagrant halt
   exit 0
-elif [[ "$1" == "down" ]]; then
+elif [[ "$1" == "remove" ]]; then
   vagrant destroy -f
   exit 0
 fi
@@ -22,9 +22,11 @@ echo -n "Do you want to make a jenkins on k8s in Vagrant Master / Slave? (M/S)"
 read A_ENV
 
 MYKEY=tz_rsa
-mkdir -p .ssh \
-  && cd .ssh \
-  && ssh-keygen -t rsa -C ${MYKEY} -P "" -f ${MYKEY} -q
+if [ ! -f .ssh/${MYKEY} ]; then
+  mkdir -p .ssh \
+    && cd .ssh \
+    && ssh-keygen -t rsa -C ${MYKEY} -P "" -f ${MYKEY} -q
+fi
 
 cp -Rf Vagrantfile Vagrantfile.bak
 if [[ "${A_ENV}" == "" || "${A_ENV}" == "M" ]]; then
@@ -34,7 +36,7 @@ if [[ "${A_ENV}" == "" || "${A_ENV}" == "M" ]]; then
 elif [[ "${A_ENV}" == "S" ]]; then
   cp -Rf ./scripts/local/Vagrantfile_node Vagrantfile
   vagrant up
-  vagrant ssh kube-master -- -t 'bash /vagrant/scripts/local/kubespray.sh'
+  vagrant ssh kube-slave -- -t 'bash /vagrant/scripts/local/node.sh'
 fi
 
 mv Vagrantfile.bak Vagrantfile
@@ -46,5 +48,10 @@ vagrant snapshot list
 
 vagrant ssh kube-master
 vagrant ssh kube-node-1
+vagrant ssh kube-node-2
+
+vagrant ssh kube-slave
+vagrant ssh kube-slave-1
+vagrant ssh kube-slave-2
 
 vagrant snapshot save kube-master kube-master_python --force

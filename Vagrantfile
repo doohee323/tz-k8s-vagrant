@@ -13,7 +13,7 @@ Vagrant.configure("2") do |config|
 
   config.vm.define "kube-slave" do |slave|
     slave.vm.box = IMAGE_NAME
-    slave.vm.network "private_network", ip: "192.168.1.10"
+    slave.vm.network "private_network", ip: "192.168.1.15"
     #slave.vm.network "public_network"
     slave.vm.network "forwarded_port", guest: 22, host: 60010, auto_correct: true, id: "ssh"
     slave.vm.network "forwarded_port", guest: 6443, host: 6443
@@ -25,22 +25,19 @@ Vagrant.configure("2") do |config|
     slave.vm.network "forwarded_port", guest: 32449, host: 32449   # prometheus
     slave.vm.network "forwarded_port", guest: 30912, host: 30912   # grafana
     slave.vm.network "forwarded_port", guest: 31000, host: 31000   # jenkins
-    slave.vm.network "forwarded_port", guest: 30007, host: 30007   # app (tz-py-crawler)
     slave.vm.network "forwarded_port", guest: 8081, host: 8081     # nexus
     slave.vm.network "forwarded_port", guest: 5050, host: 5050     # docker_repo
-    slave.vm.network "forwarded_port", guest: 32181, host: 32181   # zookeeper
-    slave.vm.network "forwarded_port", guest: 30092, host: 30092   # kafka
-    slave.vm.network "forwarded_port", guest: 30432, host: 30432   # postgresql
+    slave.vm.network "forwarded_port", guest: 30007, host: 30007   # app
     slave.vm.hostname = "kube-slave"
     slave.vm.provision "shell", :path => File.join(File.dirname(__FILE__),"scripts/local/node.sh"), :args => slave.vm.hostname
   end
 
   (1..COUNTER).each do |i|
-    config.vm.define "kube-node-#{i}" do |node|
+    config.vm.define "kube-slave-#{i}" do |node|
         node.vm.box = IMAGE_NAME
-        node.vm.network "private_network", ip: "192.168.1.#{i + 10}"
+        node.vm.network "private_network", ip: "192.168.1.#{i + 15}"
         node.vm.network "forwarded_port", guest: 22, host: "6010#{i}", auto_correct: true, id: "ssh"
-        node.vm.hostname = "kube-node-#{i}"
+        node.vm.hostname = "kube-slave-#{i}"
         node.vm.provision "shell", :path => File.join(File.dirname(__FILE__),"scripts/local/node.sh"), :args => node.vm.hostname
     end
   end
