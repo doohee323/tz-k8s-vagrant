@@ -15,7 +15,7 @@ Vagrant.configure("2") do |config|
     slave.vm.box = IMAGE_NAME
     slave.vm.network "private_network", ip: "192.168.1.15"
     #slave.vm.network "public_network"
-    slave.vm.network "forwarded_port", guest: 22, host: 60010, auto_correct: true, id: "ssh"
+    slave.vm.network "forwarded_port", guest: 22, host: 60105, auto_correct: true, id: "ssh"
     slave.vm.network "forwarded_port", guest: 6443, host: 6443
     slave.vm.network "forwarded_port", guest: 80, host: 8080
     slave.vm.network "forwarded_port", guest: 8001, host: 8001
@@ -32,12 +32,12 @@ Vagrant.configure("2") do |config|
     slave.vm.provision "shell", :path => File.join(File.dirname(__FILE__),"scripts/local/node.sh"), :args => slave.vm.hostname
   end
 
-  (5..COUNTER).each do |i|
-    config.vm.define "kube-node-#{i}" do |node|
+  (1..COUNTER).each do |i|
+    config.vm.define "kube-slave-#{i}" do |node|
         node.vm.box = IMAGE_NAME
         node.vm.network "private_network", ip: "192.168.1.#{i + 15}"
-        node.vm.network "forwarded_port", guest: 22, host: "6010#{i}", auto_correct: true, id: "ssh"
-        node.vm.hostname = "kube-node-#{i}"
+        node.vm.network "forwarded_port", guest: 22, host: "6010#{i + 15}", auto_correct: true, id: "ssh"
+        node.vm.hostname = "kube-slave-#{i}"
         node.vm.provision "shell", :path => File.join(File.dirname(__FILE__),"scripts/local/node.sh"), :args => node.vm.hostname
     end
   end
