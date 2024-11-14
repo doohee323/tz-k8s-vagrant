@@ -32,8 +32,6 @@ function prop {
 }
 EOF
 
-ln -s /home/ubuntu/tz-k8s-vagrant /vagrant
-
 if [ -d /vagrant ]; then
   cd /vagrant
 fi
@@ -52,9 +50,12 @@ sudo pip3 install -r requirements.txt
 ansible all -i inventory/test-cluster/inventory.ini -m ping -u root
 ansible all -i inventory/test-cluster/inventory.ini --list-hosts -u root
 
+exit 0
+
 # to reset on each node.
 #kubeadm reset
-ansible-playbook -u root -i inventory/test-cluster/inventory.ini reset.yml --become --become-user=root
+ansible-playbook -u root -i inventory/test-cluster/inventory.ini reset.yml --become --become-user=root --extra-vars "reset_confirmation=yes"
+
 iptables --policy INPUT   ACCEPT
 iptables --policy OUTPUT  ACCEPT
 iptables --policy FORWARD ACCEPT
@@ -66,9 +67,9 @@ iptables -t nat -X
 iptables -t mangle -F
 iptables -t mangle -X
 rm -Rf $HOME/.kube
-sudo reboot
+#sudo reboot
 
-#declare -a IPS=(192.168.0.20 192.168.0.21 192.168.0.22)
+#declare -a IPS=(192.168.1.10 192.168.1.12 192.168.1.13)
 #CONFIG_FILE=inventory/test-cluster/inventory.ini python3 contrib/inventory_builder/inventory.py ${IPS[@]}
 
 #cat inventory/test-cluster/group_vars/all/all.yml
@@ -84,26 +85,25 @@ sudo reboot
 #ansible -vvvv -i inventory/test-cluster/inventory.ini all -a "systemctl status sshd" -u root
 
 #ansible-playbook -vvvv -u root -i inventory/test-cluster/inventory.ini -e 'ansible_python_interpreter=/usr/bin/python3' \
-#  --private-key /root/.ssh/id_rsa --become --become-user=root cluster.yml
+#  --private-key /root/.ssh/tz_rsa --become --become-user=root cluster.yml
 
 #apt-add-repository ppa:ansible/ansible
 #apt update
 #apt install ansible -y
 
-ansible-playbook -u root -i inventory/test-cluster/inventory.ini --private-key /root/.ssh/id_rsa --become --become-user=root cluster.yml
+# install k8s
+ansible-playbook -u root -i inventory/test-cluster/inventory.ini --private-key .ssh/tz_rsa --become --become-user=root cluster.yml
 #ansible-playbook -i inventory/test-cluster/inventory.ini --become --become-user=root cluster.yml
 
-sudo cp -Rf /root/.kube /home/ubuntu/
-sudo chown -Rf ubuntu:ubuntu /home/ubuntu/.kube
+sudo cp -Rf /root/.kube /home/vagrant/
+sudo chown -Rf vagrant:vagrant /home/vagrant/.kube
+sudo cp -Rf /root/.kube/config /vagrant/.ssh/kubeconfig_tz-k8s-vagrant
 
-kubectl completion bash | sudo tee /etc/bash_completion.d/kubectl
-exec bash
+#kubectl completion bash | sudo tee /etc/bash_completion.d/kubectl
+#exec bash
 
 kubectl get nodes
 kubectl cluster-info
-
-sudo cp -Rf /root/.kube/config kubespray_vagrant
-sudo chown -Rf ubuntu:ubuntu kubespray_vagrant
 
 shopt -s expand_aliases
 alias k='kubectl --kubeconfig ~/.kube/config'
@@ -113,30 +113,29 @@ k apply -f tz-local/resource/standard-storage.yaml
 k patch storageclass local-storage -p '{"metadata": {"annotations":{"storageclass.kubernetes.io/is-default-class":"true"}}}'
 k get storageclass,pv,pvc
 
-helm repo add stable https://charts.helm.sh/stable
-helm repo update
-
+#helm repo add stable https://charts.helm.sh/stable
+#helm repo update
+#
 # nfs
 # 1. with helm
-#helm repo update
-#helm install my-release --set nfs.server=192.168.0.20 --set nfs.path=/srv/nfs/mydata stable/nfs-client-provisioner
+#helm install my-release --set nfs.server=192.168.1.10 --set nfs.path=/srv/nfs/mydata stable/nfs-client-provisioner
 # 2. with manual
 #k apply -f tz-local/resource/dynamic-provisioning/nfs/static-nfs.yaml
 #k apply -f tz-local/resource/dynamic-provisioning/nfs/serviceaccount.yaml
 #k apply -f tz-local/resource/dynamic-provisioning/nfs/nfs.yaml
 #k apply -f tz-local/resource/dynamic-provisioning/nfs/nfs-claim.yaml
 
-echo "## [ install kubectl ] ######################################################"
-sudo apt-get update && sudo apt-get install -y apt-transport-https gnupg2 curl
-curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl"
-sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
+#echo "## [ install kubectl ] ######################################################"
+#sudo apt-get update && sudo apt-get install -y apt-transport-https gnupg2 curl
+#curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl"
+#sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
 
-echo "## [ install helm3 ] ######################################################"
-sudo curl -fsSL -o get_helm.sh https://raw.githubusercontent.com/helm/helm/master/scripts/get-helm-3
-sudo bash get_helm.sh
-sudo rm -Rf get_helm.sh
+#echo "## [ install helm3 ] ######################################################"
+#sudo curl -fsSL -o get_helm.sh https://raw.githubusercontent.com/helm/helm/master/scripts/get-helm-3
+#sudo bash get_helm.sh
+#sudo rm -Rf get_helm.sh
 
-sleep 10
+#sleep 10
 
 #k get po -n kube-system
 

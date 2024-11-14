@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 function prop {
-	grep "${2}" "/home/ubuntu/.aws/${1}" | head -n 1 | cut -d '=' -f2 | sed 's/ //g'
+	grep "${2}" "/home/vagrant/.aws/${1}" | head -n 1 | cut -d '=' -f2 | sed 's/ //g'
 }
 k8s_project=hyper-k8s  #$(prop 'project' 'project')
 

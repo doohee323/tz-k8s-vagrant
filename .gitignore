@@ -21,18 +21,16 @@ get_helm.sh
 volumeF.yaml
 credentials
 jenkins_run.yaml
-tz-py-crawler
 info
 list.txt
 es
 kafka
 data/result
-data/doohee323*
 data/*.json
 
 /kubespray
 /authorized_keys
-/id_rsa*
+tz_rsa*
 /kubespray_vagrant
 *.log
 /data2
@@ -40,3 +38,5 @@ data/*.json
 *_bak
 *_bake
 /resources
+/kubespray
+kubeconfig_tz-k8s-vagrant

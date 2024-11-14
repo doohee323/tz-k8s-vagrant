@@ -24,7 +24,7 @@ helm repo add nfs-subdir-external-provisioner https://kubernetes-sigs.github.io/
 helm install nfs-subdir-external-provisioner nfs-subdir-external-provisioner/nfs-subdir-external-provisioner \
   --create-namespace \
   --namespace nfs-provisioner \
-  --set nfs.server=192.168.0.20 \
+  --set nfs.server=192.168.1.10 \
   --set nfs.path=/srv/nfs
 
 ## 1. Install NFS CSI driver master version on a kubernetes cluster

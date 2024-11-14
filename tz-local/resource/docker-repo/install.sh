@@ -15,7 +15,7 @@ dockerhub_password=$(prop 'project' 'dockerhub_password')
 apt-get update -y
 apt-get -y install docker.io jq
 usermod -G docker ubuntu
-chown -Rf ubuntu:ubuntu /var/run/docker.sock
+chown -Rf vagrant:vagrant /var/run/docker.sock
 
 mkdir -p ~/.docker
 docker login -u="${dockerhub_id}" -p="${dockerhub_password}"
@@ -25,7 +25,7 @@ sleep 2
 cat ~/.docker/config.json
 #mkdir -p /root/.docker
 #cp -Rf ~/.docker/config.json /root/.docker/config.json
-#chown -Rf ubuntu:ubuntu /root/.docker
+#chown -Rf vagrant:vagrant /root/.docker
 
 kubectl delete secret tz-registrykey
 kubectl create secret generic tz-registrykey \

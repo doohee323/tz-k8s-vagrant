@@ -29,25 +29,23 @@ fi
 echo -n "Do you want to make a jenkins on k8s in Vagrant or AWS? (V/A)"
 read A_ENV
 
-cp -Rf Vagrantfile Vagrantfile.bak
+MYKEY=tz_rsa
+mkdir -p .ssh \
+  && cd .ssh \
+  && ssh-keygen -t rsa -C ${MYKEY} -P "" -f ${MYKEY} -q
+
 if [[ "${A_ENV}" == "" || "${A_ENV}" == "V" ]]; then
-  cp -Rf ./scripts/local/Vagrantfile Vagrantfile
   vagrant up
   vagrant ssh kube-master -- -t 'bash /vagrant/scripts/local/kubespray.sh'
-fi
-if [[ "${A_ENV}" == "A" ]]; then
-  if [[ ! -f "./tz-aws-terraform/resource/aws/credentials" ]]; then
-    echo "There is no AWS config in ./tz-aws-terraform/resource/aws/credentials!"
-    exit 1
-  fi
-  cp -Rf ./scripts/terraform/Vagrantfile Vagrantfile
-  vagrant up
 fi
 
 mv Vagrantfile.bak Vagrantfile
 
 exit 0
 
+vagrant ssh kube-master
+vagrant ssh kube-node-1
+
 vagrant snapshot list
 
-vagrant snapshot save kube-master k8s-master_python --force
+vagrant snapshot save kube-master kube-master_python --force

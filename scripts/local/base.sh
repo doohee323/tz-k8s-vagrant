@@ -41,17 +41,17 @@ sudo sysctl --system
 #sudo ufw allow 6443
 sudo ufw disable
 
-sudo groupadd ubuntu
-sudo useradd -g ubuntu -d /home/ubuntu -s /bin/bash -m ubuntu
+sudo groupadd vagrant
+sudo useradd -g vagrant -d /home/vagrant -s /bin/bash -m vagrant
 cat <<EOF > pass.txt
-ubuntu:ubuntu
+vagrant:vagrant
 EOF
 sudo chpasswd < pass.txt
 
 cat <<EOF >> /etc/hosts
-192.168.0.20    master
-192.168.0.21    node1
-192.168.0.22    node2
+192.168.1.10    master
+192.168.1.12    node1
+192.168.1.13    node2
 EOF
 
 exit 0

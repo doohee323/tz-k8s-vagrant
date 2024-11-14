@@ -9,8 +9,8 @@ spec:
   accessModes:
     - ReadWriteMany
   nfs:
-    server: 192.168.0.20
-    path: /home/ubuntu/data
+    server: 192.168.1.10
+    path: /home/vagrant/data
 
 ---
 apiVersion: v1

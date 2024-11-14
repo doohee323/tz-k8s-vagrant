@@ -77,8 +77,8 @@ if [[ "${vault_token_new}" != "" ]]; then
   awk '!/vault=/' /vagrant/resources/project > tmpfile && mv tmpfile /vagrant/resources/project
   echo "vault=${vault_token_new}" >> /vagrant/resources/project
   cp -Rf /vagrant/resources/project ~/.aws/project
-  mkdir -p /home/ubuntu/.aws
-  cp -Rf /vagrant/resources/project /home/ubuntu/.aws/project
+  mkdir -p /home/vagrant/.aws
+  cp -Rf /vagrant/resources/project /home/vagrant/.aws/project
 fi
 
 # vault operator unseal
@@ -153,7 +153,7 @@ export VAULT_ADDR=http://vault.default.${k8s_project}.${k8s_domain}
 vault login xxxx
 vault secrets list -detailed
 
-vault audit enable file file_path=/home/ubuntu/tmp/a.log
+vault audit enable file file_path=/home/vagrant/tmp/a.log
 
 # path ex)
 secrets

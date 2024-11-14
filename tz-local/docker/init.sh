@@ -135,8 +135,8 @@ echo "
 
   - ${k8s_project} bastion:
     ssh ubuntu@${bastion_ip}
-    chmod 600 /home/ubuntu/resources/${k8s_project}
-#  - secondary-az1: ssh -i /home/ubuntu/resources/${k8s_project} ubuntu@${secondary_az1_ip}
+    chmod 600 /home/vagrant/resources/${k8s_project}
+#  - secondary-az1: ssh -i /home/vagrant/resources/${k8s_project} ubuntu@${secondary_az1_ip}
 
 #######################################################################
 " >> /vagrant/info
