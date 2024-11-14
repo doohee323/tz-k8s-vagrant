@@ -31,11 +31,11 @@ fi
 cp -Rf Vagrantfile Vagrantfile.bak
 if [[ "${A_ENV}" == "" || "${A_ENV}" == "M" ]]; then
   cp -Rf ./scripts/local/Vagrantfile Vagrantfile
-  vagrant up
+  vagrant up --provider=virtualbox
   vagrant ssh kube-master -- -t 'bash /vagrant/scripts/local/kubespray.sh'
 elif [[ "${A_ENV}" == "S" ]]; then
   cp -Rf ./scripts/local/Vagrantfile_node Vagrantfile
-  vagrant up
+  vagrant up --provider=virtualbox
   vagrant ssh kube-slave -- -t 'bash /vagrant/scripts/local/node.sh'
 fi
 
