@@ -30,7 +30,7 @@ spec:
       - matchExpressions:
         - key: kubernetes.io/hostname
           operator: In
-          values: ["kube-master", "kube-node1", "kube-node2"]
+          values: ["kube-master", "kube-node-1", "kube-node-2"]
 
 ---
 apiVersion: v1

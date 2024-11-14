@@ -54,4 +54,5 @@ vagrant ssh kube-slave
 vagrant ssh kube-slave-1
 vagrant ssh kube-slave-2
 
+vagrant reload
 vagrant snapshot save kube-master kube-master_python --force

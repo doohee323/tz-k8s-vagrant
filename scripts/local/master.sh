@@ -15,58 +15,14 @@ cp -Rf /vagrant/.ssh/${MYKEY}.pub /root/.ssh/${MYKEY}.pub
 cp /home/vagrant/.ssh/authorized_keys /root/.ssh/authorized_keys
 cat /root/.ssh/${MYKEY}.pub >> /root/.ssh/authorized_keys
 chown -R root:root /root/.ssh \
-  chmod -Rf 600 /root/.ssh
+  chmod -Rf 400 /root/.ssh
 rm -Rf /home/vagrant/.ssh \
   && cp -Rf /root/.ssh /home/vagrant/.ssh \
   && chown -Rf vagrant:vagrant /home/vagrant/.ssh \
   && chmod -Rf 700 /home/vagrant/.ssh \
   && chmod -Rf 600 /home/vagrant/.ssh/*
 
-cat <<EOF > /root/.ssh/config
-Host kube-master
-  StrictHostKeyChecking   no
-  LogLevel                ERROR
-  UserKnownHostsFile      /dev/null
-  IdentitiesOnly yes
-  User vagrant
-  IdentityFile ~/.ssh/tz_rsa
-
-Host kube-node1
-  StrictHostKeyChecking   no
-  LogLevel                ERROR
-  UserKnownHostsFile      /dev/null
-  User vagrant
-  IdentityFile ~/.ssh/tz_rsa
-
-Host kube-node2
-  StrictHostKeyChecking   no
-  LogLevel                ERROR
-  UserKnownHostsFile      /dev/null
-  User vagrant
-  IdentityFile ~/.ssh/tz_rsa
-
-Host 192.168.1.10
-  StrictHostKeyChecking   no
-  LogLevel                ERROR
-  UserKnownHostsFile      /dev/null
-  IdentitiesOnly yes
-  User vagrant
-  IdentityFile ~/.ssh/tz_rsa
-
-Host 192.168.1.11
-  StrictHostKeyChecking   no
-  LogLevel                ERROR
-  UserKnownHostsFile      /dev/null
-  User vagrant
-  IdentityFile ~/.ssh/tz_rsa
-
-Host 192.168.1.12
-  StrictHostKeyChecking   no
-  LogLevel                ERROR
-  UserKnownHostsFile      /dev/null
-  User vagrant
-  IdentityFile ~/.ssh/tz_rsa
-EOF
+cp -Rf scripts/local/config.cfg /root/.ssh/config
 
 bash scripts/local/base.sh
 

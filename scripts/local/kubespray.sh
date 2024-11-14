@@ -47,14 +47,17 @@ cp -Rf resource/kubespray/k8s-cluster.yml kubespray/inventory/test-cluster/group
 
 cd kubespray
 sudo pip3 install -r requirements.txt
-ansible all -i inventory/test-cluster/inventory.ini -m ping -u root
-ansible all -i inventory/test-cluster/inventory.ini --list-hosts -u root
+cd ..
 
-exit 0
+#/etc/ansible/ansible.cfg
+
+ansible all -i resource/kubespray/inventory.ini -m ping -u root
+ansible all -i resource/kubespray/inventory.ini --list-hosts -u root
 
 # to reset on each node.
 #kubeadm reset
-ansible-playbook -u root -i inventory/test-cluster/inventory.ini reset.yml --become --become-user=root --extra-vars "reset_confirmation=yes"
+ansible-playbook -u root -i resource/kubespray/inventory.ini kubespray/reset.yml \
+  --become --become-user=root --extra-vars "reset_confirmation=yes"
 
 iptables --policy INPUT   ACCEPT
 iptables --policy OUTPUT  ACCEPT
@@ -92,8 +95,10 @@ rm -Rf $HOME/.kube
 #apt install ansible -y
 
 # install k8s
-ansible-playbook -u root -i inventory/test-cluster/inventory.ini --private-key .ssh/tz_rsa --become --become-user=root cluster.yml
-#ansible-playbook -i inventory/test-cluster/inventory.ini --become --become-user=root cluster.yml
+ansible-playbook -u root -i resource/kubespray/inventory.ini \
+  --private-key .ssh/tz_rsa --become --become-user=root \
+  kubespray/cluster.yml
+#ansible-playbook -i resource/kubespray/inventory.ini --become --become-user=root cluster.yml
 
 sudo cp -Rf /root/.kube /home/vagrant/
 sudo chown -Rf vagrant:vagrant /home/vagrant/.kube
