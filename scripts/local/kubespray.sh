@@ -4,31 +4,31 @@
 
 #set -x
 
-echo "
+sudo tee /root/.bashrc <<"EOF"
 alias k='kubectl'
 alias KUBECONFIG='~/.kube/config'
 alias base='cd /vagrant'
 alias ll='ls -al'
-" >> /root/.bashrc
+EOF
 
-cat >> /root/.bashrc <<EOF
+sudo tee /root/.bashrc <<"EOF"
 function prop {
-  key="\${2}="
+  key="${2}="
   rslt=""
-  if [[ "\${3}" == "" ]]; then
-    rslt=\$(grep "\${key}" "/root/.aws/\${1}" | head -n 1 | cut -d '=' -f2 | sed 's/ //g')
-    if [[ "\${rslt}" == "" ]]; then
-      key="\${2} = "
-      rslt=\$(grep "\${key}" "/root/.aws/\${1}" | head -n 1 | cut -d '=' -f2 | sed 's/ //g')
+  if [[ "${3}" == "" ]]; then
+    rslt=$(grep "${key}" "/root/.aws/${1}" | head -n 1 | cut -d '=' -f2 | sed 's/ //g')
+    if [[ "${rslt}" == "" ]]; then
+      key="${2} = "
+      rslt=$(grep "${key}" "/root/.aws/${1}" | head -n 1 | cut -d '=' -f2 | sed 's/ //g')
     fi
   else
-    rslt=\$(grep "\${3}" "/root/.aws/\${1}" -A 10 | grep "\${key}" | head -n 1 | tail -n 1 | cut -d '=' -f2 | sed 's/ //g')
-    if [[ "\${rslt}" == "" ]]; then
-      key="\${2} = "
-      rslt=\$(grep "\${3}" "/root/.aws/\${1}" -A 10 | grep "\${key}" | head -n 1 | tail -n 1 | cut -d '=' -f2 | sed 's/ //g')
+    rslt=$(grep "${3}" "/root/.aws/${1}" -A 10 | grep "${key}" | head -n 1 | tail -n 1 | cut -d '=' -f2 | sed 's/ //g')
+    if [[ "${rslt}" == "" ]]; then
+      key="${2} = "
+      rslt=$(grep "${3}" "/root/.aws/${1}" -A 10 | grep "${key}" | head -n 1 | tail -n 1 | cut -d '=' -f2 | sed 's/ //g')
     fi
   fi
-  echo \${rslt}
+  echo ${rslt}
 }
 EOF
 
@@ -51,26 +51,42 @@ cd ..
 
 #/etc/ansible/ansible.cfg
 
-ansible all -i resource/kubespray/inventory.ini -m ping -u root
-ansible all -i resource/kubespray/inventory.ini --list-hosts -u root
+sudo ansible all -i resource/kubespray/inventory.ini -m ping -u root
+sudo ansible all -i resource/kubespray/inventory.ini --list-hosts -u root
+
+
+#Host 10.0.0.251
+#  StrictHostKeyChecking   no
+#  LogLevel                ERROR
+#  UserKnownHostsFile      /dev/null
+#  IdentitiesOnly yes
+#  User root
+#  IdentityFile ~/.ssh/tz_rsa
+
+#ssh -i /root/.ssh/tz_rsa root@10.0.0.251 -p 60105
+#ssh -i /root/.ssh/tz_rsa root@10.0.0.251 -p 60106
+#ssh -i /root/.ssh/tz_rsa root@10.0.0.251 -p 60107
+#kube-slave ansible_host=10.0.0.251    ip=192.168.1.15  ansible_user=root ansible_ssh_private_key_file=/root/.ssh/tz_rsa ansible_ssh_extra_args='-o StrictHostKeyChecking=no' ansible_port=60105
+#kube-slave-1 ansible_host=10.0.0.251  ip=192.168.1.16  ansible_user=root ansible_ssh_private_key_file=/root/.ssh/tz_rsa ansible_ssh_extra_args='-o StrictHostKeyChecking=no' ansible_port=60106
+#kube-slave-2 ansible_host=10.0.0.251  ip=192.168.1.17  ansible_user=root ansible_ssh_private_key_file=/root/.ssh/tz_rsa ansible_ssh_extra_args='-o StrictHostKeyChecking=no' ansible_port=60107
+
+sudo iptables --policy INPUT   ACCEPT
+sudo iptables --policy OUTPUT  ACCEPT
+sudo iptables --policy FORWARD ACCEPT
+sudo iptables -Z # zero counters
+sudo iptables -F # flush (delete) rules
+sudo iptables -X # delete all extra chains
+sudo iptables -t nat -F
+sudo iptables -t nat -X
+sudo sudo iptables -t mangle -F
+sudo iptables -t mangle -X
+#rm -Rf $HOME/.kube
+#sudo reboot
 
 # to reset on each node.
 #kubeadm reset
-ansible-playbook -u root -i resource/kubespray/inventory.ini kubespray/reset.yml \
+sudo ansible-playbook -u root -i resource/kubespray/inventory.ini kubespray/reset.yml \
   --become --become-user=root --extra-vars "reset_confirmation=yes"
-
-iptables --policy INPUT   ACCEPT
-iptables --policy OUTPUT  ACCEPT
-iptables --policy FORWARD ACCEPT
-iptables -Z # zero counters
-iptables -F # flush (delete) rules
-iptables -X # delete all extra chains
-iptables -t nat -F
-iptables -t nat -X
-iptables -t mangle -F
-iptables -t mangle -X
-rm -Rf $HOME/.kube
-#sudo reboot
 
 #declare -a IPS=(192.168.1.10 192.168.1.11 192.168.1.12)
 #CONFIG_FILE=inventory/test-cluster/inventory.ini python3 contrib/inventory_builder/inventory.py ${IPS[@]}
@@ -95,10 +111,9 @@ rm -Rf $HOME/.kube
 #apt install ansible -y
 
 # install k8s
-ansible-playbook -u root -i resource/kubespray/inventory.ini \
+sudo ansible-playbook -u root -i resource/kubespray/inventory.ini \
   --private-key .ssh/tz_rsa --become --become-user=root \
   kubespray/cluster.yml
-#ansible-playbook -i resource/kubespray/inventory.ini --become --become-user=root cluster.yml
 
 sudo cp -Rf /root/.kube /home/vagrant/
 sudo chown -Rf vagrant:vagrant /home/vagrant/.kube

@@ -16,3 +16,15 @@ rm -Rf /home/vagrant/.ssh \
   && chmod -Rf 700 /home/vagrant/.ssh \
   && chmod -Rf 600 /home/vagrant/.ssh/*
 
+bash scripts/local/base.sh
+
+sudo iptables --policy INPUT   ACCEPT
+sudo iptables --policy OUTPUT  ACCEPT
+sudo iptables --policy FORWARD ACCEPT
+sudo iptables -Z # zero counters
+sudo iptables -F # flush (delete) rules
+sudo iptables -X # delete all extra chains
+sudo iptables -t nat -F
+sudo iptables -t nat -X
+sudo sudo iptables -t mangle -F
+sudo iptables -t mangle -X

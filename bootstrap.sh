@@ -18,10 +18,6 @@ elif [[ "$1" == "remove" ]]; then
   exit 0
 fi
 
-echo -n "Do you want to make a jenkins on k8s in Vagrant Master / Slave? (M/S)"
-read A_ENV
-echo "A_ENV: ${A_ENV}"
-
 MYKEY=tz_rsa
 if [ ! -f .ssh/${MYKEY} ]; then
   mkdir -p .ssh \
@@ -29,18 +25,8 @@ if [ ! -f .ssh/${MYKEY} ]; then
     && ssh-keygen -t rsa -C ${MYKEY} -P "" -f ${MYKEY} -q
 fi
 
-cp -Rf Vagrantfile Vagrantfile.bak
-if [[ "${A_ENV}" == "M" ]]; then
-  cp -Rf ./scripts/local/Vagrantfile Vagrantfile
-  vagrant up --provider=virtualbox
-  vagrant ssh kube-master -- -t 'bash /vagrant/scripts/local/kubespray.sh'
-elif [[ "${A_ENV}" == "S" ]]; then
-  cp -Rf ./scripts/local/Vagrantfile_node Vagrantfile
-  vagrant up --provider=virtualbox
-  vagrant ssh kube-slave -- -t 'bash /vagrant/scripts/local/node.sh'
-fi
-
-mv Vagrantfile.bak Vagrantfile
+vagrant up --provider=virtualbox
+vagrant ssh kube-master -- -t 'bash /vagrant/scripts/local/kubespray.sh'
 
 exit 0
 

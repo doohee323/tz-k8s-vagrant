@@ -37,8 +37,8 @@ EOF
 sudo sysctl --system
 
 #sudo ufw enable
-#sudo ufw allow 22
-#sudo ufw allow 6443
+sudo ufw allow 22
+sudo ufw allow 6443
 sudo ufw disable
 
 sudo groupadd vagrant
@@ -55,10 +55,5 @@ cat <<EOF >> /etc/hosts
 192.168.1.13    kube-node-3
 192.168.1.14    kube-node-4
 
-192.168.1.15    kube-slave
-192.168.1.16    kube-slave-1
-192.168.1.17    kube-slave-2
-192.168.1.18    kube-slave-3
-192.168.1.19    kube-slave-4
-
-exit 0
+10.0.0.251    kube-slave
+EOF
