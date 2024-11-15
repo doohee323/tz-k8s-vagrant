@@ -20,6 +20,7 @@ fi
 
 echo -n "Do you want to make a jenkins on k8s in Vagrant Master / Slave? (M/S)"
 read A_ENV
+echo "A_ENV: ${A_ENV}"
 
 MYKEY=tz_rsa
 if [ ! -f .ssh/${MYKEY} ]; then
@@ -29,7 +30,7 @@ if [ ! -f .ssh/${MYKEY} ]; then
 fi
 
 cp -Rf Vagrantfile Vagrantfile.bak
-if [[ "${A_ENV}" == "" || "${A_ENV}" == "M" ]]; then
+if [[ "${A_ENV}" == "M" ]]; then
   cp -Rf ./scripts/local/Vagrantfile Vagrantfile
   vagrant up --provider=virtualbox
   vagrant ssh kube-master -- -t 'bash /vagrant/scripts/local/kubespray.sh'
