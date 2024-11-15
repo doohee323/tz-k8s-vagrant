@@ -1,6 +1,6 @@
 #!/bin/bash
 
-set -x
+#set -x
 
 WORKING_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
 cd ${WORKING_DIR}
@@ -31,15 +31,13 @@ fi
 
 cp -Rf Vagrantfile Vagrantfile.bak
 if [[ "${A_ENV}" == "M" ]]; then
-  echo "11111"
   cp -Rf ./scripts/local/Vagrantfile Vagrantfile
-  #vagrant up --provider=virtualbox
-  #vagrant ssh kube-master -- -t 'bash /vagrant/scripts/local/kubespray.sh'
+  vagrant up --provider=virtualbox
+  vagrant ssh kube-master -- -t 'bash /vagrant/scripts/local/kubespray.sh'
 elif [[ "${A_ENV}" == "S" ]]; then
-  echo "111112"
   cp -Rf ./scripts/local/Vagrantfile_node Vagrantfile
-  #vagrant up --provider=virtualbox
-  #vagrant ssh kube-slave -- -t 'bash /vagrant/scripts/local/node.sh'
+  vagrant up --provider=virtualbox
+  vagrant ssh kube-slave -- -t 'bash /vagrant/scripts/local/node.sh'
 fi
 
 mv Vagrantfile.bak Vagrantfile
