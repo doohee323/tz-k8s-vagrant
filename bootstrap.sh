@@ -1,6 +1,6 @@
 #!/bin/bash
 
-#set -x
+set -x
 
 WORKING_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
 cd ${WORKING_DIR}
@@ -20,6 +20,7 @@ fi
 
 echo -n "Do you want to make a jenkins on k8s in Vagrant Master / Slave? (M/S)"
 read A_ENV
+echo "A_ENV: ${A_ENV}"
 
 MYKEY=tz_rsa
 if [ ! -f .ssh/${MYKEY} ]; then
@@ -29,14 +30,16 @@ if [ ! -f .ssh/${MYKEY} ]; then
 fi
 
 cp -Rf Vagrantfile Vagrantfile.bak
-if [[ "${A_ENV}" == "" || "${A_ENV}" == "M" ]]; then
+if [[ "${A_ENV}" == "M" ]]; then
+  echo "11111"
   cp -Rf ./scripts/local/Vagrantfile Vagrantfile
-  vagrant up --provider=virtualbox
-  vagrant ssh kube-master -- -t 'bash /vagrant/scripts/local/kubespray.sh'
+  #vagrant up --provider=virtualbox
+  #vagrant ssh kube-master -- -t 'bash /vagrant/scripts/local/kubespray.sh'
 elif [[ "${A_ENV}" == "S" ]]; then
+  echo "111112"
   cp -Rf ./scripts/local/Vagrantfile_node Vagrantfile
-  vagrant up --provider=virtualbox
-  vagrant ssh kube-slave -- -t 'bash /vagrant/scripts/local/node.sh'
+  #vagrant up --provider=virtualbox
+  #vagrant ssh kube-slave -- -t 'bash /vagrant/scripts/local/node.sh'
 fi
 
 mv Vagrantfile.bak Vagrantfile
@@ -56,3 +59,4 @@ vagrant ssh kube-slave-2
 
 vagrant reload
 vagrant snapshot save kube-master kube-master_python --force
+
