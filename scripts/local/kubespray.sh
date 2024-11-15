@@ -40,10 +40,20 @@ sudo rm -Rf kubespray
 #git clone --single-branch https://github.com/kubernetes-sigs/kubespray.git
 git clone https://github.com/kubernetes-sigs/kubespray.git --branch release-2.21
 rm -Rf kubespray/inventory/test-cluster
+
+#echo -n "Did you fix ip address in resource/kubespray settings? (Y)"
+#read A_ENV
+#echo "A_ENV: ${A_ENV}"
+#if [[ "${A_ENV}" != "Y" ]]; then
+#  exit 1
+#fi
+
 cp -rfp kubespray/inventory/sample kubespray/inventory/test-cluster
-cp -Rf resource/kubespray/inventory.ini kubespray/inventory/test-cluster/inventory.ini
 cp -Rf resource/kubespray/addons.yml kubespray/inventory/test-cluster/group_vars/k8s_cluster/addons.yml
 cp -Rf resource/kubespray/k8s-cluster.yml kubespray/inventory/test-cluster/group_vars/k8s_cluster/k8s-cluster.yml
+
+cp -Rf resource/kubespray/inventory.ini kubespray/inventory/test-cluster/inventory.ini
+cp -Rf scripts/local/config.cfg /root/.ssh/config
 
 cd kubespray
 sudo pip3 install -r requirements.txt
@@ -72,7 +82,7 @@ iptables -t mangle -X
 rm -Rf $HOME/.kube
 #sudo reboot
 
-#declare -a IPS=(192.168.1.10 192.168.1.11 192.168.1.12)
+#declare -a IPS=(192.168.86.90 192.168.86.91 192.168.86.92)
 #CONFIG_FILE=inventory/test-cluster/inventory.ini python3 contrib/inventory_builder/inventory.py ${IPS[@]}
 
 #cat inventory/test-cluster/group_vars/all/all.yml
@@ -123,7 +133,7 @@ k get storageclass,pv,pvc
 #
 # nfs
 # 1. with helm
-#helm install my-release --set nfs.server=192.168.1.10 --set nfs.path=/srv/nfs/mydata stable/nfs-client-provisioner
+#helm install my-release --set nfs.server=192.168.86.90 --set nfs.path=/srv/nfs/mydata stable/nfs-client-provisioner
 # 2. with manual
 #k apply -f tz-local/resource/dynamic-provisioning/nfs/static-nfs.yaml
 #k apply -f tz-local/resource/dynamic-provisioning/nfs/serviceaccount.yaml

@@ -10,16 +10,29 @@ if [ -d /vagrant ]; then
   cd /vagrant
 fi
 
-sudo swapoff -a
-sudo sed -i '/swap/d' /etc/fstab
-#sudo sed -i '/ swap / s/^\(.*\)$/#\1/g' /etc/fstab
-sudo apt-get update
-sudo apt install -y python3 python3-pip git
+MYKEY=tz_rsa
+cp -Rf /vagrant/.ssh/${MYKEY} /root/.ssh/${MYKEY}
+cp -Rf /vagrant/.ssh/${MYKEY}.pub /root/.ssh/${MYKEY}.pub
+cp /home/vagrant/.ssh/authorized_keys /root/.ssh/authorized_keys
+cat /root/.ssh/${MYKEY}.pub >> /root/.ssh/authorized_keys
+chown -R root:root /root/.ssh \
+  chmod -Rf 400 /root/.ssh
+rm -Rf /home/vagrant/.ssh \
+  && cp -Rf /root/.ssh /home/vagrant/.ssh \
+  && chown -Rf vagrant:vagrant /home/vagrant/.ssh \
+  && chmod -Rf 700 /home/vagrant/.ssh \
+  && chmod -Rf 600 /home/vagrant/.ssh/*
 
 cat <<EOF >> /etc/resolv.conf
 nameserver 1.1.1.1 #cloudflare DNS
 nameserver 8.8.8.8 #Google DNS
 EOF
+
+sudo swapoff -a
+sudo sed -i '/swap/d' /etc/fstab
+#sudo sed -i '/ swap / s/^\(.*\)$/#\1/g' /etc/fstab
+sudo apt-get update
+sudo apt install -y python3 python3-pip net-tools git
 
 sudo tee /etc/modules-load.d/containerd.conf << EOF
 overlay
@@ -49,16 +62,15 @@ EOF
 sudo chpasswd < pass.txt
 
 cat <<EOF >> /etc/hosts
-192.168.1.10    kube-master
-192.168.1.11    kube-node-1
-192.168.1.12    kube-node-2
-192.168.1.13    kube-node-3
-192.168.1.14    kube-node-4
+192.168.86.100   kube-master
+192.168.86.101   kube-node-1
+192.168.86.102   kube-node-2
 
-192.168.1.15    kube-slave
-192.168.1.16    kube-slave-1
-192.168.1.17    kube-slave-2
-192.168.1.18    kube-slave-3
-192.168.1.19    kube-slave-4
+192.168.86.97   kube-slave-1
+192.168.86.98   kube-slave-2
+192.168.86.99   kube-slave-3
 
-exit 0
+192.168.86.94   kube-slave-4
+192.168.86.95   kube-slave-5
+192.168.86.99   kube-slave-6
+EOF

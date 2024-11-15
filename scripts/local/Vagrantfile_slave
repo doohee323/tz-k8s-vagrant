@@ -2,7 +2,7 @@
 # vi: set ft=ruby :
 
 IMAGE_NAME = "bento/ubuntu-20.04"
-COUNTER = 2
+COUNTER = 3
 Vagrant.configure("2") do |config|
   config.vm.box = IMAGE_NAME
   config.ssh.insert_key=false
@@ -11,20 +11,19 @@ Vagrant.configure("2") do |config|
     v.cpus = 2
   end
 
-  config.vm.define "kube-master" do |master|
-    master.vm.box = IMAGE_NAME
-    master.vm.network "public_network"
-    master.vm.hostname = "kube-master"
-    master.vm.provision "shell", :path => File.join(File.dirname(__FILE__),"scripts/local/master.sh"), :args => master.vm.hostname
+  config.vm.define "kube-slave-1" do |slave|
+    slave.vm.box = IMAGE_NAME
+    slave.vm.network "public_network"
+    slave.vm.hostname = "kube-slave"
+    slave.vm.provision "shell", :path => File.join(File.dirname(__FILE__),"scripts/local/node.sh"), :args => slave.vm.hostname
   end
 
-  (1..COUNTER).each do |i|
-    config.vm.define "kube-node-#{i}" do |node|
+  (2..COUNTER).each do |i|
+    config.vm.define "kube-slave-#{i}" do |node|
         node.vm.box = IMAGE_NAME
         node.vm.network "public_network"
-        node.vm.hostname = "kube-node-#{i}"
+        node.vm.hostname = "kube-slave-#{i}"
         node.vm.provision "shell", :path => File.join(File.dirname(__FILE__),"scripts/local/node.sh"), :args => node.vm.hostname
     end
   end
 end
-
