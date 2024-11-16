@@ -49,11 +49,18 @@ EOF
 sudo chpasswd < pass.txt
 
 cat <<EOF >> /etc/hosts
-192.168.1.10    kube-master
-192.168.1.11    kube-node-1
-192.168.1.12    kube-node-2
-192.168.1.13    kube-node-3
-192.168.1.14    kube-node-4
+# mac
+kube-master     192.168.86.90
+kube-node--1    192.168.86.91
+kube-node--2    192.168.86.92
 
-10.0.0.251    kube-slave
+# ubuntu
+kube-slave      192.168.86.97
+kube-slave-1    192.168.86.98
+kube-slave-2    192.168.86.99
+
+# windows
+kube-slave      192.168.86.94
+kube-slave-1    192.168.86.95
+kube-slave-2    192.168.86.96
 EOF
