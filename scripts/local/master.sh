@@ -28,7 +28,13 @@ sleep 30
 
 #kubectl apply -f https://raw.githubusercontent.com/coreos/flannel/master/Documentation/kube-flannel.yml
 # raw_address for gitcontent
-kubectl --kubeconfig ~/.kube/config apply -f /vagrant/tz-local/resource/172.16_net_calico.yaml
+kubectl --kubeconfig ~/.kube/config delete -f /vagrant/tz-local/resource/calico.yaml
+curl https://raw.githubusercontent.com/projectcalico/calico/v3.24.5/manifests/calico-policy-only.yaml -o /vagrant/tz-local/resource/calico.yaml
+sudo sed -i "s|# - name: CALICO_IPV4POOL_CIDR|- name: CALICO_IPV4POOL_CIDR|g" /vagrant/tz-local/resource/calico.yaml
+sudo sed -i "s|#   value: \"192.168.0.0|  value: \"172.16.0.0|g" /vagrant/tz-local/resource/calico.yaml
+kubectl --kubeconfig ~/.kube/config apply -f /vagrant/tz-local/resource/calico.yaml
+#yq e -i '(.spec.template.spec.containers[] | select(.name == "calico-node") | .env[] | select(.name == "CALICO_MANAGE_CNI").value) = "true"' /vagrant/tz-local/resource/calico.yaml
+#yq e '.spec.template.spec.containers[] | select(.name == "calico-node") | .env[] | select(.name == "CALICO_MANAGE_CNI").value' /vagrant/tz-local/resource/calico.yaml
 
 kubectl proxy --accept-hosts='^*' &
 

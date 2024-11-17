@@ -20,6 +20,9 @@ echo "deb http://apt.kubernetes.io/ kubernetes-xenial main" | sudo tee -a /etc/a
 sudo apt-get update
 sudo apt-get install -y kubeadm
 sudo mkdir -p /root/.ssh
+sudo wget -qO /usr/local/bin/yq https://github.com/mikefarah/yq/releases/latest/download/yq_linux_amd64
+sudo chmod a+x /usr/local/bin/yq
+yq --version
 
 sudo groupadd ubuntu
 sudo useradd -g ubuntu -d /home/ubuntu -s /bin/bash -m ubuntu
