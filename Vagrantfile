@@ -1,43 +1,36 @@
 # -*- mode: ruby -*-
 # vi: set ft=ruby :
 
-IMAGE_NAME = "bento/ubuntu-20.04"
+IMAGE_NAME = "bento/ubuntu-22.04"
 COUNTER = 2
 Vagrant.configure("2") do |config|
   config.vm.box = IMAGE_NAME
   config.ssh.insert_key=false
-  config.vm.provider "virtualbox" do |v|
-    v.memory = 4096
-    v.cpus = 2
-  end
+  # config.vm.provider "virtualbox" do |v|
+  #   v.memory = 4096
+  #   v.cpus = 2
+  # end
 
-  config.vm.define "kube-slave" do |slave|
-    slave.vm.box = IMAGE_NAME
-    slave.vm.network "private_network", ip: "192.168.1.15"
-    #slave.vm.network "public_network"
-    slave.vm.network "forwarded_port", guest: 22, host: 60105, auto_correct: true, id: "ssh"
-    slave.vm.network "forwarded_port", guest: 6443, host: 6443
-    slave.vm.network "forwarded_port", guest: 80, host: 8080
-    slave.vm.network "forwarded_port", guest: 8001, host: 8001
-#     slave.vm.network "forwarded_port", guest: 443, host: 443
-    slave.vm.network "forwarded_port", guest: 32699, host: 32699   # dashboard
-    slave.vm.network "forwarded_port", guest: 32698, host: 32698   # forwarding test
-    slave.vm.network "forwarded_port", guest: 32449, host: 32449   # prometheus
-    slave.vm.network "forwarded_port", guest: 30912, host: 30912   # grafana
-    slave.vm.network "forwarded_port", guest: 31000, host: 31000   # jenkins
-    slave.vm.network "forwarded_port", guest: 8081, host: 8081     # nexus
-    slave.vm.network "forwarded_port", guest: 5050, host: 5050     # docker_repo
-    slave.vm.network "forwarded_port", guest: 30007, host: 30007   # app
-    slave.vm.hostname = "kube-slave"
-    slave.vm.provision "shell", :path => File.join(File.dirname(__FILE__),"scripts/local/node.sh"), :args => slave.vm.hostname
+  config.vm.define "kube-master" do |master|
+    master.vm.box = IMAGE_NAME
+    master.vm.provider "virtualbox" do |vb|
+      vb.memory = 5096
+      vb.cpus = 3
+    end
+    master.vm.network "public_network", bridge: "en0: Wi-Fi (AirPort)", ip: "192.168.86.100"
+    master.vm.hostname = "kube-master"
+    master.vm.provision "shell", :path => File.join(File.dirname(__FILE__),"scripts/local/master.sh"), :args => master.vm.hostname
   end
 
   (1..COUNTER).each do |i|
-    config.vm.define "kube-slave-#{i}" do |node|
+    config.vm.define "kube-node-#{i}" do |node|
         node.vm.box = IMAGE_NAME
-        node.vm.network "private_network", ip: "192.168.1.#{i + 15}"
-        node.vm.network "forwarded_port", guest: 22, host: "6010#{i + 5}", auto_correct: true, id: "ssh"
-        node.vm.hostname = "kube-slave-#{i}"
+        node.vm.provider "virtualbox" do |vb|
+          vb.memory = 3072
+          vb.cpus = 2
+        end
+        node.vm.network "public_network", bridge: "en0: Wi-Fi (AirPort)", ip: "192.168.86.10#{i}"
+        node.vm.hostname = "kube-node-#{i}"
         node.vm.provision "shell", :path => File.join(File.dirname(__FILE__),"scripts/local/node.sh"), :args => node.vm.hostname
     end
   end

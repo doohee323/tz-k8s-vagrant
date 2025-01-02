@@ -2,6 +2,21 @@
 
 #set -x
 
+export ANSIBLE_CONFIG=/root/ansible.cfg
+export DEBIAN_FRONTEND=noninteractive
+echo "
+export ANSIBLE_CONFIG=/root/ansible.cfg
+alias k='kubectl'
+alias ll='ls -al'
+alias KUBECONFIG='~/.kube/config'
+alias base='cd /vagrant'
+export PATH=\"/root/.krew/bin:$PATH\"
+" > /root/.bashrc
+
+echo "net.ipv6.conf.all.disable_ipv6 = 1" >> /etc/sysctl.conf
+echo "net.ipv6.conf.default.disable_ipv6 = 1" >> /etc/sysctl.conf
+sysctl -p
+
 if [ -d /vagrant ]; then
   cd /vagrant
 fi
@@ -9,32 +24,28 @@ fi
 shopt -s expand_aliases
 alias k='kubectl --kubeconfig ~/.kube/config'
 
-MYKEY=tz_rsa
-cp -Rf /vagrant/.ssh/${MYKEY} /root/.ssh/${MYKEY}
-cp -Rf /vagrant/.ssh/${MYKEY}.pub /root/.ssh/${MYKEY}.pub
-cp /home/vagrant/.ssh/authorized_keys /root/.ssh/authorized_keys
-cat /root/.ssh/${MYKEY}.pub >> /root/.ssh/authorized_keys
-chown -R root:root /root/.ssh \
-  chmod -Rf 400 /root/.ssh
-rm -Rf /home/vagrant/.ssh \
-  && cp -Rf /root/.ssh /home/vagrant/.ssh \
-  && chown -Rf vagrant:vagrant /home/vagrant/.ssh \
-  && chmod -Rf 700 /home/vagrant/.ssh \
-  && chmod -Rf 600 /home/vagrant/.ssh/*
+bash /vagrant/scripts/local/base.sh
+
+sudo apt-add-repository ppa:ansible/ansible -y
+sudo apt update
+sudo apt install python3-pip ansible net-tools jq -y
+#sudo pip install --upgrade ansible
+#sudo ansible-galaxy install --force container-engine/runc
+
+sudo apt-get install apt-transport-https ca-certificates curl gnupg-agent software-properties-common -y
+curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
+sudo add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable" -y
+sudo apt-get update -y
+sudo apt-get install docker-ce docker-ce-cli containerd.io -y
 
 cp -Rf scripts/local/config.cfg /root/.ssh/config
 
-bash scripts/local/base.sh
-
-sudo apt-add-repository ppa:ansible/ansible
-sudo apt update
-sudo apt install python3-pip ansible net-tools -y
-
-sudo bash scripts/local/kubespray.sh
+sudo rm -Rf /root/.k8s
+sudo cp -Rf /vagrant/resources /root/.k8s
 
 exit 0
 
-sudo sed -i "s/\$KUBELET_EXTRA_ARGS/\$KUBELET_EXTRA_ARGS --node-ip=192.168.1.10/g" /etc/systemd/system/kubelet.service.d/10-kubeadm.conf
+sudo sed -i "s/\$KUBELET_EXTRA_ARGS/\$KUBELET_EXTRA_ARGS --node-ip=192.168.86.100/g" /etc/systemd/system/kubelet.service.d/10-kubeadm.conf
 systemctl daemon-reload && systemctl restart kubelet
 kubectl get nodes -o wide
 
@@ -42,17 +53,17 @@ kubectl get nodes -o wide
 ## !!! Warning: Authentication failure. Retrying... after nfs setting and ubuntu up
 sudo apt-get install nfs-common nfs-kernel-server rpcbind portmap -y
 sudo mkdir -p /homedata
-sudo chmod -Rf 777 /home
+#sudo chmod -Rf 777 /home
 #sudo chown -Rf nobody:nogroup /home
 echo '/homedata 192.168.1.0/16(rw,sync,no_subtree_check)' >> /etc/exports
 exportfs -a
 systemctl stop nfs-kernel-server
 systemctl start nfs-kernel-server
 #service nfs-kernel-server status
-showmount -e 192.168.1.10
+showmount -e 192.168.86.100
 #sudo mkdir /data
-#mount -t nfs -vvvv 192.168.1.10:/homedata /data
-#echo '192.168.1.10:/homedata /data  nfs      defaults    0       0' >> /etc/fstab
+#mount -t nfs -vvvv 192.168.86.100:/homedata /data
+#echo '192.168.86.100:/homedata /data  nfs      defaults    0       0' >> /etc/fstab
 #sudo mount -t nfs -o resvport,rw 192.168.3.1:/Volumes/workspace/etc /Volumes/sambashare
 
 k patch storageclass nfs-storageclass -p '{"metadata": {"annotations":{"storageclass.kubernetes.io/is-default-class":"true"}}}'
