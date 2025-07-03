@@ -1,4 +1,4 @@
-.vagrant
+.topzone
 .idea
 .project
 .DS_Store
@@ -13,7 +13,6 @@ cluster.*
 kubecfg.*
 dockerhub
 projects
-s3_bucket_id
 join.sh
 config
 join-command
@@ -21,22 +20,27 @@ get_helm.sh
 volumeF.yaml
 credentials
 jenkins_run.yaml
-tz-py-crawler
 info
 list.txt
 es
 kafka
 data/result
-data/doohee323*
 data/*.json
 
 /kubespray
 /authorized_keys
-/id_rsa*
-/kubespray_vagrant
+tz_rsa*
+/kubespray_topzone
 *.log
 /data2
 /pass.txt
 *_bak
 *_bake
 /resources
+/kubespray
+kubeconfig_tz-k8s-vagrant
+.ssh
+/.vagrant/
+/tz-local/resource/vault/vault-injection/cert/
+self-signed.key
+self-signed.crt

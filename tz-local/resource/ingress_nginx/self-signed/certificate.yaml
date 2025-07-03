@@ -1,0 +1,20 @@
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: ingress-ITEM-tls
+spec:
+  secretName: ingress-ITEM-tls
+  duration: 8760h
+  renewBefore: 360h
+  issuerRef:
+    name: selfsigned-issuer
+    kind: ClusterIssuer
+    group: cert-manager.io
+  commonName: ITEM.new-nation.church
+  privateKey:
+    algorithm: ECDSA
+    size: 256
+  dnsNames:
+    - ITEM.new-nation.church
+    - ITEM.default.topzone-k8s.new-nation.church
+    - ITEM.NS.topzone-k8s.new-nation.church

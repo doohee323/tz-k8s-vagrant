@@ -296,7 +296,7 @@ spec:
               exit 1
             fi
           fi
-          exec /entrypoint.sh /run.sh
+          exec /entrypoint.sh /bootstrap.sh
         env:
         - name: ZOO_DATA_LOG_DIR
         - name: ZOO_PORT_NUMBER

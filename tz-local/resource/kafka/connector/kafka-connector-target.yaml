@@ -23,14 +23,14 @@ spec:
   storageClassName: postgres-pv-1
   local:
 #    path: /ubuntu/data/postgres-1     # can't use shared folder
-    path: /home/ubuntu/data/postgres-1
+    path: /home/topzone/data/postgres-1
   nodeAffinity:
     required:
       nodeSelectorTerms:
       - matchExpressions:
         - key: kubernetes.io/hostname
           operator: In
-          values: ["kube-master", "kube-node1", "kube-node2"]
+          values: ["kube-master", "kube-node-1", "kube-node-2"]
 
 ---
 apiVersion: v1
