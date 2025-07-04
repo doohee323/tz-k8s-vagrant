@@ -12,7 +12,8 @@ controller:
 
   service:
     externalTrafficPolicy: "Local"
-    type: LoadBalancer
+    type: NodePort
+#    type: LoadBalancer
     loadBalancerSourceRanges: []
 
   config:
