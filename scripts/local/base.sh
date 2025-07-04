@@ -95,7 +95,7 @@ cat  /vagrant/info
 check_host=`cat /etc/hosts | grep 'kube-master'`
 if [[ "${check_host}" == "" ]]; then
 cat <<EOF >> /etc/hosts
-192.168.0.61   kube-master
+192.168.0.82   kube-master
 192.168.0.63   kube-node-1
 192.168.0.62   kube-node-2
 

@@ -74,7 +74,7 @@ to project root directory.
        
           config.vm.define "kube-master" do |master|
             master.vm.box = IMAGE_NAME
-            master.vm.network "public_network", bridge: "en0: Wi-Fi (AirPort)", ip: "192.168.0.61"        => This should be changed to your network
+            master.vm.network "public_network", bridge: "en0: Wi-Fi (AirPort)", ip: "192.168.0.82"        => This should be changed to your network
             master.vm.hostname = "kube-master"
             master.vm.provision "shell", :path => File.join(File.dirname(__FILE__),"scripts/local/master.sh"), :args => master.vm.hostname
           end
