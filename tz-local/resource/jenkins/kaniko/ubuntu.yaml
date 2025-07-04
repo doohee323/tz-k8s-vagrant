@@ -14,7 +14,7 @@ spec:
         app: devops-bastion
     spec:
       hostAliases:
-      - ip: "192.168.86.200"
+      - ip: "183.96.137.87"
         hostnames:
         - "harbor.harbor.topzone-k8s.new-nation.church"
       imagePullSecrets:

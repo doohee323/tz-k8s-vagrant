@@ -161,14 +161,14 @@ to project root directory.
         vagrant ssh kube-master
         sudo su
         vi /etc/hosts
-        ex) 192.168.86.200 is my ingress-nginx's EXTERNAL-IP
+        ex) 183.96.137.87 is my ingress-nginx's EXTERNAL-IP
             kubectl get svc -n default | grep ingress-nginx-controller        
         
-            192.168.86.200   test.default.topzone-k8s.new-nation.church consul.default.topzone-k8s.new-nation.church vault.default.topzone-k8s.new-nation.church
-            192.168.86.200   consul-server.default.topzone-k8s.new-nation.church argocd.default.topzone-k8s.new-nation.church
-            192.168.86.200   jenkins.default.topzone-k8s.new-nation.church harbor.harbor.topzone-k8s.new-nation.church
-            192.168.86.200   grafana.default.topzone-k8s.new-nation.church prometheus.default.topzone-k8s.new-nation.church alertmanager.default.topzone-k8s.new-nation.church
-            192.168.86.200   vagrant-demo-app.devops-dev.topzone-k8s.new-nation.church
+            183.96.137.87   test.default.topzone-k8s.new-nation.church consul.default.topzone-k8s.new-nation.church vault.default.topzone-k8s.new-nation.church
+            183.96.137.87   consul-server.default.topzone-k8s.new-nation.church argocd.default.topzone-k8s.new-nation.church
+            183.96.137.87   jenkins.default.topzone-k8s.new-nation.church harbor.harbor.topzone-k8s.new-nation.church
+            183.96.137.87   grafana.default.topzone-k8s.new-nation.church prometheus.default.topzone-k8s.new-nation.church alertmanager.default.topzone-k8s.new-nation.church
+            183.96.137.87   vagrant-demo-app.devops-dev.topzone-k8s.new-nation.church
 
     -. After installing k8s on all machines,
         bash /vagrant/scripts/k8s_addtion.sh

@@ -89,7 +89,7 @@ echo "##############################################"
 cat  /vagrant/info
 
 # manual test
-#sudo mount -t nfs 192.168.86.200:/srv/nfs /mnt
+#sudo mount -t nfs 183.96.137.87:/srv/nfs /mnt
 ## done
 
 check_host=`cat /etc/hosts | grep 'kube-master'`
@@ -107,12 +107,12 @@ cat <<EOF >> /etc/hosts
 192.168.86.212   kube-slave-5
 192.168.86.213   kube-slave-6
 
-192.168.86.200   test.default.topzone-k8s.new-nation.church consul.default.topzone-k8s.new-nation.church vault.default.topzone-k8s.new-nation.church
-192.168.86.200   consul-server.default.topzone-k8s.new-nation.church argocd.default.topzone-k8s.new-nation.church
-192.168.86.200   jenkins.default.topzone-k8s.new-nation.church harbor.harbor.topzone-k8s.new-nation.church
-192.168.86.200   grafana.default.topzone-k8s.new-nation.church prometheus.default.topzone-k8s.new-nation.church alertmanager.default.topzone-k8s.new-nation.church
-192.168.86.200   grafana.default.topzone-k8s.new-nation.church prometheus.default.topzone-k8s.new-nation.church alertmanager.default.topzone-k8s.new-nation.church
-192.168.86.200   vagrant-demo-app.devops-dev.topzone-k8s.new-nation.church
+183.96.137.87   test.default.topzone-k8s.new-nation.church consul.default.topzone-k8s.new-nation.church vault.default.topzone-k8s.new-nation.church
+183.96.137.87   consul-server.default.topzone-k8s.new-nation.church argocd.default.topzone-k8s.new-nation.church
+183.96.137.87   jenkins.default.topzone-k8s.new-nation.church harbor.harbor.topzone-k8s.new-nation.church
+183.96.137.87   grafana.default.topzone-k8s.new-nation.church prometheus.default.topzone-k8s.new-nation.church alertmanager.default.topzone-k8s.new-nation.church
+183.96.137.87   grafana.default.topzone-k8s.new-nation.church prometheus.default.topzone-k8s.new-nation.church alertmanager.default.topzone-k8s.new-nation.church
+183.96.137.87   vagrant-demo-app.devops-dev.topzone-k8s.new-nation.church
 
 EOF
 fi
