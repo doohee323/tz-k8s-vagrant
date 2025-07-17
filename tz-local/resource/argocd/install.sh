@@ -13,6 +13,8 @@ k8s_domain=$(prop 'project' 'domain')
 admin_password=$(prop 'project' 'admin_password')
 github_token=$(prop 'project' 'github_token')
 basic_password=$(prop 'project' 'basic_password')
+github_id=$(prop 'project' 'github_id')
+github_token=$(prop 'project' 'github_token')
 
 alias k='kubectl --kubeconfig ~/.kube/config'
 
