@@ -10,6 +10,9 @@ alias k='kubectl --kubeconfig ~/.kube/config'
 
 k8s_project=$(prop 'project' 'project')
 k8s_domain=$(prop 'project' 'domain')
+DOCKER_USERNAME=$(prop 'project' 'dockerhub_id')
+DOCKER_PW=$(prop 'project' 'dockerhub_password')
+DOCKER_EMAIL=$(prop 'project' 'dockerhub_email')
 
 helm repo add jenkins https://charts.jenkins.io
 helm search repo jenkins
@@ -48,6 +51,13 @@ mkdir -p /root/.docker
 cp -Rf /vagrant/resources/config.json /root/.docker/config2.json
 kubectl -n jenkins delete configmap docker-config
 kubectl -n jenkins create configmap docker-config --from-file=/root/.docker/config2.json
+
+kubectl create secret docker-registry tz-registrykey \
+  --namespace jenkins \
+  --docker-server=https://index.docker.io/v1/ \
+  --docker-username=$DOCKER_USERNAME \
+  --docker-password=$DOCKER_PW \
+  --docker-email=$DOCKER_EMAIL
 
 #kubectl cp plugin.txt jenkins/jenkins-0:/tmp/plugin.txt
 #kubectl -n jenkins exec -it jenkins-0 /bin/bash
