@@ -10,7 +10,7 @@ metadata:
 spec:
   ingressClassName: nginx
   rules:
-  - host: airflow-admin.default.k8s_project.k8s_domain
+  - host: airflow-admin.k8s_domain
     http:
       paths:
       - path: /
@@ -22,5 +22,5 @@ spec:
               number: 8080
   tls:
   - hosts:
-      - airflow-admin.default.k8s_project.k8s_domain
+      - airflow-admin.k8s_domain
     secretName: airflow-webserver-ingress-tls
