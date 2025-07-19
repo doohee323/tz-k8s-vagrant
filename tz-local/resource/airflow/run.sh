@@ -1,8 +1,8 @@
 # install airflow
 
 source /root/.bashrc
-#bash /vagrant/sl-local/resource/airflow/run.sh
-cd /vagrant/sl-local/resource/airflow
+#bash /vagrant/tz-local/resource/airflow/run.sh
+cd /vagrant/tz-local/resource/airflow
 
 #set -x
 shopt -s expand_aliases
