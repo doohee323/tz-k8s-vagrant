@@ -18,6 +18,8 @@ github_token=$(prop 'project' 'github_token')
 NS=airflow
 
 helm uninstall airflow -n ${NS}
+#kubectl delete pod airflow-redis-0 --grace-period=0 --force -n airflow
+#kubectl delete pod airflow-worker-0 --grace-period=0 --force -n airflow
 kubectl delete ns ${NS}
 kubectl create ns ${NS}
 
