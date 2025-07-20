@@ -17,8 +17,28 @@ helm repo add community-charts https://community-charts.github.io/helm-charts
 helm repo update
 
 #S3 (Minio) and PostgreSQL DB Configuration on Helm Upgrade Command Example
-helm upgrade --install mlflow community-charts/mlflow \
-  --namespace ${NS} \
+#helm uninstall mlflow -n ${NS}
+#helm upgrade --install mlflow community-charts/mlflow \
+#  --namespace ${NS} \
+#  --set backendStore.databaseMigration=true \
+#  --set backendStore.postgres.enabled=true \
+#  --set backendStore.postgres.host=devops-postgres-postgresql.devops-dev.svc.cluster.local \
+#  --set backendStore.postgres.port=5432 \
+#  --set backendStore.postgres.database=mlflow \
+#  --set backendStore.postgres.user=admin \
+#  --set backendStore.postgres.password='DevOps!323' \
+#  --set artifactRoot.s3.enabled=true \
+#  --set artifactRoot.s3.bucket=mlflow \
+#  --set artifactRoot.s3.awsAccessKeyId=${k8s_project} \
+#  --set artifactRoot.s3.awsSecretAccessKey=${admin_password} \
+#  --set extraEnvVars.MLFLOW_S3_ENDPOINT_URL=http://minio.devops.svc.cluster.local:9000 \
+#  --set serviceMonitor.enabled=true \
+#  --set image.tag=2.12.1
+
+helm install my-release oci://registry-1.docker.io/bitnamicharts/mlflow
+
+helm upgrade --install mlflow oci://registry-1.docker.io/bitnamicharts/mlflow \
+  --namespace ${NS} --create-namespace \
   --set backendStore.databaseMigration=true \
   --set backendStore.postgres.enabled=true \
   --set backendStore.postgres.host=devops-postgres-postgresql.devops-dev.svc.cluster.local \
@@ -28,19 +48,16 @@ helm upgrade --install mlflow community-charts/mlflow \
   --set backendStore.postgres.password='DevOps!323' \
   --set artifactRoot.s3.enabled=true \
   --set artifactRoot.s3.bucket=mlflow \
-  --set artifactRoot.s3.awsAccessKeyId=${k8s_project} \
-  --set artifactRoot.s3.awsSecretAccessKey=${admin_password} \
-  --set extraEnvVars.MLFLOW_S3_ENDPOINT_URL=http://minio.devops.svc.cluster.local:9000 \
+  --set artifactRoot.s3.awsAccessKeyId="${k8s_project}" \
+  --set artifactRoot.s3.awsSecretAccessKey="${admin_password}" \
+  --set extraEnvVars[0].name=MLFLOW_S3_ENDPOINT_URL \
+  --set extraEnvVars[0].value=http://minio.devops.svc.cluster.local:9000 \
   --set serviceMonitor.enabled=true
 
-#CREATE DATABASE mlflow OWNER admin;
-#POSTGRES_USER=admin
-#POSTGRES_PASSWORD=DevOps!323
-#POSTGRES_HOST=devops-postgres-postgresql.devops-dev.svc.cluster.local
-#POSTGRES_PORT=5432
+cp -Rf mlflow-ingress.yaml mlflow-ingress.yaml_bak
+sed -ie "s/k8s_project/${k8s_project}/g" mlflow-ingress.yaml_bak
+sed -ie "s/k8s_domain/${k8s_domain}/g" mlflow-ingress.yaml_bak
+#kubectl delete -f mlflow-ingress.yaml_bak -n mlflow
+kubectl apply -f mlflow-ingress.yaml_bak -n ${NS}
 
-#1. Get the application URL by running these commands:
-#  export POD_NAME=$(kubectl get pods --namespace devops-dev -l "app.kubernetes.io/name=mlflow,app.kubernetes.io/instance=mlflow" -o jsonpath="{.items[0].metadata.name}")
-#  export CONTAINER_PORT=$(kubectl get pod --namespace devops-dev $POD_NAME -o jsonpath="{.spec.containers[0].ports[0].containerPort}")
-#  echo "Visit http://127.0.0.1:8080 to use your application"
-#  kubectl --namespace devops-dev port-forward $POD_NAME 8080:$CONTAINER_PORT
+YgbWLutM60Eh
