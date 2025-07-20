@@ -9,15 +9,16 @@ cd /vagrant/tz-local/resource/postgres/bastion
 shopt -s expand_aliases
 alias k='kubectl --kubeconfig ~/.kube/config'
 
-k8s_project=$(prop 'project' 'project')
 NS=devops-dev
 
+cd /Volumes/workspace/tz/tz-k8s-vagrant/resources
 kubectl exec -n devops-dev -it bastion -- mkdir -p /root/.k8s
 kubectl cp project devops-dev/bastion:/root/.k8s
+kubectl exec -n devops-dev -it bastion -- mkdir -p /root/.kube
 kubectl cp kubeconfig_topzone-k8s devops-dev/bastion:/root/.kube/config
 kubectl exec -n devops-dev -it bastion -- mkdir -p /root/.k8s
 kubectl cp .bashrc devops-dev/bastion:/root/.bashrc
-kubectl exec -n devops-dev -it bastion -- bash -c 'cd /root && rm -Rf /vagrant && rm -Rf /root/tz-k8s-vagrant && git clone https://github.com/doohee323/tz-k8s-vagrant.git && cd / && ln -s /root/tz-k8s-vagrant /vagrant'
+kubectl exec -n devops-dev -it bastion -- bash -c 'cd /root && rm -Rf /vagrant && rm -Rf /root/tz-k8s-vagrant && git clone https://github.com/doohee323/tz-k8s-vagrant.git && cd / && ln -s /root/tz-k8s-vagrant /vagrant && git checkout -b mlflow_hyper-v origin/mlflow_hyper-v'
 
 ######################################################################
 TAG=latest

@@ -15,16 +15,12 @@ export admin_password=$(prop 'project' 'admin_password')
 NS=devops
 
 helm repo add minio https://charts.min.io/
-#helm show values minio minio/minio> values.yaml
-#kubectl cp values.yaml devops-dev/bastion:/vagrant/tz-local/resource/minio
-#--reuse-values
-helm uninstall minio -n ${NS}
 helm upgrade --install minio minio/minio \
-  --namespace ${NS} \
   --set accessKey=${project} \
   --set secretKey=${admin_password} \
-  --set persistence.storageClass=local-path \
-  --set persistence.size=3Gi
+  --set persistence.storageClass=standard \
+  --set persistence.size=10Gi
+  -n ${NS}
 
 cp -Rf minio-ingress.yaml minio-ingress.yaml_bak
 sed -ie "s/k8s_project/${k8s_project}/g" minio-ingress.yaml_bak
