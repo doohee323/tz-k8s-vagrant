@@ -13,9 +13,16 @@ k8s_domain=$(prop 'project' 'domain')
 admin_password=$(prop 'project' 'admin_password')
 NS=airflow
 
+#kubectl delete ns ${NS}
 kubectl create ns ${NS}
 helm repo add apache-airflow https://airflow.apache.org
-helm upgrade --install airflow apache-airflow/airflow --namespace airflow --create-namespace
+#helm show values apache-airflow/airflow > values.yaml
+helm uninstall airflow -n ${NS}
+#kubectl cp values.yaml devops-dev/bastion:/vagrant/tz-local/resource/airflow
+#--reuse-values
+helm upgrade --install airflow apache-airflow/airflow -n ${NS} -f values.yaml
+
+#echo Fernet Key: $(kubectl get secret --namespace airflow airflow-fernet-key -o jsonpath="{.data.fernet-key}" | base64 --decode)
 
 cp -Rf airflow-ingress.yaml airflow-ingress.yaml_bak
 sed -ie "s/k8s_project/${k8s_project}/g" airflow-ingress.yaml_bak
