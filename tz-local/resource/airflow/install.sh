@@ -1,3 +1,5 @@
+#!/usr/bin/env bash
+
 # install airflow
 
 source /root/.bashrc
@@ -11,13 +13,27 @@ alias k='kubectl --kubeconfig ~/.kube/config'
 k8s_project=$(prop 'project' 'project')
 k8s_domain=$(prop 'project' 'domain')
 admin_password=$(prop 'project' 'admin_password')
+github_id=$(prop 'project' 'github_id')
+github_token=$(prop 'project' 'github_token')
 NS=airflow
 
-#kubectl delete ns ${NS}
+helm uninstall airflow -n ${NS}
+kubectl delete ns ${NS}
 kubectl create ns ${NS}
+
+kubectl create secret generic git-credentials \
+  --from-literal=GIT_SYNC_USERNAME=${github_id} \
+  --from-literal=GIT_SYNC_PASSWORD=${github_token} \
+  --from-literal=GITSYNC_USERNAME=${github_id} \
+  --from-literal=GITSYNC_PASSWORD=${github_token} \
+  -n airflow
+
+kubectl create secret generic airflow-webserver-secret \
+  --from-literal=webserver-secret-key='topzone!323' \
+  -n airflow
+
 helm repo add apache-airflow https://airflow.apache.org
 #helm show values apache-airflow/airflow > values.yaml
-helm uninstall airflow -n ${NS}
 #kubectl cp values.yaml devops-dev/bastion:/vagrant/tz-local/resource/airflow
 #--reuse-values
 helm upgrade --install airflow apache-airflow/airflow -n ${NS} -f values.yaml
@@ -30,6 +46,15 @@ sed -ie "s/k8s_domain/${k8s_domain}/g" airflow-ingress.yaml_bak
 #kubectl delete -f airflow-ingress.yaml_bak -n airflow
 kubectl apply -f airflow-ingress.yaml_bak -n airflow
 
+exit 0
+
 admin / admin
+
+
+https://airflow-admin.new-nation.church/connections
+my_postgres_connection	postgres		devops-postgres-postgresql.devops-dev.svc.cluster.local	5432  admin/passwd drillquiz
+nasa_api	http		api.nasa.gov	443 https   passwd
+
+
 
 
