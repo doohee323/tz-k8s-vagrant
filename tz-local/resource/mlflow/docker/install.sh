@@ -32,7 +32,7 @@ docker push doohee323/ml_job_dag:latest
 #4. Airflow DAG에서 만들기 (KubernetesPodOperator)
 # ml_job_dag.py
 
-#5. Airflow gitsycn 로 배포
+#5. Airflow gitsync 로 배포
 #git clone https://github.com/doohee323/tz-airflow-dags.git
 cp -Rf ml_job_dag.py tz-airflow-dags/airflow-dags/ml_job_dag.py
 cd tz-airflow-dags
