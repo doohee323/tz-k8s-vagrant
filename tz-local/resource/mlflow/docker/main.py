@@ -10,17 +10,30 @@ def main():
     print(os.getenv("MLFLOW_TRACKING_URI"))
     print("----------------------------")
 
+    headers = {
+        "Authorization": "Basic dXNlcjpZZ2JXTHV0TTYwRWg="
+    }
+
+    res = requests.get(
+        "https://mlflow.new-nation.church/api/2.0/mlflow/experiments/get-by-name",
+        params={"experiment_name": "Check localhost connection2"},
+        headers=headers
+    )
+
+    print(res.json())
+    print("----------------------------")
+
     # 인증용 requests 세션 생성
     session = requests.Session()
     session.headers.update({
         "Authorization": os.getenv("MLFLOW_AUTH_HEADER")  # ex: Basic dXNlcjpZZ2JXTHV0TTYwRWg=
     })
 
-    resp = requests.get(
-        f"{os.getenv('MLFLOW_TRACKING_URI')}/api/2.0/mlflow/experiments/list",
-        headers={"Authorization": os.getenv("MLFLOW_AUTH_HEADER")}
-    )
-    print(resp.status_code, resp.text)
+    # resp = requests.get(
+    #     f"{os.getenv('MLFLOW_TRACKING_URI')}/api/2.0/mlflow/experiments/list",
+    #     headers={"Authorization": os.getenv("MLFLOW_AUTH_HEADER")}
+    # )
+    # print(resp.status_code, resp.text)
 
     # 세션을 MLflow에 주입 (비공식 방식이지만 현재까지 가장 안정적)
     import mlflow.tracking
