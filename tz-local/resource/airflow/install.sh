@@ -17,10 +17,10 @@ github_id=$(prop 'project' 'github_id')
 github_token=$(prop 'project' 'github_token')
 NS=airflow
 
-helm uninstall airflow -n ${NS}
+#helm uninstall airflow -n ${NS}
 #kubectl delete pod airflow-redis-0 --grace-period=0 --force -n airflow
 #kubectl delete pod airflow-worker-0 --grace-period=0 --force -n airflow
-kubectl delete ns ${NS}
+#kubectl delete ns ${NS}
 kubectl create ns ${NS}
 
 kubectl create secret generic git-credentials \
@@ -38,7 +38,8 @@ helm repo add apache-airflow https://airflow.apache.org
 #helm show values apache-airflow/airflow > values.yaml
 #kubectl cp values.yaml devops-dev/bastion:/vagrant/tz-local/resource/airflow
 #--reuse-values
-helm upgrade --install airflow apache-airflow/airflow -n ${NS} -f values.yaml
+helm upgrade --install --reuse-values airflow apache-airflow/airflow -n ${NS} -f values.yaml \
+  --set "airflow.extraPipPackages={apache-airflow-providers-cncf-kubernetes}"
 
 #echo Fernet Key: $(kubectl get secret --namespace airflow airflow-fernet-key -o jsonpath="{.data.fernet-key}" | base64 --decode)
 
