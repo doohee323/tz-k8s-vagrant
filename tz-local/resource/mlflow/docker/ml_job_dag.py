@@ -12,7 +12,7 @@ with DAG(
     run_ml_task = KubernetesPodOperator(
         task_id="run_ml_task",
         name="ml-task",
-        namespace="ml-pipeline",  # Airflow가 배포된 namespace
+        namespace="airflow",  # Airflow가 배포된 namespace
         image="doohee323/ml_job_dag:latest",
         image_pull_policy="Always",
         is_delete_operator_pod=True,
