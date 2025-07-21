@@ -79,6 +79,10 @@ airflowVersion: "3.0.2"
 # Images
 images:
   airflow:
+    extraPipPackages:
+      - apache-airflow-providers-cncf-kubernetes
+      - boto3
+      - mlflow
     repository: ~
     tag: ~
     # Specifying digest takes precedence over tag.

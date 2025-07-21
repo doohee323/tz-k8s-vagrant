@@ -23,6 +23,7 @@ NS=airflow
 #kubectl delete ns ${NS}
 kubectl create ns ${NS}
 
+kubectl delete secret git-credentials
 kubectl create secret generic git-credentials \
   --from-literal=GIT_SYNC_USERNAME=${github_id} \
   --from-literal=GIT_SYNC_PASSWORD=${github_token} \

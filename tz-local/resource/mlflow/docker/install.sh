@@ -25,7 +25,7 @@ cp get-started.py main.py
 
 #2. Dockerfile 작성
 #3. Docker Image 빌드 및 Push
-#cd docker
+cd docker
 docker build -t doohee323/ml_job_dag:latest .
 docker push doohee323/ml_job_dag:latest
 
