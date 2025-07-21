@@ -76,13 +76,15 @@ defaultAirflowDigest: ~
 # Airflow version (Used to make some decisions based on Airflow Version being deployed)
 airflowVersion: "3.0.2"
 
+airflow:
+  extraPipPackages:
+    - apache-airflow-providers-cncf-kubernetes
+    - boto3
+    - mlflow
+
 # Images
 images:
   airflow:
-    extraPipPackages:
-      - apache-airflow-providers-cncf-kubernetes
-      - boto3
-      - mlflow
     repository: ~
     tag: ~
     # Specifying digest takes precedence over tag.

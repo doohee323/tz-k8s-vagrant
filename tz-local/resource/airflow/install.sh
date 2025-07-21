@@ -39,8 +39,7 @@ helm repo add apache-airflow https://airflow.apache.org
 #helm show values apache-airflow/airflow > values.yaml
 #kubectl cp values.yaml devops-dev/bastion:/vagrant/tz-local/resource/airflow
 #--reuse-values
-helm upgrade --install --reuse-values airflow apache-airflow/airflow -n ${NS} -f values.yaml \
-  --set "airflow.extraPipPackages={apache-airflow-providers-cncf-kubernetes}"
+helm upgrade --install --reuse-values airflow apache-airflow/airflow -n ${NS} -f values.yaml
 
 #echo Fernet Key: $(kubectl get secret --namespace airflow airflow-fernet-key -o jsonpath="{.data.fernet-key}" | base64 --decode)
 
