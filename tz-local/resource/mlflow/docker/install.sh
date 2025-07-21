@@ -43,4 +43,7 @@ git push
 #6. 확인
 #URL: https://airflow-admin.new-nation.church/
 
+#7 Trigger
+#실행: doohee323/ml_job_dag:latest
+
 
