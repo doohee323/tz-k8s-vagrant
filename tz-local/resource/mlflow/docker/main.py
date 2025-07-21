@@ -1,4 +1,8 @@
 import mlflow
+import os
+import mlflow.tracking
+import requests
+
 
 # main.py
 def main():
@@ -8,7 +12,14 @@ def main():
 
     # In[4]:
 
-    mlflow.set_tracking_uri("https://mlflow.new-nation.church")
+    session = requests.Session()
+    session.headers.update({
+        "Authorization": os.getenv("MLFLOW_AUTH_HEADER")
+    })
+    mlflow.tracking._tracking_service.utils._get_http_session = lambda: session
+
+    mlflow.set_tracking_uri(os.getenv("MLFLOW_TRACKING_URI"))
+    # mlflow.set_tracking_uri("https://mlflow.new-nation.church")
 
     # In[5]:
 
