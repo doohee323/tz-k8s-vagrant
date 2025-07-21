@@ -61,10 +61,6 @@ sed -ie "s/k8s_domain/${k8s_domain}/g" mlflow-ingress.yaml_bak
 kubectl apply -f mlflow-ingress.yaml_bak -n ${NS}
 
 
-export MLFLOW_TRACKING_URI="https://mlflow.new-nation.church"
-export MLFLOW_TRACKING_USERNAME="user"
-export MLFLOW_TRACKING_PASSWORD="YgbWLutM60Eh"
-
 rm -Rf .venv
 #conda create -p .venv python==3.13
 #conda activate .venv
@@ -75,12 +71,19 @@ pyenv local 3.10.13
 python -m venv env
 source env/bin/activate
 
+cd /vagrant/tz-local/resource/mlflow
+python3 -m venv venv
+source venv/bin/activate
 pip3 install -r requirements.txt
 pip3 install papermill
-papermill get-started.ipynb output.ipynb
 
 pip install ipykernel
-python -m ipykernel install --user --name=mlflow-py10 --display-name "Python (MLFlow 3.10)"
-papermill get-started.ipynb output.ipynb -k mlflow-py10
+python -m ipykernel install --user --name=python3 --display-name "Python 3 (venv)"
+jupyter kernelspec list
 
+export MLFLOW_TRACKING_URI="https://mlflow.new-nation.church"
+export MLFLOW_TRACKING_USERNAME="user"
+export MLFLOW_TRACKING_PASSWORD="YgbWLutM60Eh"
+
+papermill get-started.ipynb output.ipynb
 
