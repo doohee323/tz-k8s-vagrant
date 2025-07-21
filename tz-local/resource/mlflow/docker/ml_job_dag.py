@@ -13,7 +13,7 @@ with DAG(
         task_id="run_ml_task",
         name="ml-task",
         namespace="ml-pipeline",  # Airflow가 배포된 namespace
-        image="myorg/ml-task:latest",
+        image="doohee323/ml_job_dag:latest",
         image_pull_policy="Always",
         is_delete_operator_pod=True,
         get_logs=True,

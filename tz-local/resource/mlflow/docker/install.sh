@@ -18,12 +18,14 @@ NS=devops-dev
 
 #1. Python 코드 준비
 #pip install nbconvert
+#cd papermill
 jupyter-nbconvert --to script get-started.ipynb
 cp get-started.py main.py
 # add if __name__ == "__main__":
 
 #2. Dockerfile 작성
 #3. Docker Image 빌드 및 Push
+#cd docker
 docker build -t doohee323/ml_job_dag:latest .
 docker push doohee323/ml_job_dag:latest
 
@@ -31,10 +33,12 @@ docker push doohee323/ml_job_dag:latest
 # ml_job_dag.py
 
 #5. Airflow gitsycn 로 배포
-cp -Rf ml_job_dag.py /Users/dhong/workspaces/mlops/airflow/tz-airflow-dags/airflow-dags/ml_job_dag.py
-cd /Users/dhong/workspaces/mlops/airflow/tz-airflow-dags
-git add .
+#git clone https://github.com/doohee323/tz-airflow-dags.git
+cp -Rf ml_job_dag.py tz-airflow-dags/airflow-dags/ml_job_dag.py
+cd tz-airflow-dags
+git add airflow-dags/ml_job_dag.py
 git commit -m 'ml_job_dag'
+git push
 
 #6. 확인
 #URL: https://airflow-admin.new-nation.church/
