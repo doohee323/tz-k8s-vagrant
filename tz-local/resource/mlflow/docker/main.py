@@ -4,15 +4,9 @@ import mlflow
 def main():
     print("Hello from converted notebook")
 
-    os.environ["MLFLOW_TRACKING_URI"] = "https://mlflow.new-nation.church"
-    os.environ["MLFLOW_TRACKING_USERNAME"] = "user"
-    os.environ["MLFLOW_TRACKING_PASSWORD"] = "YgbWLutM60Eh"
-
-    print("----------------------------")
     print(os.getenv("MLFLOW_TRACKING_URI"))
     print(os.getenv("MLFLOW_TRACKING_USERNAME"))
     print(os.getenv("MLFLOW_TRACKING_PASSWORD"))
-    print("----------------------------")
 
     # MLflow 서버 설정
     mlflow.set_tracking_uri(os.getenv("MLFLOW_TRACKING_URI"))
