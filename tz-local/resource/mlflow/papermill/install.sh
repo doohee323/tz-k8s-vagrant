@@ -41,5 +41,6 @@ papermill get-started.ipynb output.ipynb
 
 ######################################################################
 
-jupyter nbconvert --to script get-started.ipynb
+pip install nbconvert
+jupyter-nbconvert --to script get-started.ipynb
 
