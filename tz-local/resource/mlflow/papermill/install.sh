@@ -39,8 +39,3 @@ export MLFLOW_TRACKING_PASSWORD="YgbWLutM60Eh"
 
 papermill get-started.ipynb output.ipynb
 
-######################################################################
-
-pip install nbconvert
-jupyter-nbconvert --to script get-started.ipynb
-
