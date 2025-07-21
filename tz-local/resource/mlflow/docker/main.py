@@ -4,6 +4,10 @@ import mlflow
 def main():
     print("Hello from converted notebook")
 
+    os.environ["MLFLOW_TRACKING_URI"] = "https://mlflow.new-nation.church"
+    os.environ["MLFLOW_TRACKING_USERNAME"] = "user"
+    os.environ["MLFLOW_TRACKING_PASSWORD"] = "YgbWLutM60Eh"
+
     print("----------------------------")
     print(os.getenv("MLFLOW_TRACKING_URI"))
     print(os.getenv("MLFLOW_TRACKING_USERNAME"))
@@ -12,7 +16,6 @@ def main():
 
     # MLflow 서버 설정
     mlflow.set_tracking_uri(os.getenv("MLFLOW_TRACKING_URI"))
-    # mlflow.set_tracking_uri("https://mlflow.new-nation.church")
 
     # 실험 이름 설정 (삭제된 이름이면 에러 발생하므로 주의)
     mlflow.set_experiment("Check localhost connection2")
