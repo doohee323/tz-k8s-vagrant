@@ -36,10 +36,6 @@ helm upgrade --debug --install --reuse-values redis-cluster-${NAME} \
   --set replica.persistence.storageClass=local-path \
 bitnami/redis -n ${NS}
 
-k patch StatefulSet/redis-cluster-${NAME}-master -p '{"spec": {"template": {"spec": {"nodeSelector": {"team": "drillquiz"}}}}}' -n ${NS}
-k patch StatefulSet/redis-cluster-${NAME}-master -p '{"spec": {"template": {"spec": {"nodeSelector": {"environment": "dev"}}}}}' -n ${NS}
-k patch StatefulSet/redis-cluster-${NAME}-replicas -p '{"spec": {"template": {"spec": {"nodeSelector": {"team": "drillquiz"}}}}}' -n ${NS}
-k patch StatefulSet/redis-cluster-${NAME}-replicas -p '{"spec": {"template": {"spec": {"nodeSelector": {"environment": "dev"}}}}}' -n ${NS}
 k patch StatefulSet/redis-cluster-${NAME}-replicas -p '{"spec": {"template": {"spec": {"replicas": 1}}}}' -n ${NS}
 k patch svc redis-cluster-${NAME}-master -p '{"spec": {"type": "LoadBalancer"}}' -n ${NS}
 
