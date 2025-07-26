@@ -18,6 +18,7 @@ helm repo update
 NAME=drillquiz
 #helm uninstall redis-cluster-${NAME} -n ${NS}
 helm upgrade --debug --install --reuse-values redis-cluster-${NAME} \
+  --set sentinel.enabled=true \
   --set cluster.replicaCount=1 \
   --set auth.enabled=false \
   --set securityContext.enabled=true \
@@ -39,8 +40,9 @@ bitnami/redis -n ${NS}
 k patch StatefulSet/redis-cluster-${NAME}-replicas -p '{"spec": {"template": {"spec": {"replicas": 1}}}}' -n ${NS}
 k patch svc redis-cluster-${NAME}-master -p '{"spec": {"type": "LoadBalancer"}}' -n ${NS}
 
-k scale --replicas=0 StatefulSet redis-cluster-${NAME}-replicas -n ${NS}
-k scale --replicas=1 StatefulSet redis-cluster-${NAME}-replicas -n ${NS}
+#  --set sentinel.enabled=true \
+#k scale --replicas=0 StatefulSet redis-cluster-${NAME}-replicas -n ${NS}
+#k scale --replicas=1 StatefulSet redis-cluster-${NAME}-replicas -n ${NS}
 
 sleep 240
 
