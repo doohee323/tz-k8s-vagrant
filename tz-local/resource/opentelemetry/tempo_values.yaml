@@ -21,8 +21,8 @@ storage:
       bucket: tempo-eks-main-s
       endpoint: s3.dualstack.ap-northeast-2.amazonaws.com
       region: ap-northeast-2
-      access_key: aws_access_key_id
-      secret_key: aws_secret_access_key
+      access_key: minio_access_key_id
+      secret_key: minio_secret_access_key
   admin:
     backend: filesystem
 

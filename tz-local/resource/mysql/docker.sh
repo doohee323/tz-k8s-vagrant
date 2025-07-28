@@ -2,8 +2,8 @@
 
 cd /vagrant/tz-local/resource/mysql
 
-aws_access_key_id=$(prop 'credentials' 'aws_access_key_id')
-aws_secret_access_key=$(prop 'credentials' 'aws_secret_access_key')
+minio_access_key_id=$(prop 'credentials' 'minio_access_key_id')
+minio_secret_access_key=$(prop 'credentials' 'minio_secret_access_key')
 k8s_project=$(prop 'project' 'project')
 k8s_domain=$(prop 'project' 'domain')
 VAULT_TOKEN=$(prop 'project' 'vault')

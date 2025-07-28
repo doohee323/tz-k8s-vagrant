@@ -17,8 +17,8 @@ shopt -s expand_aliases
 
 k8s_project=$(prop 'project' 'project')
 k8s_domain=$(prop 'project' 'domain')
-aws_access_key_id=$(prop 'credentials' 'aws_access_key_id')
-aws_secret_access_key=$(prop 'credentials' 'aws_secret_access_key')
+minio_access_key_id=$(prop 'credentials' 'minio_access_key_id')
+minio_secret_access_key=$(prop 'credentials' 'minio_secret_access_key')
 
 NS=opentelemetry-operator
 alias k='kubectl --kubeconfig ~/.kube/config -n '${NS}
@@ -50,8 +50,8 @@ kubectl create ns tempo
 #helm delete tempo -n tempo
 
 cp tempo_values.yaml tempo_values.yaml_bak
-sed -i "s|aws_access_key_id|${aws_access_key_id}|g" tempo_values.yaml_bak
-sed -i "s|aws_secret_access_key|${aws_secret_access_key}|g" tempo_values.yaml_bak
+sed -i "s|minio_access_key_id|${minio_access_key_id}|g" tempo_values.yaml_bak
+sed -i "s|minio_secret_access_key|${minio_secret_access_key}|g" tempo_values.yaml_bak
 
 #helm uninstall tempo -n tempo
 #--reuse-values
@@ -75,6 +75,7 @@ helm upgrade --debug --install --reuse-values \
 #helm uninstall opentelemetry-collector -n ${NS}
 helm upgrade --debug --install --reuse-values \
   opentelemetry-collector open-telemetry/opentelemetry-collector \
+  --set image.repository=otel/opentelemetry-collector \
   --values "opentelemetry-collector_values.yaml" \
   --namespace ${NS}
 

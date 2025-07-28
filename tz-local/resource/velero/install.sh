@@ -30,8 +30,8 @@ sudo mv velero-v1.10.3-linux-amd64/velero /usr/local/bin/velero
 
 credentials_velero="/root/.k8s/credentials"
 #[default]
-#aws_access_key_id=<AWS_ACCESS_KEY_ID>
-#aws_secret_access_key=<AWS_SECRET_ACCESS_KEY>
+#minio_access_key_id=<AWS_ACCESS_KEY_ID>
+#minio_secret_access_key=<AWS_SECRET_ACCESS_KEY>
 
 kubectl create namespace velero
 
