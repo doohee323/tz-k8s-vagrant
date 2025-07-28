@@ -2,7 +2,7 @@ ingester:
   persistence:
     enabled: true
     size: 100Gi
-    storageClass: nfs-client
+    storageClass: local-path
 traces:
   otlp:
     http:
