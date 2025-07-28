@@ -3,7 +3,7 @@ kind: Service
 metadata:
   labels:
     app.kubernetes.io/name: opentelemetry-operator
-  name: opentelemetry-operator-webhook-service
+  name: opentelemetry-operator-webhook
   namespace: opentelemetry-operator
 spec:
   ports:

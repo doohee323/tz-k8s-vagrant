@@ -86,12 +86,12 @@ kubectl delete -f opentelemetry-instrumentation.yaml -n nlp
 kubectl apply -f opentelemetry-instrumentation.yaml -n nlp
 
 kubectl get instrumentations.opentelemetry.io -n nlp
-#NAME                   AGE   ENDPOINT                                                           SAMPLER                    SAMPLER ARG
-#otel-instrumentation   9s    http://opentelemetry-collector.opentelemetry-operator:4317   parentbased_traceidratio   1
+#NAME                            AGE   ENDPOINT                                                     SAMPLER                    SAMPLER ARG
+#opentelemetry-instrumentation   14m   http://opentelemetry-collector.opentelemetry-operator:4317   parentbased_traceidratio   1
 
 #kubectl delete -f opentelemetry-operator.yaml -n opentelemetry-operator
 #kubectl apply -f opentelemetry-operator.yaml -n opentelemetry-operator
-#kubectl get endpoints --namespace opentelemetry-operator opentelemetry-operator-webhook-service
+#kubectl get endpoints --namespace opentelemetry-operator opentelemetry-operator-webhook
 
 #You will need to either add a firewall rule that allows master nodes access to port 9443/tcp on worker nodes,
 # or change the existing rule that allows access to
