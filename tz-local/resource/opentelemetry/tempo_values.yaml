@@ -18,7 +18,7 @@ storage:
       version: vParquet
     backend: s3
     s3:
-      bucket: tempo-eks-main-s
+      bucket: tempo-k8s-vagrant
       endpoint: minio.devops.svc.cluster.local:9000
 #      region: ap-northeast-2
       access_key: minio_access_key_id
