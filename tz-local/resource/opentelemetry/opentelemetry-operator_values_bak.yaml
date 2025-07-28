@@ -430,7 +430,7 @@ ingress:
     cert-manager.io/cluster-issuer: "letsencrypt-prod"
   ingressClassName: nginx
   hosts:
-   - host: collector.opentelemetry-operator.eks-main-s.new-nation.church
+   - host: opentelemetry.new-nation.church
      paths:
        - path: /
          pathType: Prefix
@@ -438,7 +438,7 @@ ingress:
   tls:
     - secretName: collector-tls
       hosts:
-        - collector.opentelemetry-operator.eks-main-s.new-nation.church
+        - opentelemetry.new-nation.church
 
   # Additional ingresses - only created if ingress.enabled is true
   # Useful for when differently annotated ingress services are required

@@ -10,7 +10,7 @@ metadata:
     cert-manager.io/cluster-issuer: "letsencrypt-prod"
 spec:
   rules:
-  - host: collector.opentelemetry-operator.eks-main-s.new-nation.church
+  - host: opentelemetry.new-nation.church
     http:
       paths:
       - path: /
@@ -22,5 +22,5 @@ spec:
               number: 4318
   tls:
     - hosts:
-        - collector.opentelemetry-operator.eks-main-s.new-nation.church
+        - opentelemetry.new-nation.church
       secretName: opentelemetry-collector-ingress-tls

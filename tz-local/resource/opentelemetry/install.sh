@@ -116,7 +116,7 @@ done
 
 kubectl -n ${NS} apply -f collector-ingress.yaml
 
-curl -i http://collector.opentelemetry-operator.eks-main-s.new-nation.church/v1/traces -X POST -H "Content-Type: application/json" -d @span.json
+curl -i http://opentelemetry.new-nation.church/v1/traces -X POST -H "Content-Type: application/json" -d @span.json
 
 exit 0
 
@@ -136,7 +136,7 @@ URL: http://tempo.tempo:3100
 
 ## python
 
-curl -i http://collector.opentelemetry-operator.eks-main-s.new-nation.church/v1/traces -X POST -H "Content-Type: application/json" -d @span.json
+curl -i http://opentelemetry.new-nation.church/v1/traces -X POST -H "Content-Type: application/json" -d @span.json
 
 from opentelemetry.sdk.resources import SERVICE_NAME, Resource
 from opentelemetry import trace
@@ -149,7 +149,7 @@ resource = Resource(attributes={
 })
 
 traceProvider = TracerProvider(resource=resource)
-processor = BatchSpanProcessor(OTLPSpanExporter(endpoint="http://collector.opentelemetry-operator.eks-main-s.new-nation.church/v1/traces"))
+processor = BatchSpanProcessor(OTLPSpanExporter(endpoint="http://opentelemetry.new-nation.church/v1/traces"))
 traceProvider.add_span_processor(processor)
 trace.set_tracer_provider(traceProvider)
 
