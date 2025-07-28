@@ -19,7 +19,7 @@ storage:
     backend: s3
     s3:
       bucket: tempo-eks-main-s
-      endpoint: s3.dualstack.ap-northeast-2.amazonaws.com
+      endpoint: http://minio.devops.svc.cluster.local:9000
       region: ap-northeast-2
       access_key: minio_access_key_id
       secret_key: minio_secret_access_key

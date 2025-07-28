@@ -17,8 +17,8 @@ shopt -s expand_aliases
 
 k8s_project=$(prop 'project' 'project')
 k8s_domain=$(prop 'project' 'domain')
-minio_access_key_id=$(prop 'credentials' 'minio_access_key_id')
-minio_secret_access_key=$(prop 'credentials' 'minio_secret_access_key')
+minio_access_key_id=$(prop 'project' 'minio_access_key_id')
+minio_secret_access_key=$(prop 'project' 'minio_secret_access_key')
 
 NS=opentelemetry-operator
 alias k='kubectl --kubeconfig ~/.kube/config -n '${NS}
