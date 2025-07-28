@@ -1,0 +1,35 @@
+ingester:
+  persistence:
+    enabled: true
+    size: 100Gi
+    storageClass: gp3
+traces:
+  otlp:
+    http:
+      enabled: true
+      receiverConfig: {}
+    grpc:
+      enabled: true
+      receiverConfig: {}
+
+storage:
+  trace:
+    block:
+      version: vParquet
+    backend: s3
+    s3:
+      bucket: tempo-eks-main-s
+      endpoint: s3.dualstack.ap-northeast-2.amazonaws.com
+      region: ap-northeast-2
+      access_key: aws_access_key_id
+      secret_key: aws_secret_access_key
+  admin:
+    backend: filesystem
+
+compactor:
+  replicas: 1
+
+#  storageClass: gp2
+#  storage: 50Gi
+#  accessModes: [ "ReadWriteOnce" ]
+#  storageClassName: "gp2"
