@@ -11,7 +11,7 @@ spec:
       annotations:
         instrumentation.opentelemetry.io/inject-nodejs: "true"
       labels:
-        org: seerslab
+        org: topzone
         team: devops
         project: mc20
         environment: dev

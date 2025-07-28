@@ -66,7 +66,7 @@ helm upgrade --debug --install --reuse-values \
 #kubectl get svc tempo-distributor-discovery -n tempo
 #NAME                          TYPE        CLUSTER-IP   EXTERNAL-IP   PORT(S)                                AGE
 #tempo-distributor-discovery   ClusterIP   None         <none>        3100/TCP,4318/TCP,4317/TCP,55680/TCP   9m9s
-# https://grafana.default.eks-main-s.new-nation.church/datasources/edit/tempo
+# https://grafana.new-nation.church/datasources/edit/tempo
 #URL: http://tempo-query-frontend-discovery.tempo:3100
 
 #4. Open Telemetry Collector + Auto Instrumentation 설치 (Only when opentelemetry-collector is deployment)
@@ -160,7 +160,7 @@ trace.set_tracer_provider(traceProvider)
             with self.tracer.start_as_current_span("ri_usage") as span:
                 span.set_attribute("printed_string", "done")
 
-https://grafana.default.eks-main-s.new-nation.church/explore?orgId=1&left=%7B%22datasource%22:%22tempo%22,%22queries%22:%5B%7B%22refId%22:%22A%22,%22datasource%22:%7B%22type%22:%22tempo%22,%22uid%22:%22tempo%22%7D,%22queryType%22:%22nativeSearch%22,%22serviceName%22:%22tz-devops-admin%22,%22spanName%22:%22%2Fawsri%3Fprofile%3Dtz-596627550572%26region%3Dap-northeast-2%26type%3Ddb%22%7D%5D,%22range%22:%7B%22from%22:%22now-5m%22,%22to%22:%22now%22%7D%7D&right=%7B%22datasource%22:%22tempo%22,%22queries%22:%5B%7B%22query%22:%2261becbb1231ad192eba20ecef87d0e3d%22,%22queryType%22:%22traceId%22,%22refId%22:%22A%22%7D%5D,%22range%22:%7B%22from%22:%221713497073313%22,%22to%22:%221713497373313%22%7D%7D
+https://grafana.new-nation.church/explore?orgId=1&left=%7B%22datasource%22:%22tempo%22,%22queries%22:%5B%7B%22refId%22:%22A%22,%22datasource%22:%7B%22type%22:%22tempo%22,%22uid%22:%22tempo%22%7D,%22queryType%22:%22nativeSearch%22,%22serviceName%22:%22tz-devops-admin%22,%22spanName%22:%22%2Fawsri%3Fprofile%3Dtz-596627550572%26region%3Dap-northeast-2%26type%3Ddb%22%7D%5D,%22range%22:%7B%22from%22:%22now-5m%22,%22to%22:%22now%22%7D%7D&right=%7B%22datasource%22:%22tempo%22,%22queries%22:%5B%7B%22query%22:%2261becbb1231ad192eba20ecef87d0e3d%22,%22queryType%22:%22traceId%22,%22refId%22:%22A%22%7D%5D,%22range%22:%7B%22from%22:%221713497073313%22,%22to%22:%221713497373313%22%7D%7D
 
 
 # node.js
