@@ -7,7 +7,7 @@ spec:
     - ReadWriteOnce
   resources:
     requests:
-      storage: 10Gi
+      storage: 1Gi
 
 ---
 
@@ -16,11 +16,17 @@ kind: Pod
 metadata:
   name: bastion
 spec:
+  imagePullSecrets:
+    - name: tz-registrykey
   containers:
   - name: bastion
-    image: ubuntu:22.04
+    image: doohee323/devops-utils2:latest
     command: ["/bin/sh"]
     args: ["-c", "while true; do echo $(date -u) >> /data/out.txt; sleep 5; done"]
+    resources:
+      requests:
+        memory: "1000Mi"
+        cpu: "1000m"
     volumeMounts:
     - name: persistent-storage
       mountPath: /data

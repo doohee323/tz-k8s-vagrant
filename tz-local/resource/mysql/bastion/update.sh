@@ -16,6 +16,7 @@ NS=devops-dev
 
 # 1. make ubuntu pod as bastion
 kubectl -n devops-dev apply -f ubuntu.yaml
+kubectl -n devops-dev delete -f ubuntu.yaml
 
 apt-get update -y
 apt-get install -y curl wget jq unzip netcat apt-transport-https gnupg2 redis-tools mysql-client

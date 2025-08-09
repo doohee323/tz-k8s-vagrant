@@ -14,11 +14,15 @@ alias k='kubectl -n consul'
 k8s_project=$(prop 'project' 'project')
 basic_password=$(prop 'project' 'basic_password')
 k8s_domain=$(prop 'project' 'domain')
+export ACCESS_KEY_ID=$(prop 'credentials' 'minio_access_key_id')
+export SECRET_ACCESS_KEY=$(prop 'credentials' 'minio_secret_access_key')
 NS=devops
 
 wget https://github.com/vmware-tanzu/velero/releases/download/v1.10.3/velero-v1.10.3-linux-amd64.tar.gz
 tar -xvzf velero-v1.10.3-linux-amd64.tar.gz
 sudo mv velero-v1.10.3-linux-amd64/velero /usr/local/bin/velero
+
+kubectl create namespace velero
 
 #aws iam create-user --user-name ${k8s_project}-velero
 #aws iam put-user-policy \
@@ -28,12 +32,20 @@ sudo mv velero-v1.10.3-linux-amd64/velero /usr/local/bin/velero
 
 #aws iam create-access-key --user-name ${k8s_project}-velero
 
-credentials_velero="/root/.k8s/credentials"
+#credentials_velero="/root/.k8s/credentials"
 #[default]
-#minio_access_key_id=<AWS_ACCESS_KEY_ID>
-#minio_secret_access_key=<AWS_SECRET_ACCESS_KEY>
+#aws_access_key_id=<ACCESS_KEY_ID>
+#aws_secret_access_key=<SECRET_ACCESS_KEY>
 
-kubectl create namespace velero
+cat <<EOF > credentials-velero
+[default]
+aws_access_key_id=${ACCESS_KEY_ID}
+aws_secret_access_key=${SECRET_ACCESS_KEY}
+EOF
+
+#kubectl create secret generic credentials-velero \
+#    --namespace velero \
+#    --from-file=cloud=credentials-velero
 
 helm repo add vmware-tanzu https://vmware-tanzu.github.io/helm-charts
 helm search repo vmware-tanzu/velero
@@ -44,34 +56,9 @@ cp -Rf values.yaml values.yamll_bak
 #helm template vmware-tanzu/velero -f values.yamll_bak -n velero
 #--reuse-values
 #helm upgrade --debug --install velero vmware-tanzu/velero -f values.yamll_bak -n velero
-STACK_VERSION=3.1.2
-helm upgrade --debug --install velero vmware-tanzu/velero -f values.yamll_bak -n velero --version ${STACK_VERSION}
-
-helm upgrade --debug --install velero \
-    --namespace=velero \
-    --create-namespace \
-    --set configuration.provider=aws \
-    --set configuration.backupStorageLocation.name=default \
-    --set configuration.backupStorageLocation.bucket=velero \
-    --set configuration.backupStorageLocation.config.region=minio-default \
-    --set configuration.backupStorageLocation.config.s3ForcePathStyle=true \
-    --set configuration.backupStorageLocation.config.s3Url=http://172.17.0.1:9000 \
-    --set configuration.backupStorageLocation.config.publicUrl=http://localhost:9000 \
-    --set snapshotsEnabled=true \
-    --set configuration.volumeSnapshotLocation.name=default \
-    --set configuration.volumeSnapshotLocation.config.region=minio-default \
-    --set "initContainers[0].name=velero-plugin-for-aws" \
-    --set "initContainers[0].image=velero/velero-plugin-for-aws:v1.6.0" \
-    --set "initContainers[0].volumeMounts[0].mountPath=/target" \
-    --set "initContainers[0].volumeMounts[0].name=plugins" \
-    --set configuration.features=EnableCSI \
-    --set "initContainers[1].name=velero-plugin-for-csi" \
-    --set "initContainers[1].image=velero/velero-plugin-for-csi:v0.4.0" \
-    --set "initContainers[1].volumeMounts[0].mountPath=/target" \
-    --set "initContainers[1].volumeMounts[0].name=plugins" \
-    vmware-tanzu/velero \
-    --version ${STACK_VERSION}
-
+#STACK_VERSION=10.0.12
+helm upgrade --debug --install velero vmware-tanzu/velero -f values.yamll_bak -n velero
+# --version ${STACK_VERSION}
 
 kubectl get deployment/velero -n velero
 #velero snapshot-location create default --provider aws/volume-snapshotter-plugin
@@ -83,9 +70,7 @@ wget https://github.com/vmware-tanzu/velero/releases/download/${VERSION}/velero-
   rm -Rf velero-${VERSION}-linux-amd64.tar.gz && \
   rm -Rf velero-${VERSION}-linux-amd64
 
-PROJECTS=(hypen hypen-dev)
-#PROJECTS=(devops devops-dev mc20 mc20-dev hypen hypen-dev avatar avatar-dev default argocd consul monitoring vault elk)
-#PROJECTS=(cert-manager external-secrets istio-operator istio-system jenkins kube-node-lease kube-public kube-system sonarqube)
+PROJECTS=(devops devops-dev)
 for item in "${PROJECTS[@]}"; do
   echo "====================="
   echo ${item}
