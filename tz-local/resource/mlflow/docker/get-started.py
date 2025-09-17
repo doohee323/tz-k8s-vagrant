@@ -4,7 +4,7 @@ import mlflow
 # In[4]:
 
 
-mlflow.set_tracking_uri("https://mlflow.new-nation.church")
+mlflow.set_tracking_uri("https://mlflow.drillquiz.com")
 
 
 # In[5]:

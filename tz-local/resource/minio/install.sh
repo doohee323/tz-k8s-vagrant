@@ -43,6 +43,6 @@ sed -ie "s/k8s_domain/${k8s_domain}/g" minio-ingress.yaml_bak
 #kubectl delete -f minio-ingress.yaml_bak -n minio
 kubectl apply -f minio-ingress.yaml_bak -n ${NS}
 
-#https://minio.new-nation.church
+#https://minio.drillquiz.com
 
 

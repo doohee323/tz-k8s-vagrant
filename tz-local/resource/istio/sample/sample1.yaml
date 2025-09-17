@@ -50,7 +50,7 @@ metadata:
     cert-manager.io/cluster-issuer: "letsencrypt-istio"
 spec:
   rules:
-  - host: nginx1.istio-system.eks-main-s.argear.io
+  - host: nginx1.istio-system.drillquiz.com
     http:
       paths:
       - path: /
@@ -62,5 +62,5 @@ spec:
               number: 80
   tls:
     - hosts:
-        - nginx1.istio-system.eks-main-s.argear.io
+        - nginx1.istio-system.drillquiz.com
       secretName: nginx1.istio-system-tls1

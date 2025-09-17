@@ -52,7 +52,7 @@ metadata:
     cert-manager.io/cluster-issuer: "letsencrypt-prod"
 spec:
   rules:
-    - host: eks-main-s-demo.devops.eks-main-s.new-nation.church
+    - host: eks-main-s-demo.devops.eks-main-s.drillquiz.com
       http:
         paths:
           - path: /
@@ -64,5 +64,5 @@ spec:
                   number: 80
   tls:
     - hosts:
-        - eks-main-s-demo.devops.eks-main-s.new-nation.church
+        - eks-main-s-demo.devops.eks-main-s.drillquiz.com
       secretName: devops-tz-demo-app-eks-main-s-ssl

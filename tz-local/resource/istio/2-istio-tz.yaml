@@ -2751,7 +2751,7 @@ spec:
           optional: true
           secretName: istio-kubeconfig
 ---
-apiVersion: policy/v1beta1
+apiVersion: policy/v1
 kind: PodDisruptionBudget
 metadata:
   name: istio-egressgateway
@@ -2770,7 +2770,7 @@ spec:
       app: istio-egressgateway
       istio: egressgateway
 ---
-apiVersion: policy/v1beta1
+apiVersion: policy/v1
 kind: PodDisruptionBudget
 metadata:
   name: istio-ingressgateway
@@ -2789,7 +2789,7 @@ spec:
       app: istio-ingressgateway
       istio: ingressgateway
 ---
-apiVersion: policy/v1beta1
+apiVersion: policy/v1
 kind: PodDisruptionBudget
 metadata:
   name: istiod
@@ -4791,7 +4791,7 @@ data:
         # Grafana service name is "grafana" and is in the "telemetry" namespace.
         in_cluster_url: 'http://grafana.istio-system:3000/'
         # Public facing URL of Grafana
-        url: 'https://grafana.default.eks-main-s.argear.io'
+        url: 'https://grafana.drillquiz.com'
         dashboards:
         - name: "Istio Service Dashboard"
           variables:

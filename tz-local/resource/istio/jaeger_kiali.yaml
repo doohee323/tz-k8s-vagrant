@@ -12,7 +12,7 @@ metadata:
   annotations:
     cert-manager.io/cluster-issuer: letsencrypt-istio
     kubectl.kubernetes.io/last-applied-configuration: >
-      {"apiVersion":"networking.k8s.io/v1","kind":"Ingress","metadata":{"annotations":{"cert-manager.io/cluster-issuer":"letsencrypt-istio","kubernetes.io/ingress.class":"istio","nginx.ingress.kubernetes.io/rewrite-target":"/"},"name":"jaeger-ui","namespace":"istio-system"},"spec":{"rules":[{"host":"jaeger.istio-system.eks-main-s.argear.io","http":{"paths":[{"backend":{"service":{"name":"tracing","port":{"number":80}}},"path":"/","pathType":"Prefix"}]}}],"tls":[{"hosts":["jaeger.istio-system.eks-main-s.argear.io"],"secretName":"jaeger-tls"}]}}
+      {"apiVersion":"networking.k8s.io/v1","kind":"Ingress","metadata":{"annotations":{"cert-manager.io/cluster-issuer":"letsencrypt-istio","kubernetes.io/ingress.class":"istio","nginx.ingress.kubernetes.io/rewrite-target":"/"},"name":"jaeger-ui","namespace":"istio-system"},"spec":{"rules":[{"host":"jaeger.istio-system.drillquiz.com","http":{"paths":[{"backend":{"service":{"name":"tracing","port":{"number":80}}},"path":"/","pathType":"Prefix"}]}}],"tls":[{"hosts":["jaeger.istio-system.drillquiz.com"],"secretName":"jaeger-tls"}]}}
     kubernetes.io/ingress.class: istio
     nginx.ingress.kubernetes.io/rewrite-target: /
     service.beta.kubernetes.io/aws-load-balancer-security-groups: sg-0e40e9ba23d151660
@@ -64,10 +64,10 @@ status:
 spec:
   tls:
     - hosts:
-        - jaeger.istio-system.eks-main-s.argear.io
+        - jaeger.istio-system.drillquiz.com
       secretName: jaeger-tls
   rules:
-    - host: jaeger.istio-system.eks-main-s.argear.io
+    - host: jaeger.istio-system.drillquiz.com
       http:
         paths:
           - path: /
@@ -94,7 +94,7 @@ metadata:
   annotations:
     cert-manager.io/cluster-issuer: letsencrypt-istio
     kubectl.kubernetes.io/last-applied-configuration: >
-      {"apiVersion":"networking.k8s.io/v1","kind":"Ingress","metadata":{"annotations":{"cert-manager.io/cluster-issuer":"letsencrypt-istio","kubernetes.io/ingress.class":"istio","nginx.ingress.kubernetes.io/rewrite-target":"/"},"name":"kiali","namespace":"istio-system"},"spec":{"rules":[{"host":"kiali.istio-system.eks-main-s.argear.io","http":{"paths":[{"backend":{"service":{"name":"kiali","port":{"number":20001}}},"path":"/","pathType":"Prefix"}]}}],"tls":[{"hosts":["kiali.istio-system.eks-main-s.argear.io"],"secretName":"kiali-tls"}]}}
+      {"apiVersion":"networking.k8s.io/v1","kind":"Ingress","metadata":{"annotations":{"cert-manager.io/cluster-issuer":"letsencrypt-istio","kubernetes.io/ingress.class":"istio","nginx.ingress.kubernetes.io/rewrite-target":"/"},"name":"kiali","namespace":"istio-system"},"spec":{"rules":[{"host":"kiali.istio-system.drillquiz.com","http":{"paths":[{"backend":{"service":{"name":"kiali","port":{"number":20001}}},"path":"/","pathType":"Prefix"}]}}],"tls":[{"hosts":["kiali.istio-system.drillquiz.com"],"secretName":"kiali-tls"}]}}
     kubernetes.io/ingress.class: istio
     nginx.ingress.kubernetes.io/rewrite-target: /
   managedFields:
@@ -143,10 +143,10 @@ status:
 spec:
   tls:
     - hosts:
-        - kiali.istio-system.eks-main-s.argear.io
+        - kiali.istio-system.drillquiz.com
       secretName: kiali-tls
   rules:
-    - host: kiali.istio-system.eks-main-s.argear.io
+    - host: kiali.istio-system.drillquiz.com
       http:
         paths:
           - path: /

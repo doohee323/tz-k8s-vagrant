@@ -33,7 +33,7 @@ to project root directory.
     
     ex)
         project=topzone-k8s
-        domain=new-nation.church     # temporary local domain
+        domain=drillquiz.com     # temporary local domain
         argocd_id=admin
         admin_password=DevOps!323
         basic_password=Soqn!323
@@ -56,7 +56,7 @@ to project root directory.
                     "auth":"xxxxxx"                     # base64 encoding
                 }
             },
-            "harbor.harbor.topzone-k8s.new-nation.church": {
+            "harbor.harbor.topzone-k8s.drillquiz.com": {
                 "username":"admin",
                 "password":"Harbor12345",
                 "email":"doogee323@gmail.com",          # your email
@@ -164,11 +164,11 @@ to project root directory.
         ex) 183.96.137.87 is my ingress-nginx's EXTERNAL-IP
             kubectl get svc -n default | grep ingress-nginx-controller        
         
-            183.96.137.87   test.default.topzone-k8s.new-nation.church consul.default.topzone-k8s.new-nation.church vault.default.topzone-k8s.new-nation.church
-            183.96.137.87   consul-server.default.topzone-k8s.new-nation.church argocd.default.topzone-k8s.new-nation.church
-            183.96.137.87   jenkins.default.topzone-k8s.new-nation.church harbor.harbor.topzone-k8s.new-nation.church
-            183.96.137.87   grafana.default.topzone-k8s.new-nation.church prometheus.default.topzone-k8s.new-nation.church alertmanager.default.topzone-k8s.new-nation.church
-            183.96.137.87   vagrant-demo-app.devops-dev.topzone-k8s.new-nation.church
+            183.96.137.87   test.default.topzone-k8s.drillquiz.com consul.default.topzone-k8s.drillquiz.com vault.default.topzone-k8s.drillquiz.com
+            183.96.137.87   consul-server.default.topzone-k8s.drillquiz.com argocd.default.topzone-k8s.drillquiz.com
+            183.96.137.87   jenkins.default.topzone-k8s.drillquiz.com harbor.harbor.topzone-k8s.drillquiz.com
+            183.96.137.87   grafana.default.topzone-k8s.drillquiz.com prometheus.default.topzone-k8s.drillquiz.com alertmanager.default.topzone-k8s.drillquiz.com
+            183.96.137.87   vagrant-demo-app.devops-dev.topzone-k8s.drillquiz.com
 
     -. After installing k8s on all machines,
         bash /vagrant/scripts/k8s_addtion.sh

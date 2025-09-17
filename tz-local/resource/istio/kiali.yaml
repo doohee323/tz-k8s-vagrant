@@ -99,7 +99,7 @@ data:
         # Grafana service name is "grafana" and is in the "telemetry" namespace.
         in_cluster_url: 'http://grafana.istio-system:3000/'
         # Public facing URL of Grafana
-        url: 'https://grafana.default.eks-main-s.argear.io'
+        url: 'https://grafana.drillquiz.com'
         dashboards:
         - name: "Istio Service Dashboard"
           variables:

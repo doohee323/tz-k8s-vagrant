@@ -4,7 +4,7 @@
 ## build a jenkins project in EKS
 ###################################################
 ```
-https://vault.default.topzone-k8s.new-nation.church
+https://vault.default.topzone-k8s.drillquiz.com
 
 cat /vagrant/resources/unseal.txt
 

@@ -33,7 +33,7 @@ spec:
 ##    cert-manager.io/cluster-issuer: "letsencrypt-istio"
 #spec:
 #  rules:
-#  - host: prod.mc20.eks-main-s.argear.io
+#  - host: prod.mc20.drillquiz.com
 #    http:
 #      paths:
 #      - path: /account(/|$)(.*)
@@ -55,7 +55,7 @@ spec:
 ##              number: 80
 #  tls:
 #  - hosts:
-#    - prod.mc20.eks-main-s.argear.io
+#    - prod.mc20.drillquiz.com
 ##    - mc20.argear.io
 #    secretName: mc20-mc20-account-ssl
 
@@ -97,7 +97,7 @@ metadata:
 spec:
   servers:
   - hosts:
-      - prod.mc20.eks-main-s.argear.io
+      - prod.mc20.drillquiz.com
       - mc20.argear.io
     port:
       name: http2
@@ -106,7 +106,7 @@ spec:
     tls:
       httpsRedirect: true
   - hosts:
-      - prod.mc20.eks-main-s.argear.io
+      - prod.mc20.drillquiz.com
       - mc20.argear.io
     port:
       number: 443
@@ -128,7 +128,7 @@ spec:
   gateways:
   - mc20-http-to-https
   hosts:
-  - prod.mc20.eks-main-s.argear.io
+  - prod.mc20.drillquiz.com
   - mc20.argear.io
   http:
   - name: mc20-mc20-account-vs

@@ -10,8 +10,8 @@ cd /vagrant/tz-local/resource/istio
 
 #alias k="kubectl -n mc20-dev"
 
-tz_project=$(prop 'project' 'project')
-tz_domain=$(prop 'project' 'domain')
+tz_project=topzone-k8s
+tz_domain=drillquiz.com
 
 NS=istio-system
 
@@ -24,7 +24,7 @@ kubectl delete ns istio-system
 kubectl create ns istio-system
 
 kubectl apply -f 1-istio-init.yaml
-kubectl apply -f 2-istio-eks.yaml
+kubectl apply -f 2-istio-tz.yaml
 kubectl apply -f 3-kiali-secret.yaml
 kubectl apply -f 4-1.auth.yaml
 kubectl apply -f 4-label-default-namespace.yaml
@@ -89,9 +89,9 @@ spec:
   issuerRef:
     kind: ClusterIssuer
     name: letsencrypt-istio
-  commonName: nginx1.test8.eks-main-s.argear.io
+  commonName: nginx1.test8.drillquiz.com
   dnsNames:
-    - nginx1.test1.eks-main-s.argear.io
+    - nginx1.test1.drillquiz.com
 EOF
 
 kubectl create ns test1
@@ -127,9 +127,9 @@ spec:
   issuerRef:
     kind: ClusterIssuer
     name: letsencrypt-istio
-  commonName: nginx1.mc20.eks-main-s.argear.io
+  commonName: nginx1.mc20.drillquiz.com
   dnsNames:
-    - nginx1.mc20.eks-main-s.argear.io
+    - nginx1.mc20.drillquiz.com
 EOF
 
 kubectl -n mc20 delete -f sample/mc20.yaml
@@ -148,9 +148,9 @@ spec:
   issuerRef:
     kind: ClusterIssuer
     name: letsencrypt-istio
-  commonName: prod.mc20.eks-main-s.argear.io
+  commonName: prod.mc20.drillquiz.com
   dnsNames:
-    - prod.mc20.eks-main-s.argear.io
+    - prod.mc20.drillquiz.com
     - mc20.argear.io
 ---
 EOF
@@ -166,9 +166,9 @@ spec:
   issuerRef:
     kind: ClusterIssuer
     name: letsencrypt-istio
-  commonName: prod.mc20.eks-main-s.argear.io
+  commonName: prod.mc20.drillquiz.com
   dnsNames:
-    - prod.mc20.eks-main-s.argear.io
+    - prod.mc20.drillquiz.com
     - mc20.argear.io
 ---
 EOF

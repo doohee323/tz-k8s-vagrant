@@ -10,11 +10,11 @@ spec:
     name: selfsigned-issuer
     kind: ClusterIssuer
     group: cert-manager.io
-  commonName: ITEM.new-nation.church
+  commonName: ITEM.drillquiz.com
   privateKey:
     algorithm: ECDSA
     size: 256
   dnsNames:
-    - ITEM.new-nation.church
-    - ITEM.default.topzone-k8s.new-nation.church
-    - ITEM.NS.topzone-k8s.new-nation.church
+    - ITEM.drillquiz.com
+    - ITEM.default.topzone-k8s.drillquiz.com
+    - ITEM.NS.topzone-k8s.drillquiz.com

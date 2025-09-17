@@ -112,10 +112,10 @@ check_host=`cat /etc/hosts | grep 'jenkins'`
 if [[ "${check_host}" == "" ]]; then
 LB=`kubectl get svc | grep ingress-nginx-controller | grep LoadBalancer | awk '{print $4}'`
 cat <<EOF >> /etc/hosts
-${LB}   test.default.topzone-k8s.new-nation.church consul.default.topzone-k8s.new-nation.church vault.default.topzone-k8s.new-nation.church
-${LB}   consul-server.default.topzone-k8s.new-nation.church argocd.default.topzone-k8s.new-nation.church
-${LB}   jenkins.default.topzone-k8s.new-nation.church harbor.harbor.topzone-k8s.new-nation.church
-${LB}   grafana.default.topzone-k8s.new-nation.church prometheus.default.topzone-k8s.new-nation.church alertmanager.default.topzone-k8s.new-nation.church
+${LB}   test.default.topzone-k8s.drillquiz.com consul.default.topzone-k8s.drillquiz.com vault.default.topzone-k8s.drillquiz.com
+${LB}   consul-server.default.topzone-k8s.drillquiz.com argocd.default.topzone-k8s.drillquiz.com
+${LB}   jenkins.default.topzone-k8s.drillquiz.com harbor.harbor.topzone-k8s.drillquiz.com
+${LB}   grafana.default.topzone-k8s.drillquiz.com prometheus.default.topzone-k8s.drillquiz.com alertmanager.default.topzone-k8s.drillquiz.com
 EOF
 fi
 

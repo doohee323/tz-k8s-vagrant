@@ -16,7 +16,7 @@ spec:
       hostAliases:
       - ip: "183.96.137.87"
         hostnames:
-        - "harbor.harbor.topzone-k8s.new-nation.church"
+        - "harbor.harbor.topzone-k8s.drillquiz.com"
       imagePullSecrets:
         - name: tz-registrykey
       serviceAccountName: devops-dev-svcaccount

@@ -9,7 +9,7 @@ metadata:
     service.beta.kubernetes.io/aws-load-balancer-security-groups: sg-0e40e9ba23d151660
 spec:
   rules:
-  - host: kiali.istio-system.eks-main-s.argear.io
+  - host: kiali.istio-system.drillquiz.com
     http:
       paths:
       - path: /
@@ -21,7 +21,7 @@ spec:
               number: 20001
   tls:
     - hosts:
-        - kiali.istio-system.eks-main-s.argear.io
+        - kiali.istio-system.drillquiz.com
       secretName: kiali-tls
 
 ---
@@ -36,7 +36,7 @@ metadata:
     service.beta.kubernetes.io/aws-load-balancer-security-groups: sg-0e40e9ba23d151660
 spec:
   rules:
-  - host: jaeger.istio-system.eks-main-s.argear.io
+  - host: jaeger.istio-system.drillquiz.com
     http:
       paths:
       - path: /
@@ -48,5 +48,5 @@ spec:
               number: 80
   tls:
     - hosts:
-        - jaeger.istio-system.eks-main-s.argear.io
+        - jaeger.istio-system.drillquiz.com
       secretName: jaeger-tls

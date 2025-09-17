@@ -6,10 +6,10 @@
 ```
 
  - get jenkins url
-   => https://jenkins.default.topzone-k8s.new-nation.church
+   => https://jenkins.default.topzone-k8s.drillquiz.com
 
  - setting kubernetes plugin
-    https://jenkins.default.topzone-k8s.new-nation.church/configureClouds/
+    https://jenkins.default.topzone-k8s.drillquiz.com/configureClouds/
    - Cloud name: topzone-k8s
    - Kubernetes URL: https://kubernetes.default
    - Kubernetes Namespace: jenkins
@@ -21,7 +21,7 @@
     - github-token
       1. get github's personal access token:
         https://github.com/settings/tokens
-      2. https://jenkins.default.topzone-k8s.new-nation.church/credentials/store/system/domain/_/newCredentials
+      2. https://jenkins.default.topzone-k8s.drillquiz.com/credentials/store/system/domain/_/newCredentials
         Kind: Username with password
         Username: ex) doogee323@gmail.com
         Password: ex) xxxxxxxxxxxxxxxxxxxxxxxxx
@@ -30,28 +30,28 @@
 
     - GITHUP_TOKEN
       1. get github's personal access token:
-      2. https://jenkins.default.topzone-k8s.new-nation.church/credentials/store/system/domain/_/newCredentials
+      2. https://jenkins.default.topzone-k8s.drillquiz.com/credentials/store/system/domain/_/newCredentials
         Kind: Secret text
         Secret: ex) xxxxxxxxxxxxxxxxxxxxxxxxx
         ID: GITHUP_TOKEN
         Description: GITHUP_TOKEN
 
     - DOCKER_PASSWORD
-      1. https://jenkins.default.topzone-k8s.new-nation.church/credentials/store/system/domain/_/newCredentials
+      1. https://jenkins.default.topzone-k8s.drillquiz.com/credentials/store/system/domain/_/newCredentials
         Kind: Secret text
         Secret: ex) xxxxxxxxxxxxxxxxxxxxxxxxx
         ID: DOCKER_PASSWORD
         Description: DOCKER_PASSWORD
         
     - VAULT_TOKEN
-      1. https://jenkins.default.topzone-k8s.new-nation.church/credentials/store/system/domain/_/newCredentials
+      1. https://jenkins.default.topzone-k8s.drillquiz.com/credentials/store/system/domain/_/newCredentials
         Kind: Secret text
         Secret: ex) xxxxxxxxxxxxxxxxxxxxxxxxx
         ID: VAULT_TOKEN
         Description: VAULT_TOKEN
     
     - gmail-smtp
-      1. https://jenkins.default.topzone-k8s.new-nation.church/credentials/store/system/domain/_/newCredentials
+      1. https://jenkins.default.topzone-k8s.drillquiz.com/credentials/store/system/domain/_/newCredentials
         Kind: Username with password
         Username: ex) doogee323@gmail.com
         Password: ex) xxxxxxxxxxxxxxxx
@@ -59,7 +59,7 @@
         Description: gmail-smtp
 
  - settings
-    https://jenkins.default.topzone-k8s.new-nation.church/manage/configure
+    https://jenkins.default.topzone-k8s.drillquiz.com/manage/configure
     Git plugin
         Global Config user.name Value: Doogee Hong
         Global Config user.email Value: doogee323@gmail.com
@@ -109,6 +109,6 @@ tz-demo-app/k8s/Jenkinsfile
         GIT_BRANCH = "devops"                   =>
         GIT_COMMITTER_EMAIL = "doogee323@gmail.com"   =>
 
-        DOMAIN = "new-nation.church"                   =>
+        DOMAIN = "drillquiz.com"                   =>
         CLUSTER_NAME = "topzone-k8s"
 
