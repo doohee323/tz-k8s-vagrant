@@ -1,0 +1,66 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nginx
+  labels:
+    app: nginx
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: nginx
+  template:
+    metadata:
+      labels:
+        app: nginx
+    spec:
+      containers:
+      - name: nginx
+        image: nginx
+        ports:
+        - containerPort: 80
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: nginx
+  labels:
+    run: nginx
+spec:
+  ports:
+    - protocol: TCP
+      name: http-80
+      port: 80
+      targetPort: 80
+  selector:
+    app: nginx
+  type: ClusterIP
+
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: ingress
+  annotations:
+    nginx.ingress.kubernetes.io/rewrite-target: /
+    nginx.ingress.kubernetes.io/stz-redirect: "false"
+    kubernetes.io/ingress.class: istio
+    cert-manager.io/cluster-issuer: "letsencrypt-istio"
+spec:
+  rules:
+  - host: nginx1.istio-system.eks-main-s.argear.io
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: nginx
+            port:
+              number: 80
+  tls:
+    - hosts:
+        - nginx1.istio-system.eks-main-s.argear.io
+      secretName: nginx1.istio-system-tls1

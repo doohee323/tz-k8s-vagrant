@@ -1,0 +1,175 @@
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: mc20-mc20-account-configmap
+data:
+  GIT_BRANCH: argo-vault
+  DB_HOSTNAME: host.docker.internal
+  DB_R_HOSTNAME: host.docker.internal
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: mc20-mc20-account-sv
+spec:
+  type: ClusterIP
+  selector:
+    app: mc20-mc20-account
+  ports:
+    - port: 80
+      name: http-80
+      targetPort: 8085
+#---
+#apiVersion: networking.k8s.io/v1
+#kind: Ingress
+#metadata:
+#  name: mc20-mc20-account-ing
+#  annotations:
+##    nginx.ingress.kubernetes.io/rewrite-target: /$2
+##    nginx.ingress.kubernetes.io/use-regex: "true"
+#    nginx.ingress.kubernetes.io/stz-redirect: "false"
+#    kubernetes.io/ingress.class: "istio"
+##    cert-manager.io/cluster-issuer: "letsencrypt-istio"
+#spec:
+#  rules:
+#  - host: prod.mc20.eks-main-s.argear.io
+#    http:
+#      paths:
+#      - path: /account(/|$)(.*)
+#        pathType: Prefix
+#        backend:
+#          service:
+#            name: mc20-mc20-account-sv
+#            port:
+#              number: 80
+##  - host: mc20.argear.io
+##    http:
+##      paths:
+##      - path: /account(/|$)(.*)
+##        pathType: Prefix
+##        backend:
+##          service:
+##            name: mc20-mc20-account-sv
+##            port:
+##              number: 80
+#  tls:
+#  - hosts:
+#    - prod.mc20.eks-main-s.argear.io
+##    - mc20.argear.io
+#    secretName: mc20-mc20-account-ssl
+
+---
+apiVersion: external-secrets.io/v1beta1
+kind: ExternalSecret
+metadata:
+  name: mc20-mc20-account-es
+spec:
+  refreshInterval: "15s"
+  secretStoreRef:
+    name: mc20-prod
+    kind: SecretStore
+  target:
+    name: mc20-mc20-account-es
+  dataFrom:
+    - extract:
+        key: secret/mc20-prod/mc20-account
+
+---
+apiVersion: autoscaling/v1
+kind: HorizontalPodAutoscaler
+metadata:
+  name: mc20-mc20-account-ha
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: mc20-mc20-account
+  minReplicas: 1
+  maxReplicas: 20
+  targetCPUUtilizationPercentage: 80
+
+---
+kind: Gateway
+apiVersion: networking.istio.io/v1alpha3
+metadata:
+  name: mc20-http-to-https
+spec:
+  servers:
+  - hosts:
+      - prod.mc20.eks-main-s.argear.io
+      - mc20.argear.io
+    port:
+      name: http2
+      number: 80
+      protocol: HTTP2
+    tls:
+      httpsRedirect: true
+  - hosts:
+      - prod.mc20.eks-main-s.argear.io
+      - mc20.argear.io
+    port:
+      number: 443
+      name: https-443
+      protocol: HTTPS
+    tls:
+      credentialName: mc20-mc20-ssl
+      mode: SIMPLE
+      privateKey: sds
+      serverCertificate: sds
+  selector:
+    istio: ingressgateway
+---
+apiVersion: networking.istio.io/v1beta1
+kind: VirtualService
+metadata:
+  name: mc20-mc20-vs
+spec:
+  gateways:
+  - mc20-http-to-https
+  hosts:
+  - prod.mc20.eks-main-s.argear.io
+  - mc20.argear.io
+  http:
+  - name: mc20-mc20-account-vs
+    match:
+    - uri:
+        prefix: /account/
+    - uri:
+        prefix: /account
+    rewrite:
+      uri: /
+    route:
+    - destination:
+        host: mc20-mc20-account-sv.mc20.svc.cluster.local
+  - name: mc20-mc20-admin-vs
+    match:
+    - uri:
+        prefix: /admin/
+    - uri:
+        prefix: /admin
+    rewrite:
+      uri: /
+    route:
+    - destination:
+        host: mc20-mc20-admin-sv.mc20.svc.cluster.local
+  - name: mc20-mc20-assets-vs
+    match:
+    - uri:
+        prefix: /service/
+    - uri:
+        prefix: /service
+    rewrite:
+      uri: /
+    route:
+    - destination:
+        host: mc20-mc20-assets-sv.mc20.svc.cluster.local
+  - name: mc20-mc20-version-vs
+    match:
+    - uri:
+        prefix: /version
+    rewrite:
+      uri: /version
+    route:
+    - destination:
+        host: mc20-mc20-version-sv.mc20.svc.cluster.local

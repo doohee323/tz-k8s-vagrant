@@ -1,0 +1,33 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mc20-mc20-account
+spec:
+  selector:
+    matchLabels:
+      app: mc20-mc20-account
+  template:
+    metadata:
+      labels:
+        org: seerslab
+        team: mc20
+        project: demo
+        environment: prod
+        app: mc20-mc20-account
+    spec:
+      serviceAccountName: mc20-svcaccount
+      containers:
+        - name: mc20-mc20-account
+          image: 596627550572.dkr.ecr.ap-northeast-2.amazonaws.com/mc20-mc20-account:develop-11
+          imagePullPolicy: Always
+          ports:
+          - containerPort: 8085
+          readinessProbe:
+            httpGet:
+              path: /healthcheck
+              port: 8085
+          envFrom:
+            - configMapRef:
+                name: mc20-mc20-account-configmap
+            - secretRef:
+                name: mc20-mc20-account-es

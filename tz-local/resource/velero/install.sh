@@ -34,13 +34,13 @@ kubectl create namespace velero
 
 #credentials_velero="/root/.k8s/credentials"
 #[default]
-#aws_access_key_id=<ACCESS_KEY_ID>
-#aws_secret_access_key=<SECRET_ACCESS_KEY>
+#minio_access_key_id=<ACCESS_KEY_ID>
+#minio_secret_access_key=<SECRET_ACCESS_KEY>
 
 cat <<EOF > credentials-velero
 [default]
-aws_access_key_id=${ACCESS_KEY_ID}
-aws_secret_access_key=${SECRET_ACCESS_KEY}
+minio_access_key_id=${ACCESS_KEY_ID}
+minio_secret_access_key=${SECRET_ACCESS_KEY}
 EOF
 
 #kubectl create secret generic credentials-velero \

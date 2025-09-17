@@ -1,0 +1,59 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: alb-external-ingress
+  namespace: istio-system
+  labels:
+    app: alb-external-ingress
+  annotations:
+    kubernetes.io/ingress.class: alb
+    alb.ingress.kubernetes.io/listen-ports: '[{"HTTP": 80}, {"HTTPS": 443}]'
+    alb.ingress.kubernetes.io/stz-redirect: '443'
+    alb.ingress.kubernetes.io/load-balancer-name: alb-external-ingress
+    alb.ingress.kubernetes.io/group.name: alb-external-ingress
+    alb.ingress.kubernetes.io/target-type: instance
+    alb.ingress.kubernetes.io/scheme: internet-facing
+    alb.ingress.kubernetes.io/certificate-arn: >-
+      arn:aws:acm:ap-northeast-2:596627550572:certificate/c74a2f3a-f892-4395-969d-3524e8f7d410
+    nginx.ingress.kubernetes.io/proxy-body-size: 50m
+#    nginx.ingress.kubernetes.io/enable-cors: "true"
+#    nginx.ingress.kubernetes.io/cors-allow-credentials: "true"
+#    nginx.ingress.kubernetes.io/cors-allow-origin: "*"
+#    nginx.ingress.kubernetes.io/cors-allow-methods: "GET, PUT, POST, DELETE, PATCH, OPTIONS"
+#    nginx.ingress.kubernetes.io/cors-allow-headers: "Retry-After,DNT,X-CustomHeader,Keep-Alive,User-Agent,X-Requested-With,If-Modified-Since,Cache-Control,Content-Type,Authorization"
+#    alb.ingress.kubernetes.io/load-balancer-attributes: idle_timeout.timeout_seconds=600
+#    alb.ingress.kubernetes.io/target-group-attributes: deregistration_delay.timeout_seconds=30,slow_start.duration_seconds=30,stickiness.enabled=true,stickiness.lb_cookie.duration_seconds=60
+    # alb.ingress.kubernetes.io/wafv2-acl-arn: arn:aws:wafv2:us-west-2:123456789011:regional/webacl/prod-common-alb-acl/ae2e63f9-02f4-44b8-9d25-XXXXXXXXXXXX
+spec:
+  rules:
+    - host: api.the-dive.io
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: istio-ingressgateway
+                port:
+                  number: 80
+    - host: the-dive.io
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: istio-ingressgateway
+                port:
+                  number: 80
+    - host: www.the-dive.io
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: istio-ingressgateway
+                port:
+                  number: 80
+

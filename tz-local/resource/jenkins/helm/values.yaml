@@ -1066,8 +1066,8 @@ backup:
   # Add existingSecret for AWS credentials
   existingSecret: {}
 #  jenkinsaws:
-#    awsaccesskey: "jenkins_aws_access_key"
-#    awssecretkey: "jenkins_aws_secret_key"
+#    awsaccesskey: "jenkins_minio_access_key"
+#    awssecretkey: "jenkins_minio_secret_key"
   # Add additional environment variables
   # jenkinsgcp:
   ## Use this key for GCP credentials

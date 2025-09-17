@@ -1,0 +1,52 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: kiali
+  annotations:
+    nginx.ingress.kubernetes.io/rewrite-target: /
+    kubernetes.io/ingress.class: "istio"
+    cert-manager.io/cluster-issuer: "letsencrypt-istio"
+    service.beta.kubernetes.io/aws-load-balancer-security-groups: sg-0e40e9ba23d151660
+spec:
+  rules:
+  - host: kiali.istio-system.eks-main-s.argear.io
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: kiali
+            port:
+              number: 20001
+  tls:
+    - hosts:
+        - kiali.istio-system.eks-main-s.argear.io
+      secretName: kiali-tls
+
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: jaeger-ui
+  annotations:
+    nginx.ingress.kubernetes.io/rewrite-target: /
+    kubernetes.io/ingress.class: "istio"
+    cert-manager.io/cluster-issuer: "letsencrypt-istio"
+    service.beta.kubernetes.io/aws-load-balancer-security-groups: sg-0e40e9ba23d151660
+spec:
+  rules:
+  - host: jaeger.istio-system.eks-main-s.argear.io
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: tracing
+            port:
+              number: 80
+  tls:
+    - hosts:
+        - jaeger.istio-system.eks-main-s.argear.io
+      secretName: jaeger-tls
