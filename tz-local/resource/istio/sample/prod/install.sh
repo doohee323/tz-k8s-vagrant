@@ -9,12 +9,6 @@ cd /vagrant/tz-local/resource/istio/sample/prod
 tz_project=topzone-k8s
 tz_domain=drillquiz.com
 
-NS=drillquiz
-
-kubectl create ns drillquiz
-
-kubectl apply -f drillquiz.yaml -n drillquiz
-kubectl apply -f deployment.yaml -n drillquiz
-kubectl delete -f drillquiz.yaml -n drillquiz
-kubectl delete -f deployment.yaml -n drillquiz
+kubectl delete -f drillquiz.yaml -n devops
+kubectl apply -f drillquiz.yaml -n devops
 
