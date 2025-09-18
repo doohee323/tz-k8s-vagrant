@@ -23,6 +23,23 @@ data:
 
 ---
 apiVersion: v1
+kind: Secret
+metadata:
+  name: drillquiz-secret-dev
+type: Opaque
+data:
+  GOOGLE_OAUTH_CLIENT_SECRET: R09DU1BYLU45UWFueDlwRmFjNTNGYVdsQ2dVUFIxeFFUSXk=
+  MINIO_ACCESS_KEY: UnFyR1ZxR0hDaEExZHE4cGc4dUI=
+  MINIO_BUCKET_NAME: ZHJpbGxxdWl6LWRldg==
+  MINIO_SECRET_KEY: SXFwUTZ6UFRZSm5IamVXY2VDdHhaRzhtN2hNbjcwSnZLU0w5OXV1cg==
+  OPENAI_API_KEY: >-
+    c2stcHJvai0wR0RvM09sRmNJYlNTNEQya25peUtldEQxaHcxUlYyOHFEeC1NUVZ4YzlkdTR6U2hlWTYxVnRreGRaUGRuQlNNVzhNdGwxV0VfYVQzQmxia0ZKSjVqM2l6ZEJtZG5lTXJxcTdqTmpwY1FlTU9Cd2YxVUhJTlRKNjFNNnlxQW1VOTN3dG5JRDNINHJOVzRvd1NuME1fQkhfcUw0OEE=
+  POSTGRES_PASSWORD: RGV2T3BzITMyMw==
+  SECRET_KEY: eW91ci1wcm9kdWN0aW9uLXNlY3JldC1rZXktaGVyZQ==
+  USE_MINIO: dHJ1ZQ==
+
+---
+apiVersion: v1
 kind: Service
 metadata:
   name: devops-dev-drillquiz-sv
@@ -48,17 +65,7 @@ metadata:
     cert-manager.io/cluster-issuer: "letsencrypt-prod"
 spec:
   rules:
-  - host: devops.drillquiz.com
-    http:
-      paths:
-      - path: /
-        pathType: Prefix
-        backend:
-          service:
-            name: devops-dev-drillquiz-sv
-            port:
-              number: 80
-  - host: sw.drillquiz.com
+  - host: devops1.drillquiz.com
     http:
       paths:
       - path: /
@@ -70,26 +77,8 @@ spec:
               number: 80
   tls:
     - hosts:
-        - devops.drillquiz.com
-        - sw.drillquiz.com
+        - devops1.drillquiz.com
       secretName: devops-dev-drillquiz-ssl
-
----
-apiVersion: v1
-kind: Secret
-metadata:
-  name: drillquiz-secret-dev
-type: Opaque
-data:
-  GOOGLE_OAUTH_CLIENT_SECRET: R09DU1BYLU45UWFueDlwRmFjNTNGYVdsQ2dVUFIxeFFUSXk=
-  MINIO_ACCESS_KEY: UnFyR1ZxR0hDaEExZHE4cGc4dUI=
-  MINIO_BUCKET_NAME: ZHJpbGxxdWl6LWRldg==
-  MINIO_SECRET_KEY: SXFwUTZ6UFRZSm5IamVXY2VDdHhaRzhtN2hNbjcwSnZLU0w5OXV1cg==
-  OPENAI_API_KEY: >-
-    c2stcHJvai0wR0RvM09sRmNJYlNTNEQya25peUtldEQxaHcxUlYyOHFEeC1NUVZ4YzlkdTR6U2hlWTYxVnRreGRaUGRuQlNNVzhNdGwxV0VfYVQzQmxia0ZKSjVqM2l6ZEJtZG5lTXJxcTdqTmpwY1FlTU9Cd2YxVUhJTlRKNjFNNnlxQW1VOTN3dG5JRDNINHJOVzRvd1NuME1fQkhfcUw0OEE=
-  POSTGRES_PASSWORD: RGV2T3BzITMyMw==
-  SECRET_KEY: eW91ci1wcm9kdWN0aW9uLXNlY3JldC1rZXktaGVyZQ==
-  USE_MINIO: dHJ1ZQ==
 
 ---
 kind: Gateway
@@ -103,7 +92,7 @@ spec:
       - sw.drillquiz.com
     port:
       name: http2
-      number: 80
+      number: 880
       protocol: HTTP2
     tls:
       httpsRedirect: false
@@ -111,7 +100,7 @@ spec:
       - devops.drillquiz.com
       - sw.drillquiz.com
     port:
-      number: 443
+      number: 8443
       name: https-443
       protocol: HTTPS
     tls:
@@ -129,10 +118,10 @@ metadata:
   name: devops-dev-vs
 spec:
   gateways:
-    - drillquiz-http-to-https
+  - drillquiz-http-to-https
   hosts:
-    - devops.drillquiz.com
-    - sw.drillquiz.com
+  - devops.drillquiz.com
+  - sw.drillquiz.com
   http:
   - name: devops-dev-drillquiz-vs
     match:

@@ -15,4 +15,6 @@ kubectl create ns drillquiz
 
 kubectl apply -f drillquiz.yaml -n drillquiz
 kubectl apply -f deployment.yaml -n drillquiz
+kubectl delete -f drillquiz.yaml -n drillquiz
+kubectl delete -f deployment.yaml -n drillquiz
 
