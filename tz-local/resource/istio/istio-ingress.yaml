@@ -4,12 +4,11 @@ metadata:
   name: kiali
   annotations:
     nginx.ingress.kubernetes.io/rewrite-target: /
-    kubernetes.io/ingress.class: "istio"
-    cert-manager.io/cluster-issuer: "letsencrypt-istio"
-    service.beta.kubernetes.io/aws-load-balancer-security-groups: sg-0e40e9ba23d151660
+    kubernetes.io/ingress.class: "nginx"
+    cert-manager.io/cluster-issuer: "letsencrypt-prod"
 spec:
   rules:
-  - host: kiali.istio-system.drillquiz.com
+  - host: kiali.drillquiz.com
     http:
       paths:
       - path: /
@@ -21,7 +20,7 @@ spec:
               number: 20001
   tls:
     - hosts:
-        - kiali.istio-system.drillquiz.com
+        - kiali.drillquiz.com
       secretName: kiali-tls
 
 ---
@@ -31,12 +30,11 @@ metadata:
   name: jaeger-ui
   annotations:
     nginx.ingress.kubernetes.io/rewrite-target: /
-    kubernetes.io/ingress.class: "istio"
-    cert-manager.io/cluster-issuer: "letsencrypt-istio"
-    service.beta.kubernetes.io/aws-load-balancer-security-groups: sg-0e40e9ba23d151660
+    kubernetes.io/ingress.class: "nginx"
+    cert-manager.io/cluster-issuer: "letsencrypt-prod"
 spec:
   rules:
-  - host: jaeger.istio-system.drillquiz.com
+  - host: jaeger.drillquiz.com
     http:
       paths:
       - path: /
@@ -48,5 +46,5 @@ spec:
               number: 80
   tls:
     - hosts:
-        - jaeger.istio-system.drillquiz.com
+        - jaeger.drillquiz.com
       secretName: jaeger-tls

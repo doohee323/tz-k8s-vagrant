@@ -16,8 +16,9 @@ tz_domain=drillquiz.com
 NS=istio-system
 
 curl -sL https://istio.io/downloadIstioctl | sh -
-export PATH=$PATH:$HOME/.istioctl/bin
-istioctl operator remove -y
+export PATH=$HOME/.istioctl/bin:$PATH
+istioctl version
+# istioctl operator remove -y  # Not needed in newer versions
 kubectl delete ns istio-operator
 kubectl delete ns istio-system
 
@@ -27,12 +28,9 @@ kubectl apply -f 1-istio-init.yaml
 kubectl apply -f 2-istio-tz.yaml
 kubectl apply -f 3-kiali-secret.yaml
 kubectl apply -f 4-1.auth.yaml
-kubectl apply -f 4-label-default-namespace.yaml
+kubectl replace -f 4-label-default-namespace.yaml
 
-istioctl profile list
-istioctl operator init
-istioctl profile dump demo > raw_settings.yaml
-istioctl manifest apply -f raw_settings.yaml
+istioctl install --set values.defaultRevision=default
 
 curl -Lo kiali.yaml https://raw.githubusercontent.com/istio/istio/release-1.17/samples/addons/kiali.yaml
 kubectl -n istio-system apply -f kiali.yaml
@@ -44,10 +42,14 @@ kubectl get pod -n istio-system
 
 sleep 120
 
+kubectl -n default delete -f sample/sample1.yaml
+kubectl -n default apply -f sample/sample1.yaml
+
+kubectl -n istio-system apply -f istio-ingress.yaml
+
 kubectl -n istio-system create token kiali
 #kubectl -n istio-system create token kiali-service-account
 
-kubectl -n istio-system apply -f istio-ingress.yaml
 
 # add jaeger datasource in grafana
 #HTTP
@@ -98,85 +100,6 @@ kubectl create ns test1
 kubectl -n test1 delete -f sample/sample1.yaml
 kubectl -n test1 apply -f sample/sample1.yaml
 
-
-
-
-kubectl -n istio-system apply -f - <<EOF
-apiVersion: cert-manager.io/v1
-kind: Certificate
-metadata:
-  name: mc20-cert-istio
-spec:
-  secretName: mc20-cert-istio
-  issuerRef:
-    kind: ClusterIssuer
-    name: letsencrypt-istio
-  commonName: the-dive.io
-  dnsNames:
-    - api.the-dive.io
-    - the-dive.io
-EOF
-
-kubectl -n istio-system apply -f - <<EOF
-apiVersion: cert-manager.io/v1
-kind: Certificate
-metadata:
-  name: mc20-cert-istio
-spec:
-  secretName: mc20-cert-istio
-  issuerRef:
-    kind: ClusterIssuer
-    name: letsencrypt-istio
-  commonName: nginx1.mc20.drillquiz.com
-  dnsNames:
-    - nginx1.mc20.drillquiz.com
-EOF
-
 kubectl -n mc20 delete -f sample/mc20.yaml
 kubectl -n mc20 apply -f sample/mc20.yaml
-
-
-
-kubectl -n istio-system apply -f - <<EOF
-apiVersion: cert-manager.io/v1
-kind: Certificate
-metadata:
-  name: mc20-mc20-account-ssl
-  namespace: istio-system
-spec:
-  secretName: mc20-mc20-account-ssl
-  issuerRef:
-    kind: ClusterIssuer
-    name: letsencrypt-istio
-  commonName: prod.mc20.drillquiz.com
-  dnsNames:
-    - prod.mc20.drillquiz.com
-    - mc20.argear.io
----
-EOF
-
-kubectl -n istio-system apply -f - <<EOF
-apiVersion: cert-manager.io/v1
-kind: Certificate
-metadata:
-  name: mc20-mc20-admin-ssl
-  namespace: istio-system
-spec:
-  secretName: mc20-mc20-admin-ssl
-  issuerRef:
-    kind: ClusterIssuer
-    name: letsencrypt-istio
-  commonName: prod.mc20.drillquiz.com
-  dnsNames:
-    - prod.mc20.drillquiz.com
-    - mc20.argear.io
----
-EOF
-
-
-
-
-
-#kubectl label namespace mtown istio-injection=enabled
-#kubectl label namespaces mtown istio-injection-
 

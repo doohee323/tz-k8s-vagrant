@@ -1,33 +1,47 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: mc20-mc20-account
+  name: devops-dev-drillquiz
 spec:
   selector:
     matchLabels:
-      app: mc20-mc20-account
+      app: devops-dev-drillquiz
   template:
     metadata:
       labels:
-        org: seerslab
-        team: mc20
-        project: demo
-        environment: prod
-        app: mc20-mc20-account
+        org: tz
+        team: drillquiz
+        project: drillquiz
+        environment: dev
+        app: devops-dev-drillquiz
+        version: develop-11
+      annotations:
+        instrumentation.opentelemetry.io/inject-nodejs: "true"
     spec:
-      serviceAccountName: mc20-svcaccount
+      serviceAccountName: drillquiz-svcaccount
       containers:
-        - name: mc20-mc20-account
-          image: 596627550572.dkr.ecr.ap-northeast-2.amazonaws.com/mc20-mc20-account:develop-11
+        - name: devops-dev-drillquiz
+          image: doohee323/drillquiz:836
           imagePullPolicy: Always
           ports:
-          - containerPort: 8085
-          readinessProbe:
-            httpGet:
-              path: /healthcheck
-              port: 8085
+            - containerPort: 8000
+#          readinessProbe:
+#            httpGet:
+#              path: /healthcheck
+#              port: 8000
+#          resources:
+#            requests:
+#              memory: "100Mi"
+#              cpu: "100m"
+#            limits:
+#              memory: "500Mi"
+#              cpu: "300m"
           envFrom:
             - configMapRef:
-                name: mc20-mc20-account-configmap
+                name: devops-dev-drillquiz-configmap
             - secretRef:
-                name: mc20-mc20-account-es
+                name: devops-dev-drillquiz-es
+      nodeSelector:
+        team: drillquiz
+        environment: dev
+        app_log: "true"

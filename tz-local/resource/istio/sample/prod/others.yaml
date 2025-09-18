@@ -2,7 +2,7 @@
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: mc20-mc20-account-configmap
+  name: devops-dev-drillquiz-configmap
 data:
   GIT_BRANCH: argo-vault
   DB_HOSTNAME: host.docker.internal
@@ -11,127 +11,114 @@ data:
 apiVersion: v1
 kind: Service
 metadata:
-  name: mc20-mc20-account-sv
+  name: devops-dev-drillquiz-sv
 spec:
   type: ClusterIP
   selector:
-    app: mc20-mc20-account
+    app: devops-dev-drillquiz
   ports:
     - port: 80
       name: http-80
-      targetPort: 8085
-#---
-#apiVersion: networking.k8s.io/v1
-#kind: Ingress
-#metadata:
-#  name: mc20-mc20-account-ing
-#  annotations:
-##    nginx.ingress.kubernetes.io/rewrite-target: /$2
-##    nginx.ingress.kubernetes.io/use-regex: "true"
-#    nginx.ingress.kubernetes.io/stz-redirect: "false"
-#    kubernetes.io/ingress.class: "istio"
-##    cert-manager.io/cluster-issuer: "letsencrypt-istio"
-#spec:
-#  rules:
-#  - host: prod.mc20.drillquiz.com
-#    http:
-#      paths:
-#      - path: /account(/|$)(.*)
-#        pathType: Prefix
-#        backend:
-#          service:
-#            name: mc20-mc20-account-sv
-#            port:
-#              number: 80
-##  - host: mc20.argear.io
-##    http:
-##      paths:
-##      - path: /account(/|$)(.*)
-##        pathType: Prefix
-##        backend:
-##          service:
-##            name: mc20-mc20-account-sv
-##            port:
-##              number: 80
-#  tls:
-#  - hosts:
-#    - prod.mc20.drillquiz.com
-##    - mc20.argear.io
-#    secretName: mc20-mc20-account-ssl
+      targetPort: 8000
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: devops-dev-drillquiz-ing
+  annotations:
+#    nginx.ingress.kubernetes.io/rewrite-target: /$2
+#    nginx.ingress.kubernetes.io/use-regex: "true"
+    nginx.ingress.kubernetes.io/ssl-redirect: "false"
+    kubernetes.io/ingress.class: "istio"
+#    cert-manager.io/cluster-issuer: "letsencrypt-prod"
+spec:
+  rules:
+  - host: istio.drillquiz.com
+    http:
+      paths:
+      - path: /account(/|$)(.*)
+        pathType: Prefix
+        backend:
+          service:
+            name: devops-dev-drillquiz-sv
+            port:
+              number: 80
+  tls:
+  - hosts:
+    - istio.drillquiz.com
+    secretName: devops-dev-drillquiz-ssl
 
 ---
 apiVersion: external-secrets.io/v1beta1
 kind: ExternalSecret
 metadata:
-  name: mc20-mc20-account-es
+  name: devops-dev-drillquiz-es
 spec:
   refreshInterval: "15s"
   secretStoreRef:
-    name: mc20-prod
+    name: drillquiz-prod
     kind: SecretStore
   target:
-    name: mc20-mc20-account-es
+    name: devops-dev-drillquiz-es
   dataFrom:
     - extract:
-        key: secret/mc20-prod/mc20-account
+        key: secret/drillquiz-prod/drillquiz
 
 ---
 apiVersion: autoscaling/v1
 kind: HorizontalPodAutoscaler
 metadata:
-  name: mc20-mc20-account-ha
+  name: devops-dev-drillquiz-ha
 spec:
   scaleTargetRef:
     apiVersion: apps/v1
     kind: Deployment
-    name: mc20-mc20-account
-  minReplicas: 1
+    name: devops-dev-drillquiz
+  minReplicas: 2
   maxReplicas: 20
-  targetCPUUtilizationPercentage: 80
+  targetCPUUtilizationPercentage: 25
 
 ---
 kind: Gateway
 apiVersion: networking.istio.io/v1alpha3
 metadata:
-  name: mc20-http-to-https
+  name: drillquiz-http-to-https
 spec:
   servers:
   - hosts:
-      - prod.mc20.drillquiz.com
-      - mc20.argear.io
+      - istio.drillquiz.com
     port:
       name: http2
       number: 80
       protocol: HTTP2
     tls:
-      httpsRedirect: true
+      httpsRedirect: false
   - hosts:
-      - prod.mc20.drillquiz.com
-      - mc20.argear.io
+      - istio.drillquiz.com
     port:
       number: 443
       name: https-443
       protocol: HTTPS
     tls:
-      credentialName: mc20-mc20-ssl
+      credentialName: devops-dev-ssl
       mode: SIMPLE
       privateKey: sds
       serverCertificate: sds
   selector:
     istio: ingressgateway
+
 ---
 apiVersion: networking.istio.io/v1beta1
 kind: VirtualService
 metadata:
-  name: mc20-mc20-vs
+  name: devops-dev-vs
 spec:
   gateways:
-  - mc20-http-to-https
+    - drillquiz-http-to-https
   hosts:
-  - prod.mc20.drillquiz.com
-  - mc20.argear.io
+    - istio.drillquiz.com
   http:
-  - name: mc20-mc20-account-vs
+  - name: devops-dev-drillquiz-vs
     match:
     - uri:
         prefix: /account/
@@ -141,8 +128,8 @@ spec:
       uri: /
     route:
     - destination:
-        host: mc20-mc20-account-sv.mc20.svc.cluster.local
-  - name: mc20-mc20-admin-vs
+        host: devops-dev-drillquiz-sv.drillquiz.svc.cluster.local
+  - name: devops-dev-admin-vs
     match:
     - uri:
         prefix: /admin/
@@ -152,24 +139,51 @@ spec:
       uri: /
     route:
     - destination:
-        host: mc20-mc20-admin-sv.mc20.svc.cluster.local
-  - name: mc20-mc20-assets-vs
-    match:
-    - uri:
-        prefix: /service/
-    - uri:
-        prefix: /service
-    rewrite:
-      uri: /
-    route:
-    - destination:
-        host: mc20-mc20-assets-sv.mc20.svc.cluster.local
-  - name: mc20-mc20-version-vs
-    match:
-    - uri:
-        prefix: /version
-    rewrite:
-      uri: /version
-    route:
-    - destination:
-        host: mc20-mc20-version-sv.mc20.svc.cluster.local
+        host: devops-dev-admin-sv.drillquiz.svc.cluster.local
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: istio-ingressgateway-proxy
+  namespace: default
+spec:
+  type: ExternalName
+  externalName: istio-ingressgateway.istio-system.svc.cluster.local
+  ports:
+  - name: http
+    port: 880
+    targetPort: 880
+    protocol: TCP
+  - name: https
+    port: 8443
+    targetPort: 8443
+    protocol: TCP
+
+---
+
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: drillquiz-to-istio-proxy
+  annotations:
+    cert-manager.io/cluster-issuer: "letsencrypt-prod"
+    nginx.ingress.kubernetes.io/backend-protocol: "HTTP"
+spec:
+  ingressClassName: nginx
+  rules:
+  - host: istio.drillquiz.com
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: istio-ingressgateway-proxy
+            port:
+              number: 880
+  tls:
+    - hosts:
+        - istio.drillquiz.com
+      secretName: drillquiz.istio-system-tls1

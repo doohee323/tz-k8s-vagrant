@@ -30,6 +30,6 @@ curl -s -H 'X-Forwarded-For: 56.5.6.7, 72.9.5.6, 98.1.2.3' "$GATEWAY_URL/get?sho
 
 curl -s -H 'X-Forwarded-For: 56.5.6.7, 72.9.5.6, 98.1.2.3' "$GATEWAY_URL/admin/healthcheck"
 
-curl -v -s -H 'X-Forwarded-For: 56.5.6.7, 72.9.5.6, 98.1.2.3' https://api.the-dive.io/account/healthcheck
+curl -v -s -H 'X-Forwarded-For: 56.5.6.7, 72.9.5.6, 98.1.2.3' https://api.drillquiz.com/account/healthcheck
 
 kubectl -n istio-system apply -f alb.yaml

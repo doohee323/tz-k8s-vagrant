@@ -1,63 +1,43 @@
-#apiVersion: argoproj.io/v1alpha1
-#kind: Application
-#metadata:
-#  name: mc20-mc20-account
-#  namespace: argocd
-#spec:
-#  destination:
-#    namespace: mc20
-#    server: https://kubernetes.default.svc
-#  project: mc20
-#  source:
-#    directory:
-#      jsonnet: {}
-#      recurse: true
-#    path: mc20-mc20-account
-#    repoURL: https://bitbucket.org/seerslab/tz-argocd-repo.git
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: devops-dev-drillquiz
+  namespace: devops-dev
+spec:
+  destination:
+    namespace: devops-dev
+    server: https://kubernetes.default.svc
+  project: drillquiz
+  source:
+    directory:
+      jsonnet: {}
+      recurse: true
+    path: devops-dev-drillquiz
+    repoURL: https://github.com/doohee323/tz-argocd-repo.git
 
 
-#argocd login argocd.default.drillquiz.com:443 --username admin --password ${admin_password} --insecure
+#argocd login argocd.drillquiz.com:443 --username admin --password ${admin_password} --insecure
 #
-#argocd app create mc20-mc20-account \
-#  --project mc20 \
-#  --repo https://bitbucket.org/seerslab/tz-argocd-repo.git \
-#  --path mc20-mc20-account/prod \
-#  --dest-namespace mc20 \
+#argocd app create devops-dev-drillquiz \
+#  --project drillquiz \
+#  --repo https://github.com/doohee323/tz-argocd-repo.git \
+#  --path devops-dev-drillquiz/prod \
+#  --dest-namespace drillquiz \
 #  --dest-server https://kubernetes.default.svc --directory-recurse --upsert --grpc-web
-
+#
 #kubectl -n istio-system apply -f - <<EOF
 #apiVersion: cert-manager.io/v1
 #kind: Certificate
 #metadata:
-#  name: mc20-mc20-ssl
+#  name: devops-dev-ssl
 #  namespace: istio-system
 #spec:
-#  secretName: mc20-mc20-ssl
+#  secretName: devops-dev-ssl
 #  issuerRef:
 #    kind: ClusterIssuer
-#    name: letsencrypt-istio
-#  commonName: prod.mc20.drillquiz.com
+#    name: letsencrypt-prod
+#  commonName: istio.drillquiz.com
 #  dnsNames:
-#    - prod.mc20.drillquiz.com
-#    - mc20.argear.io
+#    - istio.drillquiz.com
 #---
 #EOF
-
-
-kubectl -n istio-system apply -f - <<EOF
-apiVersion: cert-manager.io/v1
-kind: Certificate
-metadata:
-  name: mc20-mc20-dev-ssl
-  namespace: istio-system
-spec:
-  secretName: mc20-mc20-dev-ssl
-  issuerRef:
-    kind: ClusterIssuer
-    name: letsencrypt-istio
-  commonName: test1.mc20-dev.drillquiz.com
-  dnsNames:
-    - test1.mc20-dev.drillquiz.com
-    - develop.mc20-dev.drillquiz.com
----
-EOF
