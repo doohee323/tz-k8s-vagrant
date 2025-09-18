@@ -126,22 +126,14 @@ spec:
   - name: devops-dev-drillquiz-vs
     match:
     - uri:
-        prefix: /devops/
-    - uri:
-        prefix: /devops
-    rewrite:
-      uri: /
+        prefix: /
     route:
     - destination:
         host: devops-dev-drillquiz-sv.drillquiz.svc.cluster.local
   - name: devops-dev-sw-vs
     match:
     - uri:
-        prefix: /sw/
-    - uri:
-        prefix: /sw
-    rewrite:
-      uri: /
+        prefix: /
     route:
     - destination:
         host: devops-dev-drillquiz-sv.drillquiz.svc.cluster.local
