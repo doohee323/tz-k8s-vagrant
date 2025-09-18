@@ -2,24 +2,39 @@
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: devops-dev-drillquiz-configmap
+  name: drillquiz-configmap-dev
 data:
-  GIT_BRANCH: argo-vault
-  DB_HOSTNAME: host.docker.internal
-  DB_R_HOSTNAME: host.docker.internal
+  ENVIRONMENT: "production"
+  USE_DOCKER: "true"
+  POSTGRES_DB: "drillquiz"
+  POSTGRES_USER: "admin"
+  POSTGRES_HOST: "devops-postgres-postgresql.devops-dev.svc.cluster.local"
+  POSTGRES_PORT: "5432"
+  SECRET_KEY: drillquiz-secret-dev
+  CURRENT_DOMAIN: "devops.drillquiz.com"
+  ALLOWED_HOSTS: "localhost,127.0.0.1,devops.drillquiz.com"
+  CORS_ALLOWED_ORIGINS: "http://localhost:8080,https://devops.drillquiz.com"
+  USE_MINIO: "true"
+  MINIO_ENDPOINT: "http://minio.devops.svc.cluster.local:9000"
+  MINIO_BUCKET_NAME: "devops-dev-drillquiz"
+  GOOGLE_OAUTH_CLIENT_ID: "195449497097-rf2f22ampv4imqb80fvibhr7oq5oc7km.apps.googleusercontent.com"
+  GOOGLE_OAUTH_REDIRECT_URI: "https://us-dev.drillquiz.com/api/google-oauth/"
+  VUE_APP_GOOGLE_CLIENT_ID: "195449497097-rf2f22ampv4imqb80fvibhr7oq5oc7km.apps.googleusercontent.com"
+
 ---
 apiVersion: v1
 kind: Service
 metadata:
   name: devops-dev-drillquiz-sv
 spec:
-  type: ClusterIP
+  type: NodePort
   selector:
     app: devops-dev-drillquiz
   ports:
     - port: 80
-      name: http-80
+      name: api-80
       targetPort: 8000
+
 ---
 apiVersion: networking.k8s.io/v1
 kind: Ingress
@@ -29,14 +44,24 @@ metadata:
 #    nginx.ingress.kubernetes.io/rewrite-target: /$2
 #    nginx.ingress.kubernetes.io/use-regex: "true"
     nginx.ingress.kubernetes.io/ssl-redirect: "false"
-    kubernetes.io/ingress.class: "istio"
-#    cert-manager.io/cluster-issuer: "letsencrypt-prod"
+    kubernetes.io/ingress.class: "nginx"
+    cert-manager.io/cluster-issuer: "letsencrypt-prod"
 spec:
   rules:
-  - host: istio.drillquiz.com
+  - host: devops.drillquiz.com
     http:
       paths:
-      - path: /account(/|$)(.*)
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: devops-dev-drillquiz-sv
+            port:
+              number: 80
+  - host: sw.drillquiz.com
+    http:
+      paths:
+      - path: /
         pathType: Prefix
         backend:
           service:
@@ -44,39 +69,27 @@ spec:
             port:
               number: 80
   tls:
-  - hosts:
-    - istio.drillquiz.com
-    secretName: devops-dev-drillquiz-ssl
+    - hosts:
+        - devops.drillquiz.com
+        - sw.drillquiz.com
+      secretName: devops-dev-drillquiz-ssl
 
 ---
-apiVersion: external-secrets.io/v1beta1
-kind: ExternalSecret
+apiVersion: v1
+kind: Secret
 metadata:
-  name: devops-dev-drillquiz-es
-spec:
-  refreshInterval: "15s"
-  secretStoreRef:
-    name: drillquiz-prod
-    kind: SecretStore
-  target:
-    name: devops-dev-drillquiz-es
-  dataFrom:
-    - extract:
-        key: secret/drillquiz-prod/drillquiz
-
----
-apiVersion: autoscaling/v1
-kind: HorizontalPodAutoscaler
-metadata:
-  name: devops-dev-drillquiz-ha
-spec:
-  scaleTargetRef:
-    apiVersion: apps/v1
-    kind: Deployment
-    name: devops-dev-drillquiz
-  minReplicas: 2
-  maxReplicas: 20
-  targetCPUUtilizationPercentage: 25
+  name: drillquiz-secret-dev
+type: Opaque
+data:
+  GOOGLE_OAUTH_CLIENT_SECRET: R09DU1BYLU45UWFueDlwRmFjNTNGYVdsQ2dVUFIxeFFUSXk=
+  MINIO_ACCESS_KEY: UnFyR1ZxR0hDaEExZHE4cGc4dUI=
+  MINIO_BUCKET_NAME: ZHJpbGxxdWl6LWRldg==
+  MINIO_SECRET_KEY: SXFwUTZ6UFRZSm5IamVXY2VDdHhaRzhtN2hNbjcwSnZLU0w5OXV1cg==
+  OPENAI_API_KEY: >-
+    c2stcHJvai0wR0RvM09sRmNJYlNTNEQya25peUtldEQxaHcxUlYyOHFEeC1NUVZ4YzlkdTR6U2hlWTYxVnRreGRaUGRuQlNNVzhNdGwxV0VfYVQzQmxia0ZKSjVqM2l6ZEJtZG5lTXJxcTdqTmpwY1FlTU9Cd2YxVUhJTlRKNjFNNnlxQW1VOTN3dG5JRDNINHJOVzRvd1NuME1fQkhfcUw0OEE=
+  POSTGRES_PASSWORD: RGV2T3BzITMyMw==
+  SECRET_KEY: eW91ci1wcm9kdWN0aW9uLXNlY3JldC1rZXktaGVyZQ==
+  USE_MINIO: dHJ1ZQ==
 
 ---
 kind: Gateway
@@ -86,7 +99,8 @@ metadata:
 spec:
   servers:
   - hosts:
-      - istio.drillquiz.com
+      - devops.drillquiz.com
+      - sw.drillquiz.com
     port:
       name: http2
       number: 80
@@ -94,7 +108,8 @@ spec:
     tls:
       httpsRedirect: false
   - hosts:
-      - istio.drillquiz.com
+      - devops.drillquiz.com
+      - sw.drillquiz.com
     port:
       number: 443
       name: https-443
@@ -116,30 +131,31 @@ spec:
   gateways:
     - drillquiz-http-to-https
   hosts:
-    - istio.drillquiz.com
+    - devops.drillquiz.com
+    - sw.drillquiz.com
   http:
   - name: devops-dev-drillquiz-vs
     match:
     - uri:
-        prefix: /account/
+        prefix: /devops/
     - uri:
-        prefix: /account
+        prefix: /devops
     rewrite:
       uri: /
     route:
     - destination:
         host: devops-dev-drillquiz-sv.drillquiz.svc.cluster.local
-  - name: devops-dev-admin-vs
+  - name: devops-dev-sw-vs
     match:
     - uri:
-        prefix: /admin/
+        prefix: /sw/
     - uri:
-        prefix: /admin
+        prefix: /sw
     rewrite:
       uri: /
     route:
     - destination:
-        host: devops-dev-admin-sv.drillquiz.svc.cluster.local
+        host: devops-dev-drillquiz-sv.drillquiz.svc.cluster.local
 
 ---
 
@@ -147,7 +163,6 @@ apiVersion: v1
 kind: Service
 metadata:
   name: istio-ingressgateway-proxy
-  namespace: default
 spec:
   type: ExternalName
   externalName: istio-ingressgateway.istio-system.svc.cluster.local
@@ -173,7 +188,17 @@ metadata:
 spec:
   ingressClassName: nginx
   rules:
-  - host: istio.drillquiz.com
+  - host: devops.drillquiz.com
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: istio-ingressgateway-proxy
+            port:
+              number: 880
+  - host: sw.drillquiz.com
     http:
       paths:
       - path: /
@@ -185,5 +210,6 @@ spec:
               number: 880
   tls:
     - hosts:
-        - istio.drillquiz.com
+        - devops.drillquiz.com
+        - sw.drillquiz.com
       secretName: drillquiz.istio-system-tls1

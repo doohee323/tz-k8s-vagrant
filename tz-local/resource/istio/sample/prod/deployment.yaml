@@ -14,34 +14,28 @@ spec:
         project: drillquiz
         environment: dev
         app: devops-dev-drillquiz
-        version: develop-11
-      annotations:
-        instrumentation.opentelemetry.io/inject-nodejs: "true"
     spec:
-      serviceAccountName: drillquiz-svcaccount
+      imagePullSecrets:
+        - name: tz-registrykey
       containers:
         - name: devops-dev-drillquiz
           image: doohee323/drillquiz:836
           imagePullPolicy: Always
           ports:
             - containerPort: 8000
-#          readinessProbe:
-#            httpGet:
-#              path: /healthcheck
-#              port: 8000
+  #        readinessProbe:
+  #          httpGet:
+  #            path: /health
+  #            port: 8000
 #          resources:
 #            requests:
-#              memory: "100Mi"
-#              cpu: "100m"
+#              cpu: 500m
+#              memory: 500Mi
 #            limits:
-#              memory: "500Mi"
-#              cpu: "300m"
+#              cpu: 1000m
+#              memory: 1000Mi
           envFrom:
-            - configMapRef:
-                name: devops-dev-drillquiz-configmap
-            - secretRef:
-                name: devops-dev-drillquiz-es
-      nodeSelector:
-        team: drillquiz
-        environment: dev
-        app_log: "true"
+          - configMapRef:
+              name: drillquiz-configmap-dev
+          - secretRef:
+              name: drillquiz-secret-dev
