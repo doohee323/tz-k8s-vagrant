@@ -13,5 +13,6 @@ NS=drillquiz
 
 kubectl create ns drillquiz
 
-kubectl apply -f others.yaml -n drillquiz
+kubectl apply -f drillquiz.yaml -n drillquiz
 kubectl apply -f deployment.yaml -n drillquiz
+
