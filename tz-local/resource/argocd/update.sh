@@ -26,12 +26,12 @@ argocd login `k get service -n argocd | grep argocd-server | awk '{print $4}' | 
 cp argocd-cm.yaml argocd-cm.yaml_bak
 cp argocd-rbac-cm.yaml argocd-rbac-cm.yaml_bak
 
-sed -i "s/k8s_project/${k8s_project}/g" argocd-cm.yaml_bak
-sed -i "s/k8s_domain/${k8s_domain}/g" argocd-cm.yaml_bak
+sed -ie "s/k8s_project/${k8s_project}/g" argocd-cm.yaml_bak
+sed -ie "s/k8s_domain/${k8s_domain}/g" argocd-cm.yaml_bak
 # OpenID Connect (google oauth2)
 # https://argo-cd.readthedocs.io/en/stable/operator-manual/user-management/google/
-sed -i "s/argocd_google_client_id/${argocd_google_client_id}/g" argocd-cm.yaml_bak
-sed -i "s/argocd_google_client_secret/${argocd_google_client_secret}/g" argocd-cm.yaml_bak
+sed -ie "s/argocd_google_client_id/${argocd_google_client_id}/g" argocd-cm.yaml_bak
+sed -ie "s/argocd_google_client_secret/${argocd_google_client_secret}/g" argocd-cm.yaml_bak
 
 PROJECTS=(default argocd devops devops-dev)
 for item in "${PROJECTS[@]}"; do
@@ -53,11 +53,11 @@ for item in "${PROJECTS[@]}"; do
         -d https://kubernetes.default.svc,argocd \
         -s https://github.com/${github_id}/tz-argocd-repo.git \
         -s https://${github_id}.github.io/tz-argocd-repo/ \
-        --upsert
+        --upsert --grpc-web
       echo "  accounts.${project}: apiKey, login" >> argocd-cm.yaml_bak
       echo "    p, role:${project}, applications, sync, ${project}/*, allow" >> argocd-rbac-cm.yaml_bak
       echo "    g, ${project}, role:${project}" >> argocd-rbac-cm.yaml_bak
-      argocd account update-password --account ${project} --current-password ${admin_password} --new-password 'imsi!323'
+      argocd account update-password --account ${project} --current-password ${admin_password} --new-password 'imsi!323' --grpc-web
     else
       argocd proj create ${project} \
         -d https://kubernetes.default.svc,${project} \
@@ -65,11 +65,11 @@ for item in "${PROJECTS[@]}"; do
         -d https://kubernetes.default.svc,argocd \
         -s https://github.com/${github_id}/tz-argocd-repo.git \
         -s https://${github_id}.github.io/tz-argocd-repo/ \
-        --upsert
+        --upsert --grpc-web
       echo "  accounts.${project}-admin: apiKey, login" >> argocd-cm.yaml_bak
       echo "    p, role:${project}-admin, *, *, ${project}/*, allow" >> argocd-rbac-cm.yaml_bak
       echo "    g, ${project}-admin, role:${project}-admin" >> argocd-rbac-cm.yaml_bak
-      argocd account update-password --account ${project}-admin --current-password ${admin_password} --new-password 'imsi!323'
+      argocd account update-password --account ${project}-admin --current-password ${admin_password} --new-password 'imsi!323' --grpc-web
     fi
   fi
 done

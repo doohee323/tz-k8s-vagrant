@@ -37,20 +37,9 @@ sudo chmod +x /usr/local/bin/argocd
 #brew install argoproj/tap/argocd
 #argocd
 
-argocd login `k get service -n argocd | grep -w "argocd-server " | awk '{print $4}'` --username admin --password ${TMP_PASSWORD} --insecure
-argocd account update-password --account admin --current-password ${TMP_PASSWORD} --new-password ${admin_password}
-
-# basic auth
-#https://kubernetes.github.io/ingress-nginx/user-guide/nginx-configuration/annotations/
-#https://kubernetes.github.io/ingress-nginx/examples/auth/basic/
-#echo ${basic_password} | htpasswd -i -n admin > auth
-#k create secret generic basic-auth-argocd --from-file=auth -n argocd
-#k get secret basic-auth-argocd -o yaml -n argocd
-#rm -Rf auth
-
 cp -Rf ingress-argocd.yaml ingress-argocd.yaml_bak
-sed -i "s/k8s_project/${k8s_project}/g" ingress-argocd.yaml_bak
-sed -i "s/k8s_domain/${k8s_domain}/g" ingress-argocd.yaml_bak
+sed -ie "s/k8s_project/${k8s_project}/g" ingress-argocd.yaml_bak
+sed -ie "s/k8s_domain/${k8s_domain}/g" ingress-argocd.yaml_bak
 k delete -f ingress-argocd.yaml_bak -n argocd
 k apply -f ingress-argocd.yaml_bak -n argocd
 
@@ -62,6 +51,19 @@ k apply -f ingress-argocd.yaml_bak -n argocd
 #k patch deploy/argocd-dex-server -p '{"spec": {"template": {"spec": {"nodeSelector": {"team": "devops", "environment": "prod"}}}}}' -n argocd
 
 k patch deploy/argocd-redis -p '{"spec": {"template": {"spec": {"imagePullSecrets": [{"name": "tz-registrykey"}]}}}}' -n argocd
+
+argocd login `k get service -n argocd | grep argocd-server | awk '{print $4}' | head -n 1`:443 --username admin --password ${admin_password} --insecure --grpc-web
+argocd account update-password \
+  --current-password "${TMP_PASSWORD}" \
+  --new-password "${admin_password}"
+
+# basic auth
+#https://kubernetes.github.io/ingress-nginx/user-guide/nginx-configuration/annotations/
+#https://kubernetes.github.io/ingress-nginx/examples/auth/basic/
+#echo ${basic_password} | htpasswd -i -n admin > auth
+#k create secret generic basic-auth-argocd --from-file=auth -n argocd
+#k get secret basic-auth-argocd -o yaml -n argocd
+#rm -Rf auth
 
 argocd login `k get service -n argocd | grep argocd-server | awk '{print $4}' | head -n 1` --username admin --password ${admin_password} --insecure
 argocd repo add https://github.com/${github_id}/tz-argocd-repo \

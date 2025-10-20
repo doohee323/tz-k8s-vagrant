@@ -48,7 +48,7 @@ spec:
     route:
     - destination:
         host: drillquiz.devops.svc.cluster.local
-  - name: devops-dev-sw-vs
+  - name: sw-dev-drillquiz-vs
     match:
     - uri:
         prefix: /
